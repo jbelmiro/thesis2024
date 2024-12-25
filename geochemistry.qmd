@@ -1,3 +1,39 @@
 ---
 title: "geochemistry"
 ---
+
+```{r}
+#| label: libraries
+
+library(readr)
+library(dplyr)
+
+
+```
+
+```{r}
+#| label: database-read
+
+pxrf_raw <- read_csv('data/pxrf_data_dec.csv')
+
+
+```
+
+```{r}
+#| label: database-setup
+
+pxrf_dataset <- pxrf_raw %>%
+  select("Sample_ID", "pXRF_ID", "Formation/Type", "Application", "Method",
+         "ElapsedTime",
+         "MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2",
+         "V", "Cr", "MnO", "Fe2O3", "Co", "Ni", "Cu", "Zn", "As", "Se", "Rb",
+         "Sr", "Y", "Zr", "Nb", "Mo", "Rh", "Ag", "Cd", "Sn", "Sb", "Ba", "La",
+         "Ce", "Hf", "Ta", "W", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Th", "U",
+         "Cal Check") %>% 
+  mutate("MgO_detect" = case_when(
+    MgO == 0 | MgO == "< LOD" ~ "LOD",
+    TRUE ~ "Value"))
+
+
+  
+```
