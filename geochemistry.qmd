@@ -1,5 +1,13 @@
 ---
 title: "geochemistry"
+
+execute:
+  echo: false
+  warning: false
+  message: false
+  comment: "#>"
+  fig-path: "../figures/"
+  fig-dpi: 600
 ---
 
 ```{r}
@@ -34,6 +42,20 @@ pxrf_dataset <- pxrf_raw %>%
     MgO == 0 | MgO == "< LOD" ~ "LOD",
     TRUE ~ "Value"))
 
+pxrf_analysis <- pxrf_dataset %>% 
+  select("Sample_ID", "pXRF_ID", "Formation/Type",
+         "MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "V", "MnO", "Fe2O3", "Cu", "As", "Rb",
+         "Sr", "Y", "Zr", "Mo", "Ag", "Ba", "Ce", "W", "Au", "Pb") # Removed elements with only 0 or <LOD values in all samples
 
   
 ```
+
+## Methodology
+
+For this experiment, a Bruker portable XRF Titan S1 was used in a laboratory benchtop setup, using battery power (up to 25% battery charge then replaced by a fully charged battery). A validation run was applied on two standard samples provided by Bruker and using the standard calibration. Samples were scanned for 180 seconds each (90 seconds for the first phase for major elements and 90 seconds for the second phase for minor elements), at least once, with several scans applied to samples that showed macroscopic variability (e.g., areas with different colours or translucency). The standard database from Bruker was used, with the Geochem application and Dual Mining method. \*\* chert samples were scanned, from several sources and chert types, both geological and archaeological. After scanning, the scanned face was measured (thickness and diameter), to guarantee a minimum thickness and size was followed for each sample, since other studies have shown thickness and size may impact the homogeneity of data collection and results [@newlanderEmpiricalStudyEffect2015]. All samples, including their thickness and diameter, can be found in table X. For geological samples, fresh, flat surfaces were scanned, avoiding altered faces or cortex; whenever necessary, the samples were prepared by breaking the nodules. The samples were chosen to represent all varieties of chert identified in the Algarve region, in the archaeological record of Vale Boi, but also from other regions such as Central Portugal and South Spain, to allow their comparison and test hypotheses made from macroscopic and petrographic data. For archaeological samples, artefacts were chosen from previously identified types (REF?), focusing on larger and flatter morphologies, with the least degree of surface alterations possible.
+
+The analysis and result reporting protocol was established following previous studies, focusing on the accuracy of obtained data but also the transparency and reproducibility of the results [@newlanderEmpiricalStudyEffect2015; @johnsonBestPracticesPublishing2024]. For further reproducibility and replicability, and working towards the goal of open science [@johnsonBestPracticesPublishing2024; @marwickComputationalReproducibilityArchaeological2017], the obtained raw pXRF results can be found online on our online compendium (LINK).
+
+## Results
+
+The pXRF measured several major and minor elements, of which a small amount returned values of 0 or were below the limit of detection (\<LOD). These were uranium (U), thorium (Th), bismuth (Bi), thallium (Tl), mercury (Hg), platinum (Pt), tantalum (Ta), hafnium (Hf), lanthanum (La), antimony (Sb), Tin (Sn), cadmium (Cd), rhodium (Rh), niobium (Nb), selenium (Se), zinc (Zn), nickel (Ni), cobalt (Co) and chromium (Cr). They were removed from the analysis based on their nonexistence, although they can still be found in the raw pXRF results.
