@@ -16,6 +16,9 @@ execute:
 library(readr)
 library(dplyr)
 
+library(janitor)
+library(tidyr)
+
 
 ```
 
@@ -36,25 +39,288 @@ pxrf_raw <- read_csv('data/pxrf_data_dec.csv')
 ```{r}
 #| label: database-setup
 
-pxrf_dataset <- pxrf_raw %>%
+pxrf_dataset <- pxrf_raw |> 
   select("Sample_ID", "pXRF_ID", "Formation/Type", "Application", "Method",
          "ElapsedTime",
          "MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2",
          "V", "Cr", "MnO", "Fe2O3", "Co", "Ni", "Cu", "Zn", "As", "Se", "Rb",
          "Sr", "Y", "Zr", "Nb", "Mo", "Rh", "Ag", "Cd", "Sn", "Sb", "Ba", "La",
          "Ce", "Hf", "Ta", "W", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Th", "U",
-         "Cal Check") %>% 
+         "Cal Check") |> 
   mutate("MgO_detect" = case_when(
     MgO == 0 | MgO == "< LOD" ~ "LOD",
     TRUE ~ "Value"))
 
-pxrf_analysis <- pxrf_dataset %>% 
+pxrf_analysis <- pxrf_dataset |> 
   select("Sample_ID", "pXRF_ID", "Formation/Type",
          "MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "V", "MnO", "Fe2O3", "Cu", "As", "Rb",
          "Sr", "Y", "Zr", "Mo", "Ag", "Ba", "Ce", "W", "Au", "Pb") # Removed elements with only 0 or <LOD values in all samples
 
   
 ```
+
+```{r}
+#| label: tbl-occurrences
+#| tbl-cap: A table.
+
+
+
+# Example dataset
+data <- data.frame(
+  Group = c("A", "A", "B", "B", "A", "B", "C", "C", "C", "A"),
+  Category1 = c("X", "Y", "X", "Y", "X", "Y", "X", "X", "Y", "Y"),
+  Category2 = c("P", "P", "Q", "Q", "P", "P", "Q", "P", "Q", "P")
+)
+
+# Combine the multiple columns into a single table
+combined_table <- pxrf_analysis |> 
+  mutate(across(
+    .cols = c("MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "V", "MnO", "Fe2O3", "Cu", "As", "Rb",
+         "Sr", "Y", "Zr", "Mo", "Ag", "Ba", "Ce", "W", "Au", "Pb"),
+    .fns = ~ case_when(
+      . == 0 | . == "< LOD" ~ "No",
+      . > 0 ~ "Yes",
+      TRUE ~ as.character(.))
+    )) |> 
+  mutate(`Chert type` = case_when(
+    `Formation/Type` == "TYPE 2B" | `Formation/Type` == "TYPE 2R" ~ "TYPE 2",
+    `Formation/Type` == "TYPE 6LLB" | `Formation/Type` == "TYPE 6E" ~ "TYPE 6",
+    TRUE ~ `Formation/Type`))
+
+tbl_MgO <- combined_table |> 
+  tabyl(`Chert type`, MgO) |>
+  adorn_percentages("row") |> 
+  adorn_pct_formatting(digits = 1) |> 
+  select("Chert type", Yes) |> 
+  rename(MgO = Yes)
+# Al2O3
+tbl_Al2O3 <- combined_table |> 
+  tabyl(`Chert type`, Al2O3) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+  select("Chert type", Yes) |> 
+  rename(Al2O3 = Yes)
+# SiO2
+tbl_SiO2 <- combined_table |> 
+  tabyl(`Chert type`, SiO2) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+  select("Chert type", Yes) |> 
+  rename(SiO2 = Yes)
+# P2O5
+tbl_P2O5 <- combined_table |> 
+  tabyl(`Chert type`, P2O5) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(P2O5 = Yes)
+# S
+tbl_S <- combined_table |> 
+  tabyl(`Chert type`, S) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(S = Yes)
+# Cl
+tbl_Cl <- combined_table |> 
+  tabyl(`Chert type`, Cl) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Cl = Yes)
+# K2O has 100% rate
+tbl_K2O <- combined_table |> 
+  tabyl(`Chert type`, K2O) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(K2O = Yes)
+# CaO
+tbl_CaO <- combined_table |> 
+  tabyl(`Chert type`, CaO) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(CaO = Yes)
+# TiO2
+tbl_TiO2 <- combined_table |> 
+  tabyl(`Chert type`, TiO2) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(TiO2 = Yes)
+# V
+tbl_V <- combined_table |> 
+  tabyl(`Chert type`, V) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(V = Yes)
+# MnO
+tbl_MnO <- combined_table |> 
+  tabyl(`Chert type`, MnO) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(MnO = Yes)
+# Fe2O3 has 100% rate
+tbl_Fe2O3 <- combined_table |> 
+  tabyl(`Chert type`, Fe2O3) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Fe2O3 = Yes)
+# Cu
+tbl_Cu <- combined_table |> 
+  tabyl(`Chert type`, Cu) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Cu = Yes)
+# As
+tbl_As <- combined_table |> 
+  tabyl(`Chert type`, As) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(As = Yes)
+# Rb
+tbl_Rb <- combined_table |> 
+  tabyl(`Chert type`, Rb) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Rb = Yes)
+# Sr
+tbl_Sr <- combined_table |> 
+  tabyl(`Chert type`, Sr) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Sr = Yes)
+# Y
+tbl_Y <- combined_table |> 
+  tabyl(`Chert type`, Y) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Y = Yes)
+# Zr
+tbl_Zr <- combined_table |> 
+  tabyl(`Chert type`, Zr) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Zr = Yes)
+# Mo
+tbl_Mo <- combined_table |> 
+  tabyl(`Chert type`, Mo) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Mo = Yes)
+# Ag
+tbl_Ag <- combined_table |> 
+  tabyl(`Chert type`, Ag) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Ag = Yes)
+# Ba
+tbl_Ba <- combined_table |> 
+  tabyl(`Chert type`, Ba) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Ba = Yes)
+# Ce
+tbl_Ce <- combined_table |> 
+  tabyl(`Chert type`, Ce) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Ce = Yes)
+# W
+tbl_W <- combined_table |> 
+  tabyl(`Chert type`, W) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(W = Yes)
+# Au
+tbl_Au <- combined_table |> 
+  tabyl(`Chert type`, Au) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Au = Yes)
+# Pb
+tbl_Pb <- combined_table |> 
+  tabyl(`Chert type`, Pb) |>
+  adorn_percentages("row") |>                   
+  adorn_pct_formatting(digits = 1) |>
+
+  select("Chert type", Yes) |> 
+  rename(Pb = Yes)
+
+combined_tbl <- tbl_MgO |> 
+  full_join(tbl_Al2O3, by = "Chert type") |> 
+  full_join(tbl_SiO2, by = "Chert type") |>
+  full_join(tbl_P2O5, by = "Chert type") |> 
+  full_join(tbl_S, by = "Chert type") |> 
+  full_join(tbl_Cl, by = "Chert type") |> 
+  full_join(tbl_K2O, by = "Chert type") |> 
+  full_join(tbl_CaO, by = "Chert type") |> 
+  full_join(tbl_TiO2, by = "Chert type") |> 
+  full_join(tbl_V, by = "Chert type") |> 
+  full_join(tbl_MnO, by = "Chert type") |> 
+  full_join(tbl_Fe2O3, by = "Chert type") |> 
+  full_join(tbl_Cu, by = "Chert type") |> 
+  full_join(tbl_As, by = "Chert type") |> 
+  full_join(tbl_Rb, by = "Chert type") |> 
+  full_join(tbl_Sr, by = "Chert type") |> 
+  full_join(tbl_Y, by = "Chert type") |> 
+  full_join(tbl_Zr, by = "Chert type") |> 
+  full_join(tbl_Mo, by = "Chert type") |> 
+  full_join(tbl_Ag, by = "Chert type") |> 
+  full_join(tbl_Ba, by = "Chert type") |> 
+  full_join(tbl_Ce, by = "Chert type") |> 
+  full_join(tbl_W, by = "Chert type") |> 
+  full_join(tbl_Au, by = "Chert type") |> 
+  full_join(tbl_Pb, by = "Chert type")
+
+library(gt)
+  
+combined_table |> 
+  select(`Formation/Type`, MgO, Al2O3) |> 
+  t
+  
+# Print the resulting table
+print(combined_table)
+
+```
+
 
 ## Methodology
 
