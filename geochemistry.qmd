@@ -288,12 +288,16 @@ plot_grid(biplot_alg, biplot_nl, biplot_comp, biplot_comp2, labels = c("a", "b",
 # Boxplot data preparation
 boxplots_pxrf <- pxrf_analysis |> 
   select(-Sample_ID, -pXRF_ID) |> 
+  filter(!`Formation/Type` %in% c("TW", "T1")) |> # Removing chalcedony
   mutate(across(-`Formation/Type`, ~ as.numeric(.)))
   #pivot_longer(cols = c("MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "Fe2O3", "Cu",
         # "Sr", "Zr"), names_to = "Variable", values_to = "Value")
 boxplots_pxrf <- boxplots_pxrf |> 
-  mutate(`Formation/Type` = factor(`Formation/Type`, levels = c("TW", "LJW", "MJE", "UJW", "UJE", "CPT", "UCA", "T1", "T2",
-                                                                "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11")))
+  mutate(`Formation/Type` = case_when(
+    `Formation/Type` == "T2" | `Formation/Type` == "T3" | `Formation/Type` == "T4" | `Formation/Type` == "T5" ~ "T2-5", TRUE ~ `Formation/Type`
+  )) |> 
+  mutate(`Formation/Type` = factor(`Formation/Type`, levels = c("TW", "LJW", "MJE", "UJW", "UJE", "CPT", "UCA", "T1", "T2-5", "T6", "T7", "T8", "T9", "T10", "T11")))
+
 ## MgO
 count_data_mgo <- boxplots_pxrf |> # Count number of observations per group where Value > 0
   select(`Formation/Type`, MgO) |> 
@@ -302,7 +306,7 @@ count_data_mgo <- boxplots_pxrf |> # Count number of observations per group wher
   summarise(n = n(), .groups = "drop") 
 
 b1 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = MgO)) +
+  ggplot(aes(x = `Formation/Type`, y = MgO, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
   geom_text(data = count_data_mgo, aes(x = `Formation/Type`, y = 0.5, label = n), size = 3) +
@@ -316,11 +320,13 @@ count_data_al2o3 <- boxplots_pxrf |> # Count number of observations per group wh
   summarise(n = n(), .groups = "drop") 
 
 b2 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = Al2O3)) +
+  ggplot(aes(x = `Formation/Type`, y = Al2O3, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
   geom_text(data = count_data_al2o3, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank())
 
 ## SiO2
 count_data_sio2 <- boxplots_pxrf |> # Count number of observations per group where Value > 0
@@ -330,11 +336,14 @@ count_data_sio2 <- boxplots_pxrf |> # Count number of observations per group whe
   summarise(n = n(), .groups = "drop") 
 
 b3 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = SiO2)) +
+  ggplot(aes(x = `Formation/Type`, y = SiO2, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_sio2, aes(x = `Formation/Type`, y = 40, label = n), size = 3) +
-  theme_minimal()
+  geom_text(data = count_data_sio2, aes(x = `Formation/Type`, y = 70, label = n), size = 3) +
+  coord_cartesian(ylim = c(70, 100)) +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank())
 
 ## P2O5
 count_data_p2o5 <- boxplots_pxrf |> # Count number of observations per group where Value > 0
@@ -344,11 +353,14 @@ count_data_p2o5 <- boxplots_pxrf |> # Count number of observations per group whe
   summarise(n = n(), .groups = "drop") 
 
 b4 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = P2O5)) +
+  ggplot(aes(x = `Formation/Type`, y = P2O5, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
   geom_text(data = count_data_p2o5, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
-  theme_minimal()
+  coord_cartesian(ylim = c(0, 0.25)) +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank())
 
 ## S
 count_data_s <- boxplots_pxrf |> # Count number of observations per group where Value > 0
@@ -358,11 +370,14 @@ count_data_s <- boxplots_pxrf |> # Count number of observations per group where 
   summarise(n = n(), .groups = "drop") 
 
 b5 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = S)) +
+  ggplot(aes(x = `Formation/Type`, y = S, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_s, aes(x = `Formation/Type`, y = -0.1, label = n), size = 3) +
-  theme_minimal()
+  geom_text(data = count_data_s, aes(x = `Formation/Type`, y = -0.05, label = n), size = 3) +
+  coord_cartesian(ylim = c(-0.05, 0.3)) +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank())
 
 ## Cl
 count_data_cl <- boxplots_pxrf |> # Count number of observations per group where Value > 0
@@ -372,11 +387,11 @@ count_data_cl <- boxplots_pxrf |> # Count number of observations per group where
   summarise(n = n(), .groups = "drop") 
 
 b6 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = Cl)) +
+  ggplot(aes(x = `Formation/Type`, y = Cl, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
   geom_text(data = count_data_cl, aes(x = `Formation/Type`, y = -0.05, label = n), size = 3) +
-  coord_cartesian(ylim = c(-0.05, 0.75)) +
+  coord_cartesian(ylim = c(-0.05, 0.5)) +
   theme_minimal()
 
 ## K2O
@@ -387,11 +402,13 @@ count_data_k2o <- boxplots_pxrf |> # Count number of observations per group wher
   summarise(n = n(), .groups = "drop") 
 
 b7 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = K2O)) +
+  ggplot(aes(x = `Formation/Type`, y = K2O, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
   geom_text(data = count_data_k2o, aes(x = `Formation/Type`, y = -0.05, label = n), size = 3) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank())
 
 ## CaO
 count_data_cao <- boxplots_pxrf |> # Count number of observations per group where Value > 0
@@ -401,7 +418,7 @@ count_data_cao <- boxplots_pxrf |> # Count number of observations per group wher
   summarise(n = n(), .groups = "drop") 
 
 b8 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = CaO)) +
+  ggplot(aes(x = `Formation/Type`, y = CaO, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
   geom_text(data = count_data_cao, aes(x = `Formation/Type`, y = -0.3, label = n), size = 3) +
@@ -415,11 +432,13 @@ count_data_tio2 <- boxplots_pxrf |> # Count number of observations per group whe
   summarise(n = n(), .groups = "drop") 
 
 b9 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = TiO2)) +
+  ggplot(aes(x = `Formation/Type`, y = TiO2, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
   geom_text(data = count_data_tio2, aes(x = `Formation/Type`, y = -0.02, label = n), size = 3) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank())
 
 ## Fe2O3
 count_data_fe2o3 <- boxplots_pxrf |> # Count number of observations per group where Value > 0
@@ -429,11 +448,14 @@ count_data_fe2o3 <- boxplots_pxrf |> # Count number of observations per group wh
   summarise(n = n(), .groups = "drop") 
 
 b10 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = Fe2O3)) +
+  ggplot(aes(x = `Formation/Type`, y = Fe2O3, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
   geom_text(data = count_data_fe2o3, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
-  theme_minimal()
+  coord_cartesian(ylim = c(0, 0.75)) +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank())
 
 ## Cu
 count_data_cu <- boxplots_pxrf |> # Count number of observations per group where Value > 0
@@ -443,11 +465,13 @@ count_data_cu <- boxplots_pxrf |> # Count number of observations per group where
   summarise(n = n(), .groups = "drop") 
 
 b11 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = Cu)) +
+  ggplot(aes(x = `Formation/Type`, y = Cu, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
   geom_text(data = count_data_cu, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank())
 
 ## Sr
 count_data_sr <- boxplots_pxrf |> # Count number of observations per group where Value > 0
@@ -457,11 +481,14 @@ count_data_sr <- boxplots_pxrf |> # Count number of observations per group where
   summarise(n = n(), .groups = "drop") 
 
 b12 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = Sr)) +
+  ggplot(aes(x = `Formation/Type`, y = Sr, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_sr, aes(x = `Formation/Type`, y = -0.005, label = n), size = 3) +
-  theme_minimal()
+  geom_text(data = count_data_sr, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
+  coord_cartesian(ylim = c(0, 0.02)) +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank())
 
 ## Zr
 count_data_zr <- boxplots_pxrf |> # Count number of observations per group where Value > 0
@@ -471,25 +498,13 @@ count_data_zr <- boxplots_pxrf |> # Count number of observations per group where
   summarise(n = n(), .groups = "drop") 
 
 b13 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = Zr)) +
+  ggplot(aes(x = `Formation/Type`, y = Zr, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_zr, aes(x = ` `, y = 0, label = n), size = 3) +
-  theme_minimal()
-
-boxplots_pxrf_all <- pxrf_analysis |> 
-  select(-Sample_ID, -pXRF_ID) |> 
-  mutate(across(-`Formation/Type`, ~ as.numeric(.))) |> 
-  pivot_longer(cols = c("MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "Fe2O3", "Cu",
-        "Sr", "Zr"), names_to = "Variable", values_to = "Value")
-  
-boxplots_pxrf_all |> 
-  ggplot(aes(x = `Formation/Type`, y = Value)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  facet_wrap(~Variable, scales = "free") +
-  #geom_text(data = count_data_zr, aes(x = ` `, y = 0, label = n), size = 3) +
-  theme_minimal()  
+  geom_text(data = count_data_zr, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank())
 
 ```
 
@@ -497,7 +512,24 @@ boxplots_pxrf_all |>
 #| label: fig-boxplots
 #| fig-cap: A group of boxplots.
 
-plot_grid(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, labels = c("a","b","c","d","e","f","g","h","i","j","k","l","m"))
+install.packages("ggpubr")
+library(ggpubr)
+
+boxplots_comb1 <- ggarrange(b3, b10, b9, b2, b4, b7, 
+          labels = c("a","b","c","d","e","f"),
+          ncol = 2,
+          nrow = 3,
+          common.legend = TRUE,
+          legend = "bottom")
+boxplots_comb2 <- ggarrange(b5, b11, b12, b13, 
+          labels = c("a","b","c","d"),
+          ncol = 2,
+          nrow = 2,
+          common.legend = TRUE,
+          legend = "bottom")
+
+#ggsave("boxplots_a.png", plot = boxplots_comb1, width = 8, height = 10, dpi = 600, bg = "white")
+#ggsave("boxplots_b.png", plot = boxplots_comb2, width = 8, height = 8, dpi = 600, bg = "white")
 
 ```
 
