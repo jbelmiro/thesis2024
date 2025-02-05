@@ -20,7 +20,6 @@ library(tidyr)
 library(gt)
 library(ggplot2)
 library(cowplot)
-# Load required libraries
 library(tidyverse)
 library(ggfortify)
 library(FactoMineR)
@@ -49,7 +48,7 @@ pxrf_raw <- pxrf_raw |>
   filter(!Sample_ID %in% c("I19-1751", "H21-2126")) # Removing 2 altered samples
 pxrf_analysis <- pxrf_raw |> 
   select("Sample_ID", "pXRF_ID", "Formation/Type",
-         "MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "Fe2O3", "Cu",
+         "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "Fe2O3", "Cu",
          "Sr", "Zr") |>  # Removed elements with 0 or <LOD values in all samples or in high percentages in all groups
   mutate(`Formation/Type` = case_when(
     `Formation/Type` == "TYPE 1" ~ "T1",
@@ -69,218 +68,76 @@ pxrf_analysis <- pxrf_raw |>
 ```
 
 ```{r}
-#| label: PCA
+#| label: fig-lod
+#| fig-cap: A barplot.
 
-## a) PCA geological regional cherts
-pca_db_algarve <- pxrf_raw |> 
-  select(`Formation/Type`, P2O5, S, Cl, K2O, CaO, TiO2, Fe2O3) |>
-  filter(`Formation/Type` %in% c("LJW", "MJE", "UJE", "UJW", "TW"))
-# Convert "< LOD" values to NA
-pca_db_algarve[pca_db_algarve == "< LOD"] <- NA
-# Keep Group column separately before PCA
-pca_db_algarve$`Formation/Type` <- as.factor(pca_db_algarve$`Formation/Type`)  # Ensure it's a factor
-group_var_algarve <- pca_db_algarve$`Formation/Type`  
-# Convert numeric columns correctly
-df_numeric_alg <- pca_db_algarve %>%
-  select(-`Formation/Type`) %>%  # Remove Group for PCA
-  mutate(across(everything(), as.numeric))  # Convert all columns to numeric
-# Remove rows with NA (important: also filter group_var!)
-complete_cases_alg <- complete.cases(df_numeric_alg)  # Identify complete rows
-df_numeric_alg <- df_numeric_alg[complete_cases, ]  # Remove NA rows
-group_var_algarve <- group_var_algarve[complete_cases]  # Filter group_var accordingly
-# Scale values
-df_scaled_alg <- scale(df_numeric_alg)
-# Ensure row names are properly set
-rownames(df_scaled_alg) <- make.names(group_var_algarve, unique = TRUE)
-# Perform PCA
-pca_result_alg <- PCA(df_scaled_alg, graph = FALSE)
-# Summary of PCA
-summary(pca_result_alg)
-fviz_eig(pca_result_alg, addlabels = TRUE, ylim = c(0, 100))
-# PCA Biplot with Groups
-biplot_alg <- fviz_pca_biplot(pca_result_alg, 
-                label = "var", 
-                habillage = group_var_algarve,  # Use stored group column
-                addEllipses = TRUE, 
-                ellipse.level = 0.95) +
-  ggtitle(NULL)
-# Add Group column back for visualization
-df_pca_alg <- data.frame(pca_result_alg$ind$coord, Group = group_var_algarve)
-# PCA plot with groups
-scatter_alg <- ggplot(df_pca_alg, aes(x = Dim.1, y = Dim.2, color = Group, shape = Group)) +
-  geom_point(size = 3, alpha = 0.8) +
-  stat_ellipse(level = 0.95, aes(fill = Group), alpha = 0.2, geom = "polygon") +
-  theme_minimal() +
-  labs(title = "PCA of pXRF Data", x = "PC1", y = "PC2") +
-  theme(legend.position = "right")
+# Table to see the occurrence of 0 or <LOD values within each element and by rm type, to choose the elements in which to apply statistics.
+# Combine the multiple columns into a single table
+lod_tab <- pxrf_raw |>
+  select(-contains("Err")) |>
+  select(-pXRF_ID, -Application, -Method, -ElapsedTime, -`Cal Check`) |>
+  mutate(across(.cols = MgO:U,
+                .fns = ~ case_when(
+                  . == 0 ~"Success 0",
+                  . > 0 ~ "Success",
+                  TRUE ~ as.character(.))
+                ))
+# Reshape the data into a long format
+lod_tab_long <- lod_tab |>
+  pivot_longer(cols = MgO:U,  # Assuming these columns contain the 'Success' and 'LOD' values
+               names_to = "Element",  # New column for the names of elements
+               values_to = "Value")   # New column for the corresponding Success/LOD values
 
-## b) PCA of geological cherts: local Lower Jurassic, Central Portugal and Cadiz
-pca_db_nl <- pxrf_raw |> 
-  select(`Formation/Type`, P2O5, K2O, TiO2, Fe2O3, Cu, S) |> # Removing CaO which is high NA in CPT
-  filter(`Formation/Type` %in% c("LJW", "CPT", "UCA"))
-# Convert "< LOD" values to NA
-pca_db_nl[pca_db_nl == "< LOD"] <- NA
-# Keep Group column separately before PCA
-pca_db_nl$`Formation/Type` <- as.factor(pca_db_nl$`Formation/Type`)  # Ensure it's a factor
-group_var_nl <- pca_db_nl$`Formation/Type`  
-# Convert numeric columns correctly
-df_numeric_nl <- pca_db_nl %>%
-  select(-`Formation/Type`) %>%  # Remove Group for PCA
-  mutate(across(everything(), as.numeric))  # Convert all columns to numeric
-# Remove rows with NA (important: also filter group_var!)
-complete_cases_nl <- complete.cases(df_numeric_nl)  # Identify complete rows
-df_numeric_nl <- df_numeric_nl[complete_cases_nl, ]  # Remove NA rows
-group_var_nl <- group_var_nl[complete_cases_nl]  # Filter group_var accordingly
-# Scale values
-df_scaled_nl <- scale(df_numeric_nl)
-# Ensure row names are properly set
-rownames(df_scaled_nl) <- make.names(group_var_nl, unique = TRUE)
-# Perform PCA
-pca_result_nl <- PCA(df_scaled_nl, graph = FALSE)
-# Summary of PCA
-summary(pca_result_nl)
-fviz_eig(pca_result_nl, addlabels = TRUE, ylim = c(0, 100))
-# PCA Biplot with Groups
-biplot_nl <- fviz_pca_biplot(pca_result_nl, 
-                label = "var", 
-                habillage = group_var_nl,  # Use stored group column
-                addEllipses = TRUE, 
-                ellipse.level = 0.95) +
-  ggtitle(NULL)
-# Add Group column back for visualization
-df_pca_nl <- data.frame(pca_result_nl$ind$coord, Group = group_var_nl)
-# PCA plot with groups
-scatter_nl <- ggplot(df_pca_nl, aes(x = Dim.1, y = Dim.2, color = Group, shape = Group)) +
-  geom_point(size = 3, alpha = 0.8) +
-  stat_ellipse(level = 0.95, aes(fill = Group), alpha = 0.2, geom = "polygon") +
-  theme_minimal() +
-  labs(title = "PCA of pXRF Data", x = "PC1", y = "PC2") +
-  theme(legend.position = "right")
+lod_tab_summary <- lod_tab_long |>
+  group_by(Element, Value) |>
+  summarise(Count = n(), .groups = "drop")  # Count the occurrences of Success and LOD for each Element
 
-## c) PCA archaeological T6 compared to local Lower Jurassic and Central Portugal
-pca_db_comp <- pxrf_raw |> 
-  select(`Formation/Type`, P2O5, K2O, TiO2, Fe2O3, Cu, S) |> # Removing CaO which is high NA in CPT
-  mutate(`Formation/Type` = case_when(
-    `Formation/Type` == "TYPE 1" ~ "T1",
-    `Formation/Type` == "TYPE 2" | `Formation/Type` == "TYPE 2B" | `Formation/Type` == "TYPE 2R" ~ "T2",
-    `Formation/Type` == "TYPE 3" ~ "T3",
-    `Formation/Type` == "TYPE 4" ~ "T4",
-    `Formation/Type` == "TYPE 5" ~ "T5",
-    `Formation/Type` == "TYPE 6" | `Formation/Type` == "TYPE 6LLB" | `Formation/Type` == "TYPE 6E" ~ "T6",
-    `Formation/Type` == "TYPE 7" ~ "T7",
-    `Formation/Type` == "TYPE 8" ~ "T8",
-    `Formation/Type` == "TYPE 9" ~ "T9",
-    `Formation/Type` == "TYPE 10" ~ "T10",
-    `Formation/Type` == "TYPE 11" ~ "T11",
-    TRUE ~ `Formation/Type`
-  )) |> 
-  filter(`Formation/Type` %in% c("LJW","CPT", "T6"))
-# Convert "< LOD" values to NA
-pca_db_comp[pca_db_comp == "< LOD"] <- NA
-# Keep Group column separately before PCA
-pca_db_comp$`Formation/Type` <- as.factor(pca_db_comp$`Formation/Type`)  # Ensure it's a factor
-group_var_comp <- pca_db_comp$`Formation/Type`  
-# Convert numeric columns correctly
-df_numeric_comp <- pca_db_comp %>%
-  select(-`Formation/Type`) %>%  # Remove Group for PCA
-  mutate(across(everything(), as.numeric))  # Convert all columns to numeric
-# Remove rows with NA (important: also filter group_var!)
-complete_cases_comp <- complete.cases(df_numeric_comp)  # Identify complete rows
-df_numeric_comp <- df_numeric_comp[complete_cases_comp, ]  # Remove NA rows
-group_var_comp <- group_var_comp[complete_cases_comp]  # Filter group_var accordingly
-# Scale values
-df_scaled_comp <- scale(df_numeric_comp)
-# Ensure row names are properly set
-rownames(df_scaled_comp) <- make.names(group_var_comp, unique = TRUE)
-# Perform PCA
-pca_result_comp <- PCA(df_scaled_comp, graph = FALSE)
-# Summary of PCA
-summary(pca_result_comp)
-fviz_eig(pca_result_comp, addlabels = TRUE, ylim = c(0, 100))
-# PCA Biplot with Groups
-biplot_comp <- fviz_pca_biplot(pca_result_comp, 
-                label = "var", 
-                habillage = group_var_comp,  # Use stored group column
-                addEllipses = TRUE, 
-                ellipse.level = 0.80) +
-  ggtitle(NULL)
-# Add Group column back for visualization
-df_pca_comp <- data.frame(pca_result_comp$ind$coord, Group = group_var_comp)
-# PCA plot with groups
-scatter_comp <- ggplot(df_pca_comp, aes(x = Dim.1, y = Dim.2, color = Group, shape = Group)) +
-  geom_point(size = 3, alpha = 0.8) +
-  stat_ellipse(level = 0.95, aes(fill = Group), alpha = 0.2, geom = "polygon") +
-  theme_minimal() +
-  labs(title = "PCA of pXRF Data", x = "PC1", y = "PC2") +
-  theme(legend.position = "right")
+# Now, reshape the data into a wide format using pivot_wider
+lod_tab_table <- lod_tab_summary |>
+  pivot_wider(names_from = Value, values_from = Count, values_fill = list(Count = 0))  # Fill missing values with 0
 
-## d) PCA archaeological local cherts T2-5 and non-local T7 compared with local Lower Jurassic and UCA cherts
-pca_db_comp2 <- pxrf_raw |> 
-  select(`Formation/Type`, P2O5, TiO2, K2O,Fe2O3, Cu, S) |> # Removing CaO which is high NA in CPT
-  mutate(`Formation/Type` = case_when(
-    `Formation/Type` == "TYPE 1" ~ "T1",
-    `Formation/Type` == "TYPE 2" | `Formation/Type` == "TYPE 2B" | `Formation/Type` == "TYPE 2R" ~ "T2-5",
-    `Formation/Type` == "TYPE 3" ~ "T2-5",
-    `Formation/Type` == "TYPE 4" ~ "T2-5",
-    `Formation/Type` == "TYPE 5" ~ "T2-5",
-    `Formation/Type` == "TYPE 6" | `Formation/Type` == "TYPE 6LLB" | `Formation/Type` == "TYPE 6E" ~ "T6",
-    `Formation/Type` == "TYPE 7" ~ "T7",
-    `Formation/Type` == "TYPE 8" ~ "T8",
-    `Formation/Type` == "TYPE 9" ~ "T9",
-    `Formation/Type` == "TYPE 10" ~ "T10",
-    `Formation/Type` == "TYPE 11" ~ "T11",
-    TRUE ~ `Formation/Type`
-  )) |> 
-  filter(`Formation/Type` %in% c("LJW","UCA", "T7", "T2-5"))
-# Convert "< LOD" values to NA
-pca_db_comp2[pca_db_comp2 == "< LOD"] <- NA
-# Keep Group column separately before PCA
-pca_db_comp2$`Formation/Type` <- as.factor(pca_db_comp2$`Formation/Type`)  # Ensure it's a factor
-group_var_comp2 <- pca_db_comp2$`Formation/Type`  
-# Convert numeric columns correctly
-df_numeric_comp2 <- pca_db_comp2 %>%
-  select(-`Formation/Type`) %>%  # Remove Group for PCA
-  mutate(across(everything(), as.numeric))  # Convert all columns to numeric
-# Remove rows with NA (important: also filter group_var!)
-complete_cases_comp2 <- complete.cases(df_numeric_comp2)  # Identify complete rows
-df_numeric_comp2 <- df_numeric_comp2[complete_cases_comp2, ]  # Remove NA rows
-group_var_comp2 <- group_var_comp2[complete_cases_comp2]  # Filter group_var accordingly
-# Scale values
-df_scaled_comp2 <- scale(df_numeric_comp2)
-# Ensure row names are properly set
-rownames(df_scaled_comp2) <- make.names(group_var_comp2, unique = TRUE)
-# Perform PCA
-pca_result_comp2 <- PCA(df_scaled_comp2, graph = FALSE)
-# Summary of PCA
-summary(pca_result_comp2)
-fviz_eig(pca_result_comp2, addlabels = TRUE, ylim = c(0, 100))
-# PCA Biplot with Groups
-biplot_comp2 <- fviz_pca_biplot(pca_result_comp2, 
-                label = "var", 
-                habillage = group_var_comp2,  # Use stored group column
-                addEllipses = TRUE, 
-                ellipse.level = 0.80) +
-  ggtitle(NULL)
-# Add Group column back for visualization
-df_pca_comp2 <- data.frame(pca_result_comp2$ind$coord, Group = group_var_comp2)
-# PCA plot with groups
-scatter_comp2 <- ggplot(df_pca_comp2, aes(x = Dim.1, y = Dim.2, color = Group, shape = Group)) +
-  geom_point(size = 3, alpha = 0.8) +
-  stat_ellipse(level = 0.95, aes(fill = Group), alpha = 0.2, geom = "polygon") +
+lod_tab_summary <- lod_tab_long |>
+  group_by(Element, Value) |>
+  summarise(Count = n(), .groups = "drop")  # Count occurrences of each Value per Element
+
+lod_tab_summary <- lod_tab_summary |>
+  count(Element, Value)
+
+# Create the bar plot
+ggplot(lod_tab_summary, aes(x = Element, y = Count, fill = Value)) +
+  geom_bar(stat = "identity", position = "stack") +  # Use stat = "identity" to use summarized counts
+  scale_fill_manual(values = c("Success" = "darkseagreen", "Success 0" = "darkseagreen2", "< LOD" = "indianred3")) +
+  labs(title = "Summarized Success and LOD Counts by Element",
+       y = "Count", 
+       fill = " ") +
   theme_minimal() +
-  labs(x = "PC1", y = "PC2") +
-  theme(legend.position = "right")
+ # facet_wrap(~ Element, scales = "free_y") +  # Facet by Element with independent y-axes
+  theme(axis.text.x = element_text(hjust = 1),
+        axis.title.x = element_blank()) +
+  #geom_text(data = lod_tab_summary_filtered, aes(label = Count), position=position_stack(vjust=0.5), colour="white", size = 3) +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, max(lod_tab_summary$Count), by = 20))
 
 ```
 
 ```{r}
-#| label: fig-pca
-#| fig-cap: Several pcas
+#| label: averages
 
-plot_grid(biplot_alg, biplot_nl, biplot_comp, biplot_comp2, labels = c("a", "b", "c", "d"))
+pxrf_average <- pxrf_analysis |> 
+  select(-Sample_ID, -pXRF_ID) |>
+  mutate(`Formation/Type` = case_when(
+    `Formation/Type` == "T2" | `Formation/Type` == "T3" | `Formation/Type` == "T4" | `Formation/Type` == "T5" ~ "T2-5", TRUE ~ `Formation/Type`
+  )) |> 
+  mutate(`Formation/Type` = factor(`Formation/Type`, levels = c("TW", "LJW", "MJE", "UJW", "UJE", "CPT", "UCA", "T1", "T2-5", "T6", "T7", "T8", "T9", "T10", "T11"))) |>
+  mutate(across(-`Formation/Type`, ~ as.numeric(.))) |>    # Convert valid numbers
+  mutate(across(where(is.numeric), ~ ifelse(is.na(.), 0, .))) |>  # Replace NAs with 0
+  group_by(`Formation/Type`) |> 
+  summarise(across(where(is.numeric),
+                   .fns = list(mean = ~ round(mean(.x, na.rm = TRUE), 4), 
+                               sd = ~ round(sd(.x, na.rm = TRUE), 4)), 
+                   .names = "{.col}_{.fn}"))
 
 ```
-
 
 ```{r}
 #| label: boxplots
@@ -533,14 +390,11 @@ boxplots_comb2 <- ggarrange(b5, b11, b12, b13,
 
 ```
 
-
 ```{r}
 #| label: tbl-occurrences
 #| tbl-cap: A table.
 #| include: false
 
-# Table to see the occurrence of 0 or <LOD values within each element and by rm type, to choose the elements in which to apply statistics.
-# Combine the multiple columns into a single table
 combined_table <- pxrf_raw |>
   select("Sample_ID", "pXRF_ID", "Formation/Type",
          "MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "V", "MnO", "Fe2O3", "Cu", "As", "Rb",
@@ -793,86 +647,217 @@ gt(combined_tbl) %>%
 ```
 
 ```{r}
-#| label: averages
+#| label: PCA
 
-pxrf_average <- pxrf_analysis |> 
-  select(-Sample_ID, -pXRF_ID) |> 
-  mutate(across(-`Formation/Type`, ~ as.numeric(.))) |>    # Convert valid numbers
-  mutate(across(where(is.numeric), ~ ifelse(is.na(.), 0, .))) |>  # Replace NAs with 0
-  group_by(`Formation/Type`) |> 
-  summarise(across(where(is.numeric), ~ round(mean(.), 4)))
-  pivot_wider(names_from = `Formation/Type`,
-              values_from = c("MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "Fe2O3", "Cu",
-         "Sr", "Zr"))
+## a) PCA geological regional cherts
+pca_db_algarve <- pxrf_raw |> 
+  select(`Formation/Type`, P2O5, S, Cl, K2O, CaO, TiO2, Fe2O3) |>
+  filter(`Formation/Type` %in% c("LJW", "MJE", "UJE", "UJW", "TW"))
+# Convert "< LOD" values to NA
+pca_db_algarve[pca_db_algarve == "< LOD"] <- NA
+# Keep Group column separately before PCA
+pca_db_algarve$`Formation/Type` <- as.factor(pca_db_algarve$`Formation/Type`)  # Ensure it's a factor
+group_var_algarve <- pca_db_algarve$`Formation/Type`  
+# Convert numeric columns correctly
+df_numeric_alg <- pca_db_algarve %>%
+  select(-`Formation/Type`) %>%  # Remove Group for PCA
+  mutate(across(everything(), as.numeric))  # Convert all columns to numeric
+# Remove rows with NA (important: also filter group_var!)
+complete_cases_alg <- complete.cases(df_numeric_alg)  # Identify complete rows
+df_numeric_alg <- df_numeric_alg[complete_cases, ]  # Remove NA rows
+group_var_algarve <- group_var_algarve[complete_cases]  # Filter group_var accordingly
+# Scale values
+df_scaled_alg <- scale(df_numeric_alg)
+# Ensure row names are properly set
+rownames(df_scaled_alg) <- make.names(group_var_algarve, unique = TRUE)
+# Perform PCA
+pca_result_alg <- PCA(df_scaled_alg, graph = FALSE)
+# Summary of PCA
+summary(pca_result_alg)
+fviz_eig(pca_result_alg, addlabels = TRUE, ylim = c(0, 100))
+# PCA Biplot with Groups
+biplot_alg <- fviz_pca_biplot(pca_result_alg, 
+                label = "var", 
+                habillage = group_var_algarve,  # Use stored group column
+                addEllipses = TRUE, 
+                ellipse.level = 0.95) +
+  ggtitle(NULL)
+# Add Group column back for visualization
+df_pca_alg <- data.frame(pca_result_alg$ind$coord, Group = group_var_algarve)
+# PCA plot with groups
+scatter_alg <- ggplot(df_pca_alg, aes(x = Dim.1, y = Dim.2, color = Group, shape = Group)) +
+  geom_point(size = 3, alpha = 0.8) +
+  stat_ellipse(level = 0.95, aes(fill = Group), alpha = 0.2, geom = "polygon") +
+  theme_minimal() +
+  labs(title = "PCA of pXRF Data", x = "PC1", y = "PC2") +
+  theme(legend.position = "right")
 
-average_MgO <- pxrf_average |> 
-  ggplot(aes(x = `Formation/Type`, y = MgO)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() + 
-  labs(x = " ",y = "MgO")
+## b) PCA of geological cherts: local Lower Jurassic, Central Portugal and Cadiz
+pca_db_nl <- pxrf_raw |> 
+  select(`Formation/Type`, P2O5, K2O, TiO2, Fe2O3, Cu, S) |> # Removing CaO which is high NA in CPT
+  filter(`Formation/Type` %in% c("LJW", "CPT", "UCA"))
+# Convert "< LOD" values to NA
+pca_db_nl[pca_db_nl == "< LOD"] <- NA
+# Keep Group column separately before PCA
+pca_db_nl$`Formation/Type` <- as.factor(pca_db_nl$`Formation/Type`)  # Ensure it's a factor
+group_var_nl <- pca_db_nl$`Formation/Type`  
+# Convert numeric columns correctly
+df_numeric_nl <- pca_db_nl %>%
+  select(-`Formation/Type`) %>%  # Remove Group for PCA
+  mutate(across(everything(), as.numeric))  # Convert all columns to numeric
+# Remove rows with NA (important: also filter group_var!)
+complete_cases_nl <- complete.cases(df_numeric_nl)  # Identify complete rows
+df_numeric_nl <- df_numeric_nl[complete_cases_nl, ]  # Remove NA rows
+group_var_nl <- group_var_nl[complete_cases_nl]  # Filter group_var accordingly
+# Scale values
+df_scaled_nl <- scale(df_numeric_nl)
+# Ensure row names are properly set
+rownames(df_scaled_nl) <- make.names(group_var_nl, unique = TRUE)
+# Perform PCA
+pca_result_nl <- PCA(df_scaled_nl, graph = FALSE)
+# Summary of PCA
+summary(pca_result_nl)
+fviz_eig(pca_result_nl, addlabels = TRUE, ylim = c(0, 100))
+# PCA Biplot with Groups
+biplot_nl <- fviz_pca_biplot(pca_result_nl, 
+                label = "var", 
+                habillage = group_var_nl,  # Use stored group column
+                addEllipses = TRUE, 
+                ellipse.level = 0.95) +
+  ggtitle(NULL)
+# Add Group column back for visualization
+df_pca_nl <- data.frame(pca_result_nl$ind$coord, Group = group_var_nl)
+# PCA plot with groups
+scatter_nl <- ggplot(df_pca_nl, aes(x = Dim.1, y = Dim.2, color = Group, shape = Group)) +
+  geom_point(size = 3, alpha = 0.8) +
+  stat_ellipse(level = 0.95, aes(fill = Group), alpha = 0.2, geom = "polygon") +
+  theme_minimal() +
+  labs(title = "PCA of pXRF Data", x = "PC1", y = "PC2") +
+  theme(legend.position = "right")
 
-average_Al2O3 <- pxrf_average |> 
-  ggplot(aes(x = `Formation/Type`, y = Al2O3)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() + 
-  labs(x = " ",y = "Al2O3")
+## c) PCA archaeological T6 compared to local Lower Jurassic and Central Portugal
+pca_db_comp <- pxrf_raw |> 
+  select(`Formation/Type`, P2O5, K2O, TiO2, Fe2O3, Cu, S) |> # Removing CaO which is high NA in CPT
+  mutate(`Formation/Type` = case_when(
+    `Formation/Type` == "TYPE 1" ~ "T1",
+    `Formation/Type` == "TYPE 2" | `Formation/Type` == "TYPE 2B" | `Formation/Type` == "TYPE 2R" ~ "T2",
+    `Formation/Type` == "TYPE 3" ~ "T3",
+    `Formation/Type` == "TYPE 4" ~ "T4",
+    `Formation/Type` == "TYPE 5" ~ "T5",
+    `Formation/Type` == "TYPE 6" | `Formation/Type` == "TYPE 6LLB" | `Formation/Type` == "TYPE 6E" ~ "T6",
+    `Formation/Type` == "TYPE 7" ~ "T7",
+    `Formation/Type` == "TYPE 8" ~ "T8",
+    `Formation/Type` == "TYPE 9" ~ "T9",
+    `Formation/Type` == "TYPE 10" ~ "T10",
+    `Formation/Type` == "TYPE 11" ~ "T11",
+    TRUE ~ `Formation/Type`
+  )) |> 
+  filter(`Formation/Type` %in% c("LJW","CPT", "T6"))
+# Convert "< LOD" values to NA
+pca_db_comp[pca_db_comp == "< LOD"] <- NA
+# Keep Group column separately before PCA
+pca_db_comp$`Formation/Type` <- as.factor(pca_db_comp$`Formation/Type`)  # Ensure it's a factor
+group_var_comp <- pca_db_comp$`Formation/Type`  
+# Convert numeric columns correctly
+df_numeric_comp <- pca_db_comp %>%
+  select(-`Formation/Type`) %>%  # Remove Group for PCA
+  mutate(across(everything(), as.numeric))  # Convert all columns to numeric
+# Remove rows with NA (important: also filter group_var!)
+complete_cases_comp <- complete.cases(df_numeric_comp)  # Identify complete rows
+df_numeric_comp <- df_numeric_comp[complete_cases_comp, ]  # Remove NA rows
+group_var_comp <- group_var_comp[complete_cases_comp]  # Filter group_var accordingly
+# Scale values
+df_scaled_comp <- scale(df_numeric_comp)
+# Ensure row names are properly set
+rownames(df_scaled_comp) <- make.names(group_var_comp, unique = TRUE)
+# Perform PCA
+pca_result_comp <- PCA(df_scaled_comp, graph = FALSE)
+# Summary of PCA
+summary(pca_result_comp)
+fviz_eig(pca_result_comp, addlabels = TRUE, ylim = c(0, 100))
+# PCA Biplot with Groups
+biplot_comp <- fviz_pca_biplot(pca_result_comp, 
+                label = "var", 
+                habillage = group_var_comp,  # Use stored group column
+                addEllipses = TRUE, 
+                ellipse.level = 0.80) +
+  ggtitle(NULL)
+# Add Group column back for visualization
+df_pca_comp <- data.frame(pca_result_comp$ind$coord, Group = group_var_comp)
+# PCA plot with groups
+scatter_comp <- ggplot(df_pca_comp, aes(x = Dim.1, y = Dim.2, color = Group, shape = Group)) +
+  geom_point(size = 3, alpha = 0.8) +
+  stat_ellipse(level = 0.95, aes(fill = Group), alpha = 0.2, geom = "polygon") +
+  theme_minimal() +
+  labs(title = "PCA of pXRF Data", x = "PC1", y = "PC2") +
+  theme(legend.position = "right")
 
-average_SiO2 <- pxrf_average |> 
-  ggplot(aes(x = `Formation/Type`, y = SiO2)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() + 
-  labs(x = " ",y = "SiO2")
-
-average_P2O5 <- pxrf_average |> 
-  ggplot(aes(x = `Formation/Type`, y = P2O5)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() + 
-  labs(x = " ",y = "P2O5")
-
-average_S <- pxrf_average |> 
-  ggplot(aes(x = `Formation/Type`, y = S)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() + 
-  labs(x = " ",y = "S")
-
-average_Cl <- pxrf_average |> 
-  ggplot(aes(x = `Formation/Type`, y = Cl)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() + 
-  labs(x = " ",y = "Cl")
-
-average_K2O <- pxrf_average |> 
-  ggplot(aes(x = `Formation/Type`, y = K2O)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() + 
-  labs(x = " ",y = "K2O")
-
-average_CaO <- pxrf_average |> 
-  ggplot(aes(x = `Formation/Type`, y = CaO)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() + 
-  labs(x = " ",y = "CaO")
-
-average_TiO2 <- pxrf_average |> 
-  ggplot(aes(x = `Formation/Type`, y = TiO2)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() + 
-  labs(x = " ",y = "TiO2")
-
-average_Fe2O3 <- pxrf_average |> 
-  ggplot(aes(x = `Formation/Type`, y = Fe2O3)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() + 
-  labs(x = " ",y = "Fe2O3")
-
-average_Sr <- pxrf_average |> 
-  ggplot(aes(x = `Formation/Type`, y = Sr)) +
-  geom_bar(stat = "identity") +
-  theme_minimal() + 
-  labs(x = " ",y = "Sr")
+## d) PCA archaeological local cherts T2-5 and non-local T7 compared with local Lower Jurassic and UCA cherts
+pca_db_comp2 <- pxrf_raw |> 
+  select(`Formation/Type`, P2O5, TiO2, K2O,Fe2O3, Cu, S) |> # Removing CaO which is high NA in CPT
+  mutate(`Formation/Type` = case_when(
+    `Formation/Type` == "TYPE 1" ~ "T1",
+    `Formation/Type` == "TYPE 2" | `Formation/Type` == "TYPE 2B" | `Formation/Type` == "TYPE 2R" ~ "T2-5",
+    `Formation/Type` == "TYPE 3" ~ "T2-5",
+    `Formation/Type` == "TYPE 4" ~ "T2-5",
+    `Formation/Type` == "TYPE 5" ~ "T2-5",
+    `Formation/Type` == "TYPE 6" | `Formation/Type` == "TYPE 6LLB" | `Formation/Type` == "TYPE 6E" ~ "T6",
+    `Formation/Type` == "TYPE 7" ~ "T7",
+    `Formation/Type` == "TYPE 8" ~ "T8",
+    `Formation/Type` == "TYPE 9" ~ "T9",
+    `Formation/Type` == "TYPE 10" ~ "T10",
+    `Formation/Type` == "TYPE 11" ~ "T11",
+    TRUE ~ `Formation/Type`
+  )) |> 
+  filter(`Formation/Type` %in% c("LJW","UCA", "T7", "T2-5"))
+# Convert "< LOD" values to NA
+pca_db_comp2[pca_db_comp2 == "< LOD"] <- NA
+# Keep Group column separately before PCA
+pca_db_comp2$`Formation/Type` <- as.factor(pca_db_comp2$`Formation/Type`)  # Ensure it's a factor
+group_var_comp2 <- pca_db_comp2$`Formation/Type`  
+# Convert numeric columns correctly
+df_numeric_comp2 <- pca_db_comp2 %>%
+  select(-`Formation/Type`) %>%  # Remove Group for PCA
+  mutate(across(everything(), as.numeric))  # Convert all columns to numeric
+# Remove rows with NA (important: also filter group_var!)
+complete_cases_comp2 <- complete.cases(df_numeric_comp2)  # Identify complete rows
+df_numeric_comp2 <- df_numeric_comp2[complete_cases_comp2, ]  # Remove NA rows
+group_var_comp2 <- group_var_comp2[complete_cases_comp2]  # Filter group_var accordingly
+# Scale values
+df_scaled_comp2 <- scale(df_numeric_comp2)
+# Ensure row names are properly set
+rownames(df_scaled_comp2) <- make.names(group_var_comp2, unique = TRUE)
+# Perform PCA
+pca_result_comp2 <- PCA(df_scaled_comp2, graph = FALSE)
+# Summary of PCA
+summary(pca_result_comp2)
+fviz_eig(pca_result_comp2, addlabels = TRUE, ylim = c(0, 100))
+# PCA Biplot with Groups
+biplot_comp2 <- fviz_pca_biplot(pca_result_comp2, 
+                label = "var", 
+                habillage = group_var_comp2,  # Use stored group column
+                addEllipses = TRUE, 
+                ellipse.level = 0.80) +
+  ggtitle(NULL)
+# Add Group column back for visualization
+df_pca_comp2 <- data.frame(pca_result_comp2$ind$coord, Group = group_var_comp2)
+# PCA plot with groups
+scatter_comp2 <- ggplot(df_pca_comp2, aes(x = Dim.1, y = Dim.2, color = Group, shape = Group)) +
+  geom_point(size = 3, alpha = 0.8) +
+  stat_ellipse(level = 0.95, aes(fill = Group), alpha = 0.2, geom = "polygon") +
+  theme_minimal() +
+  labs(x = "PC1", y = "PC2") +
+  theme(legend.position = "right")
 
 ```
 
+```{r}
+#| label: fig-pca
+#| fig-cap: Several pcas
+
+plot_grid(biplot_alg, biplot_nl, biplot_comp, biplot_comp2, labels = c("a", "b", "c", "d"))
+
+```
 
 ## Methodology
 
