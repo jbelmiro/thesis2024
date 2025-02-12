@@ -155,20 +155,6 @@ boxplots_pxrf <- boxplots_pxrf |>
   )) |> 
   mutate(`Formation/Type` = factor(`Formation/Type`, levels = c("TW", "LJW", "MJE", "UJW", "UJE", "CPT", "UCA", "T1", "T2-5", "T6", "T7", "T8", "T9", "T10", "T11")))
 
-## MgO
-count_data_mgo <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, MgO) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(MgO)) |> 
-  summarise(n = n(), .groups = "drop") 
-
-b1 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = MgO, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_mgo, aes(x = `Formation/Type`, y = 0.5, label = n), size = 3) +
-  theme_minimal()
-
 ## Al2O3
 count_data_al2o3 <- boxplots_pxrf |> # Count number of observations per group where Value > 0
   select(`Formation/Type`, Al2O3) |> 
