@@ -24,7 +24,6 @@ library(tidyverse)
 library(ggfortify)
 library(FactoMineR)
 library(factoextra)
-library(powdR)
 
 ```
 
@@ -50,6 +49,31 @@ p_sp6 <- sp6_long |>
   geom_point(data = sp6_peaks, aes(x = Angle, y = Intensity, colour = Phase), size = 5,
              shape = 21, show.legend = FALSE) +
   geom_label(data = sp6_peaks, aes(x = Angle, y = Intensity, label = d), 
+             size = 3, fill = "white", label.size = 0.2, vjust = -0.8, show.legend = FALSE)
+
+sp18_xrd <- read_csv('data/SP18_xrd.csv')
+sp18_peaks <- read_csv('data/SP18_peaks.csv')
+sp18_peaks <- sp18_peaks |> 
+  dplyr::mutate(Phase = case_when(
+    Phase == "SiO2p3221" ~ "SiO2",
+    TRUE ~ Phase))
+sp18_xrd <- sp18_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000)
+
+sp18_long <- sp18_xrd %>%
+  pivot_longer(cols = c(Difference, Background, Observed, SiO2, Dolomite, Hydroxyapatite), 
+               names_to = "Phase", 
+               values_to = "Count")
+
+p_sp18 <- sp18_long |> 
+  mutate(Phase = factor(Phase, levels = c("Difference" ,"Observed", "SiO2", "Dolomite", "Hydroxyapatite", "Background"))) |>
+  ggplot(aes(x = Angle, y = Count, color = Phase)) +
+  geom_line(size = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  geom_point(data = sp18_peaks, aes(x = Angle, y = Intensity, colour = Phase), size = 5,
+             shape = 21, show.legend = FALSE) +
+  geom_label(data = sp18_peaks, aes(x = Angle, y = Intensity, label = d), 
              size = 3, fill = "white", label.size = 0.2, vjust = -0.8, show.legend = FALSE)
 ```
 
