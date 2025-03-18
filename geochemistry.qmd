@@ -383,9 +383,9 @@ pxrf_raw <- read_csv('data/pxrf_data_dec.csv')
 #| label: database-setup
 
 ## DB setup
-pxrf_raw <- pxrf_raw |> 
+pxrf_db <- pxrf_raw |> 
   filter(!Sample_ID %in% c("I19-1751", "H21-2126")) # Removing 2 altered samples
-pxrf_analysis <- pxrf_raw |> 
+pxrf_analysis <- pxrf_db |> 
   select("Sample_ID", "pXRF_ID", "Formation/Type",
          "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "Fe2O3", "Cu",
          "Sr", "Zr") |>  # Removed elements with 0 or <LOD values in all samples or in high percentages in all groups
@@ -412,9 +412,9 @@ pxrf_analysis <- pxrf_raw |>
 
 # Table to see the occurrence of 0 or <LOD values within each element and by rm type, to choose the elements in which to apply statistics.
 # Combine the multiple columns into a single table
-lod_tab <- pxrf_raw |>
+lod_tab <- pxrf_db |>
   select(-contains("Err")) |>
-  select(-pXRF_ID, -Application, -Method, -ElapsedTime, -`Cal Check`) |>
+  select(-pXRF_ID, -Application, -Method, -ElapsedTime, -`Cal Check`, -Sample_ID) |>
   mutate(across(.cols = MgO:U,
                 .fns = ~ case_when(
                   . == 0 ~"Success 0",
@@ -431,21 +431,26 @@ lod_tab_summary <- lod_tab_long |>
   group_by(Element, Value) |>
   summarise(Count = n(), .groups = "drop")  # Count the occurrences of Success and LOD for each Element
 
-# Now, reshape the data into a wide format using pivot_wider
+# Reshape the data into a wide format using pivot_wider
 lod_tab_table <- lod_tab_summary |>
-  pivot_wider(names_from = Value, values_from = Count, values_fill = list(Count = 0))  # Fill missing values with 0
+  pivot_wider(names_from = Value, values_from = Count, values_fill = list(Count = 0)) |> 
+  filter(Success > 80) |> 
+  select(Element, Success, "< LOD")
+lod_tab_table_long <- lod_tab_table |> 
+  pivot_longer(cols = c(Success, `< LOD`), names_to = "Metric", values_to = "Count") |> 
+  mutate(Metric = factor(Metric, levels = c("Success", "< LOD"))) 
+lod_tab_table_long |> 
+  ggplot(aes(x = Element, y = Count, fill = Metric)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Comparison of Success and < LOD", y = "Count") +
+  theme_minimal() +
+  scale_fill_manual(values = c("Success" = "#99D3A7", "< LOD" = "#ED7673"))
 
-lod_tab_summary <- lod_tab_long |>
-  group_by(Element, Value) |>
-  summarise(Count = n(), .groups = "drop")  # Count occurrences of each Value per Element
-
-lod_tab_summary <- lod_tab_summary |>
-  count(Element, Value)
 
 # Create the bar plot
 ggplot(lod_tab_summary, aes(x = Element, y = Count, fill = Value)) +
   geom_bar(stat = "identity", position = "stack") +  # Use stat = "identity" to use summarized counts
-  scale_fill_manual(values = c("Success" = "darkseagreen", "Success 0" = "darkseagreen2", "< LOD" = "indianred3")) +
+  scale_fill_manual(values = c("Success" = "darkseagreen", "Success 0" = "lightgoldenrod1", "< LOD" = "indianred3")) +
   labs(title = "Summarized Success and LOD Counts by Element",
        y = "Count", 
        fill = " ") +
@@ -473,7 +478,8 @@ pxrf_average <- pxrf_analysis |>
   group_by(`Formation/Type`) |> 
   summarise(across(where(is.numeric),
                    .fns = list(mean = ~ round(mean(.x, na.rm = TRUE), 4), 
-                               sd = ~ round(sd(.x, na.rm = TRUE), 4)), 
+                               sd = ~ round(sd(.x, na.rm = TRUE), 4),
+                               count = ~ sum(.x != 0, na.rm = TRUE)),
                    .names = "{.col}_{.fn}"))
 
 ```
@@ -484,7 +490,7 @@ pxrf_average <- pxrf_analysis |>
 # Boxplot data preparation
 boxplots_pxrf <- pxrf_analysis |> 
   select(-Sample_ID, -pXRF_ID) |> 
-  filter(!`Formation/Type` %in% c("TW", "T1")) |> # Removing chalcedony
+  filter(!`Formation/Type` %in% c("TW", "T1", "T9", "T10", "T11")) |> # Removing chalcedony
   mutate(across(-`Formation/Type`, ~ as.numeric(.)))
   #pivot_longer(cols = c("MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "Fe2O3", "Cu",
         # "Sr", "Zr"), names_to = "Variable", values_to = "Value")
@@ -521,7 +527,7 @@ b3 <- boxplots_pxrf |>
   ggplot(aes(x = `Formation/Type`, y = SiO2, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_sio2, aes(x = `Formation/Type`, y = 70, label = n), size = 3) +
+  #geom_text(data = count_data_sio2, aes(x = `Formation/Type`, y = 70, label = n), size = 3) +
   coord_cartesian(ylim = c(70, 100)) +
   theme_minimal() +
   theme(axis.title.x = element_blank(),
@@ -603,8 +609,10 @@ b8 <- boxplots_pxrf |>
   ggplot(aes(x = `Formation/Type`, y = CaO, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_cao, aes(x = `Formation/Type`, y = -0.3, label = n), size = 3) +
-  theme_minimal()
+  #geom_text(data = count_data_cao, aes(x = `Formation/Type`, y = -0.3, label = n), size = 3) +
+  theme_minimal() +
+  theme(axis.title.x = element_blank(),
+        axis.text.x = element_blank())
 
 ## TiO2
 count_data_tio2 <- boxplots_pxrf |> # Count number of observations per group where Value > 0
@@ -617,7 +625,7 @@ b9 <- boxplots_pxrf |>
   ggplot(aes(x = `Formation/Type`, y = TiO2, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_tio2, aes(x = `Formation/Type`, y = -0.02, label = n), size = 3) +
+  #geom_text(data = count_data_tio2, aes(x = `Formation/Type`, y = -0.02, label = n), size = 3) +
   theme_minimal() +
   theme(axis.title.x = element_blank(),
         axis.text.x = element_blank())
@@ -633,7 +641,7 @@ b10 <- boxplots_pxrf |>
   ggplot(aes(x = `Formation/Type`, y = Fe2O3, colour = `Formation/Type`)) +
   geom_boxplot() +
   stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_fe2o3, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
+  #geom_text(data = count_data_fe2o3, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
   coord_cartesian(ylim = c(0, 0.75)) +
   theme_minimal() +
   theme(axis.title.x = element_blank(),
@@ -697,10 +705,10 @@ b13 <- boxplots_pxrf |>
 install.packages("ggpubr")
 library(ggpubr)
 
-boxplots_comb1 <- ggarrange(b3, b10, b9, b2, b4, b7, 
-          labels = c("a","b","c","d","e","f"),
+boxplots <- ggarrange(b3, b8, b10, b9, 
+          labels = c("a","b","c","d"),
           ncol = 2,
-          nrow = 3,
+          nrow = 2,
           common.legend = TRUE,
           legend = "bottom")
 boxplots_comb2 <- ggarrange(b5, b11, b12, b13, 
