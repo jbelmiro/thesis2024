@@ -8,6 +8,7 @@ execute:
   comment: "#>"
   fig-path: "../figures/"
   fig-dpi: 600
+
 ---
 
 ```{r}
@@ -29,6 +30,10 @@ library(ggpmisc)
 ```
 
 # X-ray diffraction (XRD)
+
+Some text.
+Some other text.
+A bit more of text.
 
 ```{r}
 #| label: xrd-readtables
