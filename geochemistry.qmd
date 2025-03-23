@@ -29,7 +29,7 @@ library(ggpmisc)
 
 ```
 
-# X-ray diffraction (XRD)
+## X-ray diffraction (XRD)
 
 Some text.
 Some other text.
@@ -72,52 +72,6 @@ sp69_xrd <- read_csv('data/xrd_data/SP69_xrd.csv')
 
 ```{r}
 #| label: xrd-graphs
-
-xrd_perc <- read_csv('data/xrd_goals.csv')
-
-sp6_xrd <- read_csv('data/SP6_xrd.csv')
-sp6_peaks <- read_csv('data/SP6_CSV_PEAKS.csv')
-
-sp6_long <- sp6_xrd %>%
-  pivot_longer(cols = c(Difference, Background, Observed, SiO2, Dolomite), 
-               names_to = "Phase", 
-               values_to = "Count")
-
-p_sp6 <- sp6_long |> 
-  mutate(Phase = factor(Phase, levels = c("Difference", "Observed", "SiO2", "Dolomite", "Background"))) |>
-  ggplot(aes(x = Baseline, y = Count, color = Phase)) +
-  geom_line(size = 0.5) +
-  labs(x = "Diffraction Angle", y = "Intensity") +
-  theme_minimal() +
-  geom_point(data = sp6_peaks, aes(x = Angle, y = Intensity, colour = Phase), size = 5,
-             shape = 21, show.legend = FALSE) +
-  geom_label(data = sp6_peaks, aes(x = Angle, y = Intensity, label = d), 
-             size = 3, fill = "white", label.size = 0.2, vjust = -0.8, show.legend = FALSE)
-
-sp18_xrd <- read_csv('data/SP18_xrd.csv')
-sp18_peaks <- read_csv('data/SP18_peaks.csv')
-sp18_peaks <- sp18_peaks |> 
-  dplyr::mutate(Phase = case_when(
-    Phase == "SiO2p3221" ~ "SiO2",
-    TRUE ~ Phase))
-sp18_xrd <- sp18_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 3000)
-
-sp18_long <- sp18_xrd %>%
-  pivot_longer(cols = c(Difference, Background, Observed, SiO2, Dolomite, Hydroxyapatite), 
-               names_to = "Phase", 
-               values_to = "Count")
-
-p_sp18 <- sp18_long |> 
-  mutate(Phase = factor(Phase, levels = c("Difference" ,"Observed", "SiO2", "Dolomite", "Hydroxyapatite", "Background"))) |>
-  ggplot(aes(x = Angle, y = Count, color = Phase)) +
-  geom_line(size = 0.5) +
-  labs(x = "Diffraction Angle", y = "Intensity") +
-  theme_minimal() +
-  geom_point(data = sp18_peaks, aes(x = Angle, y = Intensity, colour = Phase), size = 5,
-             shape = 21, show.legend = FALSE) +
-  geom_label(data = sp18_peaks, aes(x = Angle, y = Intensity, label = d), 
-             size = 3, fill = "white", label.size = 0.2, vjust = -0.8, show.legend = FALSE)
 
 xrd_marks <- xrd_marks |>
   dplyr::mutate(Phase = case_when(
@@ -373,9 +327,9 @@ p_sp58 <- sp58_long |>
 ```
 
 
-# Scanning electron microscopy and energy dispersive X-ray spectroscopy (SEM-EDS)
+## Scanning electron microscopy and energy dispersive X-ray spectroscopy (SEM-EDS)
 
-# Portable X-ray fluorescence (pXRF)
+## Portable X-ray fluorescence (pXRF)
 
 ```{r}
 #| label: database-read
@@ -707,7 +661,6 @@ b13 <- boxplots_pxrf |>
 #| label: fig-boxplots
 #| fig-cap: A group of boxplots.
 
-install.packages("ggpubr")
 library(ggpubr)
 
 boxplots <- ggarrange(b3, b8, b10, b9, 
@@ -716,271 +669,6 @@ boxplots <- ggarrange(b3, b8, b10, b9,
           nrow = 2,
           common.legend = TRUE,
           legend = "bottom")
-boxplots_comb2 <- ggarrange(b5, b11, b12, b13, 
-          labels = c("a","b","c","d"),
-          ncol = 2,
-          nrow = 2,
-          common.legend = TRUE,
-          legend = "bottom")
-
-#ggsave("boxplots_a.png", plot = boxplots_comb1, width = 8, height = 10, dpi = 600, bg = "white")
-#ggsave("boxplots_b.png", plot = boxplots_comb2, width = 8, height = 8, dpi = 600, bg = "white")
-
-```
-
-```{r}
-#| label: tbl-occurrences
-#| tbl-cap: A table.
-#| include: false
-
-combined_table <- pxrf_raw |>
-  select("Sample_ID", "pXRF_ID", "Formation/Type",
-         "MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "V", "MnO", "Fe2O3", "Cu", "As", "Rb",
-         "Sr", "Y", "Zr", "Mo", "Ag", "Ba", "Ce", "W", "Au", "Pb") |> 
-  mutate(across(
-    .cols = c("MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "V", "MnO", "Fe2O3", "Cu", "As", "Rb",
-         "Sr", "Y", "Zr", "Mo", "Ag", "Ba", "Ce", "W", "Au", "Pb"),
-    .fns = ~ case_when(
-      . == 0 | . == "< LOD" ~ "No",
-      . > 0 ~ "Yes",
-      TRUE ~ as.character(.))
-    )) |> 
-  mutate(`Chert type` = case_when(
-    `Formation/Type` == "TYPE 2B" | `Formation/Type` == "TYPE 2R" ~ "TYPE 2",
-    `Formation/Type` == "TYPE 6LLB" | `Formation/Type` == "TYPE 6E" ~ "TYPE 6",
-    TRUE ~ `Formation/Type`))
-
-tbl_MgO <- combined_table |> 
-  tabyl(`Chert type`, MgO) |>
-  adorn_percentages("row") |> 
-  adorn_pct_formatting(digits = 1) |> 
-  select("Chert type", Yes) |> 
-  rename(MgO = Yes)
-# Al2O3
-tbl_Al2O3 <- combined_table |> 
-  tabyl(`Chert type`, Al2O3) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-  select("Chert type", Yes) |> 
-  rename(Al2O3 = Yes)
-# SiO2
-tbl_SiO2 <- combined_table |> 
-  tabyl(`Chert type`, SiO2) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-  select("Chert type", Yes) |> 
-  rename(SiO2 = Yes)
-# P2O5
-tbl_P2O5 <- combined_table |> 
-  tabyl(`Chert type`, P2O5) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(P2O5 = Yes)
-# S
-tbl_S <- combined_table |> 
-  tabyl(`Chert type`, S) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(S = Yes)
-# Cl
-tbl_Cl <- combined_table |> 
-  tabyl(`Chert type`, Cl) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(Cl = Yes)
-# K2O has 100% rate
-tbl_K2O <- combined_table |> 
-  tabyl(`Chert type`, K2O) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(K2O = Yes)
-# CaO
-tbl_CaO <- combined_table |> 
-  tabyl(`Chert type`, CaO) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(CaO = Yes)
-# TiO2
-tbl_TiO2 <- combined_table |> 
-  tabyl(`Chert type`, TiO2) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(TiO2 = Yes)
-# V
-tbl_V <- combined_table |> 
-  tabyl(`Chert type`, V) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(V = Yes)
-# MnO
-tbl_MnO <- combined_table |> 
-  tabyl(`Chert type`, MnO) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(MnO = Yes)
-# Fe2O3 has 100% rate
-tbl_Fe2O3 <- combined_table |> 
-  tabyl(`Chert type`, Fe2O3) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(Fe2O3 = Yes)
-# Cu
-tbl_Cu <- combined_table |> 
-  tabyl(`Chert type`, Cu) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(Cu = Yes)
-# As
-tbl_As <- combined_table |> 
-  tabyl(`Chert type`, As) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(As = Yes)
-# Rb
-tbl_Rb <- combined_table |> 
-  tabyl(`Chert type`, Rb) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(Rb = Yes)
-# Sr
-tbl_Sr <- combined_table |> 
-  tabyl(`Chert type`, Sr) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(Sr = Yes)
-# Y
-tbl_Y <- combined_table |> 
-  tabyl(`Chert type`, Y) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(Y = Yes)
-# Zr
-tbl_Zr <- combined_table |> 
-  tabyl(`Chert type`, Zr) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(Zr = Yes)
-# Mo
-tbl_Mo <- combined_table |> 
-  tabyl(`Chert type`, Mo) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(Mo = Yes)
-# Ag
-tbl_Ag <- combined_table |> 
-  tabyl(`Chert type`, Ag) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(Ag = Yes)
-# Ba
-tbl_Ba <- combined_table |> 
-  tabyl(`Chert type`, Ba) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(Ba = Yes)
-# Ce
-tbl_Ce <- combined_table |> 
-  tabyl(`Chert type`, Ce) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(Ce = Yes)
-# W
-tbl_W <- combined_table |> 
-  tabyl(`Chert type`, W) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(W = Yes)
-# Au
-tbl_Au <- combined_table |> 
-  tabyl(`Chert type`, Au) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-
-  select("Chert type", Yes) |> 
-  rename(Au = Yes)
-# Pb
-tbl_Pb <- combined_table |> 
-  tabyl(`Chert type`, Pb) |>
-  adorn_percentages("row") |>                   
-  adorn_pct_formatting(digits = 1) |>
-  select("Chert type", Yes) |> 
-  rename(Pb = Yes)
-
-combined_tbl <- tbl_MgO |> 
-  full_join(tbl_Al2O3, by = "Chert type") |> 
-  full_join(tbl_SiO2, by = "Chert type") |>
-  full_join(tbl_P2O5, by = "Chert type") |> 
-  full_join(tbl_S, by = "Chert type") |> 
-  full_join(tbl_Cl, by = "Chert type") |> 
-  full_join(tbl_K2O, by = "Chert type") |> 
-  full_join(tbl_CaO, by = "Chert type") |> 
-  full_join(tbl_TiO2, by = "Chert type") |> 
-  full_join(tbl_V, by = "Chert type") |> 
-  full_join(tbl_MnO, by = "Chert type") |> 
-  full_join(tbl_Fe2O3, by = "Chert type") |> 
-  full_join(tbl_Cu, by = "Chert type") |> 
-  full_join(tbl_As, by = "Chert type") |> 
-  full_join(tbl_Rb, by = "Chert type") |> 
-  full_join(tbl_Sr, by = "Chert type") |> 
-  full_join(tbl_Y, by = "Chert type") |> 
-  full_join(tbl_Zr, by = "Chert type") |> 
-  full_join(tbl_Mo, by = "Chert type") |> 
-  full_join(tbl_Ag, by = "Chert type") |> 
-  full_join(tbl_Ba, by = "Chert type") |> 
-  full_join(tbl_Ce, by = "Chert type") |> 
-  full_join(tbl_W, by = "Chert type") |> 
-  full_join(tbl_Au, by = "Chert type") |> 
-  full_join(tbl_Pb, by = "Chert type")
-
-combined_tbl[, 2:26] <- lapply(combined_tbl[, 2:26], function(x) as.numeric(sub("%", "", x)))
-gt(combined_tbl) %>%
-  data_color(
-    columns = vars("MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "V", "MnO", "Fe2O3", "Cu", "As", "Rb",
-         "Sr", "Y", "Zr", "Mo", "Ag", "Ba", "Ce", "W", "Au", "Pb"),  # Multiple columns
-    colors = scales::col_numeric(
-      palette = c("#f8f0fc", "#dab6fc", "#b6f7c1"), # Gradient from red to green
-      domain = c(0, 100))
-  )
 
 ```
 
@@ -1002,8 +690,8 @@ df_numeric_alg <- pca_db_algarve %>%
   mutate(across(everything(), as.numeric))  # Convert all columns to numeric
 # Remove rows with NA (important: also filter group_var!)
 complete_cases_alg <- complete.cases(df_numeric_alg)  # Identify complete rows
-df_numeric_alg <- df_numeric_alg[complete_cases, ]  # Remove NA rows
-group_var_algarve <- group_var_algarve[complete_cases]  # Filter group_var accordingly
+df_numeric_alg <- df_numeric_alg[complete_cases_alg, ]  # Remove NA rows
+group_var_algarve <- group_var_algarve[complete_cases_alg]  # Filter group_var accordingly
 # Scale values
 df_scaled_alg <- scale(df_numeric_alg)
 # Ensure row names are properly set

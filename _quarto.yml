@@ -15,10 +15,12 @@ book:
 bibliography: references.bib
 
 format:
-  html:
-    theme: cosmo
   pdf:
     documentclass: scrreprt
+    keep-tex: true
+    papersize: a4
+    indent: true
+    linestretch: 2
 
 editor: visual
 
