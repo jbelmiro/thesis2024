@@ -2,7 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
-_book/thesis2024.pdf
+/_book
+/geochemistry_files
+/article2_files
 
 /.quarto/
 
