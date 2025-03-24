@@ -1,3 +1,819 @@
 ---
-title: "Within and Beyond: Chert Procurement Patterns During The Upper Palaeolithic in Southwesternmost Iberia"
+title: "Within and beyond: chert procurement patterns during the Upper Palaeolithic in Southwesternmost Iberia"
+
+execute:
+  echo: false
+  warning: false
+  message: false
+  comment: "#>"
+  fig-path: "../figures/"
+  fig-dpi: 600
 ---
+
+```{r packages}
+#| label: callpackages
+
+# Call packages
+# This includes all necessary packages to run the code
+library(readr)
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+library(janitor)
+library(ggpubr)
+library(knitr)
+library(gtsummary)
+
+```
+
+```{r dbsetup}
+#| label: db-setup
+
+# Terrace DB preparation
+# Read DBs
+T_RM_data <- read_csv(here::here('data/raw_data_withinandbeyond/MACRO_IND_TERRACE.csv')) # Terrace RM analysis
+context <- read_csv(here::here('data/raw_data_withinandbeyond/VB_Terrace_context.csv')) # Terrace Field DB - lithic artefact info
+xyz <- read_csv(here::here('data/raw_data_withinandbeyond/VB_Terrace_xyz.csv')) # Terrace Field DB - just coordinates
+
+# Df cleaning and uniformizing
+cols_to_concat <- c("UNIT", "ID") # Vector to concatenate Unit and ID in one single variable (e.g. A6-100) - to use with both Field databases
+context$ID <- str_squish(context$ID) # Remove empty spaces from ID field
+xyz$ID <- str_squish(xyz$ID) # Remove empty spaces from UNIT field
+
+# Concatenate UNIT and ID variables in one single variable (e.g. A6-100)
+context <- context %>%
+  dplyr::rename("UNIT" = "Unit") %>% # Renaming first column from Unit to UNIT to use cols_to_concat
+  unite(col='ID', cols_to_concat, sep="-", remove=FALSE) %>% # Unite UNIT with ID using cols_to_concat
+  select(ID, Level, Spit, Code) %>% # Selecting important variables: ID refers to artifact ID; Level refers to archaeologycal layer; Spit refers to artificial levels within an archaeological layer; Code refers to type of artifact (e.g., LITHIC or BONE)
+  distinct(ID, .keep_all = TRUE)
+
+xyz <- xyz %>%
+  unite(col='ID', cols_to_concat, sep="-", remove=FALSE) %>% # Unite UNIT with ID using cols_to_concat
+  filter(Suffix == 0) %>% # To avoid several entries related to several points of the same artefact
+  select(ID, X, Y, Z) %>% # Selecting important variables
+  distinct(ID, .keep_all = TRUE)
+
+field_data <- full_join(xyz, context, by = "ID") # Join field tables
+T_dataset <- left_join(T_RM_data, field_data, by = "ID") # Join field and RM type tables
+
+T_dataset <- T_dataset %>% 
+  filter(!Level %in% c("2", "3")) %>% # Filtering out Upper levels
+  drop_na(Level) %>% # Dropping artifacts without level
+  mutate(Level = case_when(Level == "7C" ~ "7",
+                           Level == 8 ~ "7", # Collapsing samples from Level 7C and Level 8 into 7, since 8 disappears in field_data
+                           Level == "4B" ~ "4", # collapsing samples from 4B to 4 due to small number
+                           TRUE ~ Level)) %>% 
+  mutate(RMTYPE = case_when(RMTYPE == "Chalcedony" ~ "TYPE 1", # Altering first group names to final group names. Subtypes are maintained as before.
+                            RMTYPE == "TYPE 15" ~ "TYPE 3",
+                            RMTYPE == "TYPE 7" ~ "TYPE 4",
+                            RMTYPE == "TYPE 12" ~ "TYPE 5",
+                            RMTYPE == "TYPE 11" ~ "TYPE 6",
+                            RMTYPE == "TYPE 13" ~ "TYPE 7",
+                            RMTYPE == "TYPE 11F" ~ "TYPE 8",
+                            RMTYPE == "TYPE 13B" ~ "TYPE 9",
+                            RMTYPE == "Oolitic" ~ "TYPE 10",
+                            RMTYPE == "GB" ~ "TYPE 11",
+                            TRUE ~ RMTYPE))
+
+# Mutate level 5 to add phases: top of 5 (4E/5) and bottom of 5 (5), following Belmiro et al. (2020).
+phase_dataset <- T_dataset %>% 
+  mutate(Level = case_when(
+    Level == 5 & Z > 24.1 ~ "4E/5",
+    Level == 5 & Z < 24.1 ~ "5",
+    TRUE ~ Level)) %>% 
+  mutate(Technocomplex = case_when(
+    Level == 4 | Level == "4C" | Level == "4D" ~ "Solutrean",
+    Level == "4E" | Level == "4E/5" | Level == 5 ~ "Proto-Solutrean",
+    Level == 6 | Level == 7 ~ "Gravettian"))
+
+# Shelter DB preparation
+S_RM_data <- read_csv(here::here('data/raw_data_withinandbeyond/MACRO_IND_SHELTER.csv')) # Shelter RM analysis
+S_field_data <- read_csv(here::here('data/raw_data_withinandbeyond/VB_Shelter_xyz_codes.csv')) # Shelter coordinates
+S_layerdata <- read_csv(here::here('data/raw_data_withinandbeyond/shelter_layers_JC.csv')) # Shelter layers
+
+S_RM_data <- S_RM_data %>%
+  mutate_at("ID", str_replace, "VB", "") %>% # Remove "VB" from ID
+  mutate(RMTYPE = case_when(
+    RMTYPE == "Type 2" ~ "TYPE 2",
+    RMTYPE == "Chalcedony" ~ "TYPE 1", # Altering first group names to final group names. Subtypes are maintained as before.
+    RMTYPE == "TYPE 15" ~ "TYPE 3",
+    RMTYPE == "TYPE 7" ~ "TYPE 4",
+    RMTYPE == "TYPE 12" ~ "TYPE 5",
+    RMTYPE == "TYPE 11" ~ "TYPE 6",
+    RMTYPE == "TYPE 13" ~ "TYPE 7",
+    RMTYPE == "TYPE 11F" ~ "TYPE 8",
+    RMTYPE == "TYPE 13B" ~ "TYPE 9",
+    RMTYPE == "Oolitic" ~ "TYPE 10",
+    RMTYPE == "TYPE GB" ~ "TYPE 11",
+    .default = RMTYPE)) 
+
+cols_to_concat_shelter <- c("YEAR", "ID") # Concatenate YEAR and ID variables in one single variable (e.g. 05-500)
+
+S_layerdata <- S_layerdata %>% 
+  mutate_at("Date", str_replace, "20", "") %>%
+  dplyr::rename("YEAR" = "Date") %>% 
+  unite(col='ID', cols_to_concat_shelter, sep="-", remove=FALSE) %>% 
+  select(ID, Layer) %>% 
+  distinct(ID, .keep_all = TRUE) %>%
+  filter(!Layer %in% c("D", "Z"))
+
+S_field_data <- S_field_data %>%
+  mutate_at("YEAR", str_replace, "20", "") %>%
+  unite(col='ID', cols_to_concat_shelter, sep="-", remove=FALSE) %>% # Unite YEAR with Id s«using cols_to_concat
+  select(ID, X, Y, Z, CODE) %>%
+  filter(CODE == "L") %>% # Selecting important variables
+  distinct(ID, .keep_all = TRUE)
+  
+shelter_field_data <- left_join(S_field_data, S_layerdata, by = "ID")
+S_dataset <- left_join(S_RM_data, shelter_field_data, by = "ID")
+S_dataset <- S_dataset %>% 
+  mutate_at(vars(Layer), ~replace_na(., "ND")) %>% 
+  filter(!Layer == "ND")
+
+
+```
+
+# Within and beyond: chert procurement patterns during the Upper Palaeolithic in Southwesternmost Iberia
+
+**Authors**: Joana Belmiro, Xavier Terradas, Salvador Dominguez-Bella, João Cascalheira
+
+\newpage
+
+## Abstract {.unnumbered}
+
+Analyses of raw materials and the distinction between local/regional and long-distance sources have proven invaluable for understanding the extensive movements, interactions, and social networks during the Upper Palaeolithic in the Iberian Peninsula. However, unlike other parts of Iberia, research on the management and acquisition of raw materials in the south and west of Iberia remains relatively underdeveloped. Despite significant knowledge about the technological practices of Palaeolithic hunter-gatherers from southern Portugal, particularly from studies conducted at the site of Vale Boi, there is a noticeable lack of focus on raw materials management. This paper presents the first comprehensive characterization of chert raw materials from the Gravettian, Proto-Solutrean, and Solutrean occupations at Vale Boi, using both macroscopic and petrographic techniques. Our study reveals that the majority of chert found at Vale Boi originates locally, within a 20 km radius. However, a non-negligible portion of the chert comes from non-local sources, indicating \>200 km raw material circulation from central Portugal and southern Spain.
+
+**keywords:** Upper Paleolithic; Iberian Peninsula; Lithic raw materials; Petrography
+
+\newpage
+
+## Introduction
+
+Knappable raw materials play a crucial role in understanding the mobility and lifeways of past hunter-gatherers, given the ubiquitous presence of lithic artefacts throughout Prehistory. More than mere rocks with which stone tools were produced, the management of these resources is intimately connected to a group’s technological, social, and cultural organisation, potentially influencing the group’s overall survivability [@oestmoFormalModelingApproach2017; @binfordOrganizationFormationProcesses1979; @bleedOptimalDesignHunting1986; @bousmanHuntergathererAdaptationsEconomic1993; @torrenceTimeBudgetingHuntergatherer1983; @gouldLithicProcurementCentral1985].
+
+Several key topics in the study of hunter-gatherer behaviour and organisation have been explored in different geographic regions and chronological periods through raw material analysis, such as modalities of procurement and mobility strategies [@ambroseSocialEcologicalModels1990; @binfordOrganizationFormationProcesses1979; @binford_righteous_1985; @gouldEmpiricistStrikesBack1985; @gouldLithicProcurementCentral1985; @kuhnUnpackingReductionLithic1991; @mccallBehavioralEcologicalModels2007], occupation types and their duration [@kuhnUpperPaleolithicRaw2004; @surovellBehavioralEcologyLithic2009], the establishment and dimension of social networks [@whallonSocialNetworksInformation2006], as well as exchanges between groups or individuals [@gamblePalaeolithicSocietiesEurope1999]. These analyses are often achieved by systematically characterizing geological and archaeological raw materials and establishing correlations between samples from both origins. The ultimate aim is to identify the corresponding sources, enabling, for example, a precise differentiation between local and non-local raw materials, and examine their distribution within a site over different occupations and periods.
+
+These approaches and concepts have also been extensively and successfully applied to the study of lithic assemblages from prehistoric archaeological sites in the Iberian Peninsula [e.g., @aubryUpperPalaeolithicLithic2016; @aubryEconomyLithicRaw2009; @garcia-rojasGreatStepForward2021; @gomezdesolerPanadellaChertMontmaneu2020; @herrero-alonsoManagementLithicRaw2020; @matiasRawMaterialSourcing2016; @ortegaMobilitatDesplacamentsDels2003; @pereiraLithicEconomyTerritory2016; @pereiraRawMaterialProcurement2021; @pereira_flint_2022; @ramacciottiMovingLandFirst2022; @sanchezdelatorreNewDataChert2023; @sotoProcurementMobilityLate2016; @rodriguezPrehistoricFlintExploitations2011; @costaLithicArrowheadsSiliceous2022; @noceteRelacionesCentroPeriferia2005], and contributed to understanding how different groups explored and managed the available lithic resources.
+
+In this context, raw material analyses and the distinction between local, regional and long-distance sources have been instrumental in tracing extensive movements, contacts, and social networks throughout the Upper Palaeolithic (UP) throughout Iberia. Noteworthy examples include studies in northwestern Iberia (Galicia) during the Solutrean period [@hermidaSilexNWPeninsula2016], northern Iberia (Asturias) during the Magdalenian occupations at Las Caldas [@corchonrodriguezMobiliteTerritoiresRelations2016], northeastern Iberia (Catalunya) during the Aurignacian and Gravettian periods at Arbreda cave [@marreirosExploringLithicVariability2016; @ortegaMobilitatDesplacamentsDels2003], northern Portugal during the Gravettian/Solutrean periods in the Côa Valley [@aubryUpperPalaeolithicLithic2016; @aubryRawMaterialProcurement2004], and inland central Iberia (Guadalajara) during the Proto-Solutrean and Solutrean periods at Peña Capón [@sanchezdelatorreNewDataChert2023]. Ultimately, the recognition of these connections has broadened our comprehension of mobility and social organization during the UP in Iberia, illustrating a vast interconnected territory.
+
+However, in contrast to other areas of Iberia, and despite the potential of raw material studies to shed light on the lifeways and organisational structures of Palaeolithic hunter-gatherers, research on the procurement and management of raw materials during the UP in southern and western Iberia remains in its initial stages. Specifically, in southern Portugal, even though there is considerable knowledge about the technological organisation of Palaeolithic hunter-gatherers—largely due to research conducted at the Vale Boi archaeological site [see e.g., @belmiro_gravettian-solutrean_2021; @bicho_ecodynamics_2013; @cascalheiraHunterGathererEcodynamics2013; @marreirosLithicTechnologyGravettian2015; @cascalheiraTecnologiaLiticaSolutrense2010; @horta_role_2019]—raw material studies are notably infrequent and use mainly macroscopic methodologies.
+
+This situation is attributed to the absence of a detailed and comprehensive characterization of regional lithic resources in the Algarve region (southern Portugal) and the subsequent lack of a complete reference collection produced by complementing characterization methodologies, which is a critical component for conducting raw material studies. Such efforts are particularly crucial for distinguishing between local and non-local raw materials and for understanding variations within the archaeological record [@pop_simulating_2015; @surovellBehavioralEcologyLithic2009].
+
+Recently, we have made significant strides by introducing such a reference collection and establishing a framework for raw material studies in the region, through a detailed macroscopic and petrographic database of chert resources in the Algarve region [@belmiroCreatingFramesReference2023]. This initiative paves the way for systematic investigations into raw material procurement strategies during the Upper Palaeolithic, especially concerning the Vale Boi site, where previous raw material studies have already shown complex patterns of chert procurement and management. These preliminary studies at Vale Boi, employing only macroscopic methods, pointed to a predominant use of local cherts [@bicho_ecodynamics_2013; @pereira_territory_2016-1; @verissimo_jazidas_2004], likely originating within a 16 km radius and reflecting embedded procurement strategies [@pereira_territory_2016-1]. To a lesser extent, non-local cherts were also identified throughout the various UP occupations [@bicho_ecodynamics_2013; @pereira_territory_2016-1; @verissimo_jazidas_2004], pointing to extended sourcing networks, possibly involving sourcing from other regions of southern Portugal and southern Spain. The presence of chert from the Cretaceous formations of central Portugal has also been suggested [@bicho_ecodynamics_2013].
+
+These results highlight the potential for systematic raw material studies at the site to shed light on the lithic resource procurement strategies, mobility patterns, and social networks of the hunter-gatherer groups of southwestern Iberia throughout the UP.
+
+Vale Boi stands as a key archaeological site for this study since it is currently the only site in southern Portugal with a long-term occupation spanning most of the UP and allowing the exploration of raw material procurement and mobility trends through time [@cascalheira_2017]. It also holds a pivotal role in the study of UP adaptations on the Iberian Peninsula, providing invaluable insights into the subsistence and technological strategies of hunter-gatherer populations [@belmiro_gravettian-solutrean_2021; @bicho_ecodynamics_2013; @cascalheira_2017; @cascalheiraTerritorialityOrganizationTechnology2019; @horta_role_2019; @manneIntensiveSubsistencePractices2012; @marreirosExploringLithicVariability2016; @pereira_territory_2016-1].
+
+Furthermore, previous studies have highlighted the role of Vale Boi in understanding different patterns of territory exploitation and contact with other regions of Iberia throughout the UP. During the Solutrean, Vale Boi has been interpreted as an important connection point between the core Solutrean areas of central Portugal and southern Spain, making it a key site for identifying extended social networks that promoted the exchange of information and culture [@cascalheira_2017; @cascalheiraHunterGathererEcodynamics2013; @cascalheiraSolutrenseEmPortugal2013]. On the contrary, techno-typological studies from the Gravettian occupations of Vale Boi instead show marked differences between regions and suggest a more limited circulation of people and information in southern Iberia [@marreirosLithicTechnologyVariability2013].
+
+Based on the notions that a) during the Solutrean Vale Boi served as a connection point between different regions which may have promoted the exchange of information and culture, including raw materials from long-distances; and b) the limited circulation of people during the Gravettian may have isolated groups occupying Vale Boi, making them mostly reliant on the available local or regional resources, we propose a set of hypotheses and expectations regarding chert procurement and human mobility throughout the UP at Vale Boi. On one hand, it would be expected that Solutrean occupations are characterized by the predominant use of local raw materials but with a considerable percentage of cherts obtained from long-distance sources, possibly through exchange with different groups in Iberia. Conversely, it would be expected that Gravettian occupations would be mostly composed of local cherts, with a more limited presence of long-distance cherts.
+
+To investigate the applicability of these patterns to the procurement and circulation of lithic raw materials, and to examine the prevailing hypotheses concerning UP mobility and social network exchanges, this paper focuses on the following questions: 1) what types of chert were the hunter-gatherers of Vale Boi using and where did they come from?; 2) are there different patterns of chert use throughout time?; 3) and if so, how can these be related to patterns of land use and the circulation of people/ideas, as suggested through technological studies of the same lithic assemblages? As a result, our study presents the first comprehensive characterisation of chert raw materials, through macroscopic and microscopic analysis, of UP occupations in southwestern Iberia, derived from the Gravettian, Proto-Solutrean, and Solutrean (c. 32-19 ka cal BP) occupations at Vale Boi.
+
+### Site description
+
+Vale Boi is located on the western coast of the Algarve region in southern Portugal, within a small valley that extends southward to the Atlantic coast, approximately 2 km away (@fig-map b). It is bordered by limestone outcrops that form rock shelters facing west and southwest [@bichoRockshelterStudiesSouthwestern2007; @bichoEdgeCaseVale2012; @bicho_ecodynamics_2013; @cascalheiraHunterGathererEcodynamics2013; @cascalheira_2017; @manneIntensiveSubsistencePractices2012; @mannePryingNewMeaning2011]. The site extends for more than 10,000 sq meters along the slope of the valley, through which three main areas were excavated between 2000 and 2019: Slope, Terrace, and Shelter. For this study, the chosen areas were the Terrace and Shelter areas (see Section 2 Materials and Methods).
+
+The Terrace encompasses occupations from the UP to the Early Neolithic, resulting in the identification of eight main lithostratigraphic units. The UP sequence includes several occupations attributed to the Gravettian (levels 8 to 6) between c. 32 and 27 ka cal BP, Proto-Solutrean (levels 5 to 4E) between c. 26 and 24 ka cal BP, and Solutrean (level 4D, 4C, 4C, 4 and Lower 3) between c. 24 and 20 ka cal BP [@belmiro_gravettian-solutrean_2021; @cascalheiraHunterGathererEcodynamics2013; @cascalheira_2017].
+
+The Shelter area shows four main lithostratigraphic units, with Magdalenian, Solutrean and Gravettian occupations. From these, the Solutrean levels show the most intensive occupation, with three, well-preserved, archaeological horizons (layers C to A) and dated to c. 24-22 ka cal BP [@cascalheiraValeBoiAlgarve2013; @cascalheiraTecnologiaLiticaSolutrense2010; @cascalheira_2017]. These occupation levels were identified under blocks of limestone, which collapsed from the rockshelter ceiling [@cascalheiraTecnologiaLiticaSolutrense2010].
+
+Both these areas have been previously interpreted as seasonal residential camps, repeatedly used for extended stays, due to the abundance of lithic debitage, stone tools, heat-cracked rocks related to grease rendering activities, large quantities of faunal remains (both marine and terrestrial) and the presence of ornaments and portable art [@manneIntensiveSubsistencePractices2012]. The analysis of lithic assemblages and retouched frequency of lithic assemblages from the Terrace and Shelter areas also corroborate this interpretation [@cascalheiraTecnologiaLiticaSolutrense2010; @marreirosPrimeirasComunidadesHomem2009; @cascalheira_2017]. Cascalheira et al. [-@cascalheira_2017] show that, with the exception of the Early Gravettian occupations of the Terrace area and Magdalenian occupation of the Shelter, all other UP occupations are composed of high-density assemblages with low degree of retouch, correspondent to a residential base-camp occupation, for extended periods of time.
+
+```{r}
+#| label: fig-map
+#| fig-cap: Iberian Peninsula map with locations and geological formations mentioned throughout the paper. a) Detail of the central Portugal region where the Cenomanian formations with chert nodules are located. b) Detail of southwestern Portugal, with chert and chalcedony bearing formations, outcrops, and location of Vale Boi. c) Detail of eastern Algarve with chert-bearing formations. The figure was produced using ArcGIS Pro 3.2.
+
+knitr::include_graphics(here::here("figures/within-and-beyond/map_layout.png"))
+```
+
+### Regional geological background
+
+The Algarve region is a complex territory, marked by several geomorphic sub-regions and geological units that provide different lithological resources. Two of the main geological units which characterize the Algarve are: 1) the Baixo Alentejo Flyschoid Group, part of the south Portuguese Zone [@fernandesNewEvidenceConcerning2012; @oliveiraCartaGeologicaPortugal1984; @onezimeNewGeodynamicInterpretation2003], located in the north sector of the region, and characterized by schists, greywackes and quartzites; and 2) the Algarve basin in the south, which is characterized by limestones, dolomites and marls [@terrinhaBaciaAlgarveEstratigrafia2006]. It is within these limestones and dolomitized limestones from the Triassic to the Upper Jurassic where chalcedony and chert nodules/beds can be found [@manuppellaNoticiaExplicativaFolha1987; @manuppellaNoticiaExplicativaFolha2007; @ribeiro_evolucao_2005; @rochaNoticiaExplicativaFolha1979; @rochaNoticiaExplicativaFolha1983; @terrinhaBaciaAlgarveEstratigrafia2006].
+
+The availability of regional resources containing cherts and the characterization of their lithologies has already been published by our team [@belmiroCreatingFramesReference2023], and we herein present the summarized main findings. The results showed the existence of abundant chert nodules and beds found in the Lower Jurassic (Carixian) formation and Upper Jurassic (Kimmeridgian) formation, mostly outcropping in the cliff and beach areas of westernmost Algarve, at \~20 km southwest from the site of Vale Boi, and with one single inland outcrop located \~8 km east from the site (@fig-map b). The Lower Jurassic nodules and beds can be found in abundant outcrops, but also frequently in sub-primary or secondary deposition settings in proximity to the outcrops, possibly due to natural erosion. However, in the case of the inland outcrop of Ferrel, the outcrop is partially destroyed due to recent human action, and chert can be found scattered as chunks or larger nodules. The Upper Jurassic nodules can be found in sub-primary deposition and are easily accessible, or in secondary deposition. The cherts from the previously mentioned formations are are frequently opaque with yellow, grey, purple or red colours, occasionally with bands or laminations, and frequently with visible sponge spicules. Although abundant, these chert nodules are frequently small (\~4-10 cm in length), with the largest nodules being \~20 cm, and frequently characterized by high levels of dolomitization and fractures. Petrographically, they are composed mainly of microcrystalline quartz, with wackestone or packstone textures, small percentages of macrocrystalline quartz, fibrous chalcedony and allochems composed of oxides and poorly preserved bioclasts. When identifiable, the bioclasts are Echinoderms, Radiolarians, Sponge spicules and Bivalve shells. The Upper Jurassic cherts of Mareta show similar petrographic characteristics, but with abundant Calcispheres which are not always apparent under the stereomicroscope.
+
+Chert sources were also identified in two formations from the eastern area of the Algarve (@fig-map c). The Middle Jurassic Malhão formation chert outcrops were identified at around 80-100 km east of the site and characterized by chert nodules with similar macroscopic features to those found in western Algarve. Petrographically they are composed mainly of microcrystalline quartz and characterized by wackestone textures, while dolomite, chalcedony and macrocrystalline quartz are also present in small percentages (\<10%). Allochems are iron oxides, and albeit poorly preserved, several bioclasts can be identified: Sponge spicules, Radiolarians, Ostracods, Echinoderms, Calcispheres and possibly Tentaculites. The Upper Jurassic Jordana formation chert outcrops were identified at around 90 km east of Vale Boi and characterized by chert nodules with significantly different macroscopic features to those of other formations, with frequently small sizes (\~5 cm), difficult removal from the parent rock and unidentified secondary deposits. Petrographically they are composed mostly of microcrystalline quartz, with wackestone to packstone textures, and small percentages of fibrous chalcedony and dolomite (\<10%). They show frequent iron oxides and very frequent bioclasts, albeit often poorly preserved and unidentifiable; identified fossils are Calcispheres, Bivalve shells, Sponge spicules, Ostracods, Echinoderms and Gastropods.
+
+Chalcedony can be found \~10 km west of Vale Boi (@fig-map b), within the marl-carbonated Triassic formations as lenses or nodules and was formed through hydrothermal processes [@bicho_ecodynamics_2013]. Previous studies also note the presence of chalcedony (with frequent presence of cortex) in the immediate vicinity of the site [@pereira_territory_2016-1; @gibajabaoProvenienceTechnologyMorphology2013]. The chalcedony frequently has fractures and fissures and is characterized by a fibrous quartz structure, without inclusions or fossils.
+
+## Materials and methods
+
+To characterize the siliceous raw materials used during the UP occupations at Vale Boi and to identify their geological sources, we focused on chalcedony and chert archaeological materials from the Terrace and Shelter areas. These two areas were chosen since both have detailed spatial information, well-defined chronological sequences, and previous studies providing lithic technology, faunal, and geoarchaeological data. For this, we focused on layers that spanned the UP occupations, characterized by good preservation, a significant number of lithic finds and with radiocarbon dating (as mentioned in section Site description).
+
+In this study, the terms chert and chalcedony follow the definitions provided by Luedtke (1992). We use the term chert to refer to sedimentary rocks composed primarily of microcrystalline quartz, which includes other possible varieties such as jasper, agate, or chalcedony. The term chalcedony is used in its petrographic sense and refers to cherts with a fibrous quartz structure. Since this definition of chalcedony implies a destructive method which cannot be applied to all archaeological chalcedony samples, we use the term based on the confirmed correlation between the macroscopic appearance of chalcedony and its petrographic characteristics, obtained through geological and archaeological thin sections.
+
+Chert was chosen for this study as it is one of the three main raw materials used at the archaeological site of Vale Boi alongside quartz and greywacke. Other raw materials such as chalcedony, dolerite, and schists have also been identified [@belmiro_gravettian-solutrean_2021; @cascalheiraTecnologiaLiticaSolutrense2010; @pereira_territory_2016-1].
+
+Using the field database with all individually coordinated lithic artefacts (all pieces larger than \~2 cm; [@belmiroProtoSolutreanLithicTechnology2020]), we compared the incidence of chert and chalcedony in opposition to the remaining lithics of other raw materials. @fig-rm-comparison shows that for the selected levels of the Terrace area (@fig-rm-comparison a), chert represents only \~15-20% of the lithic assemblage, while in the Shelter area (@fig-rm-comparison b), chert represents \~35-50% of the lithic assemblage from the Solutrean layers A, B, and C. Based on previous lithic studies in the Terrace and Shelter areas, the remaining 80% of other raw materials are mostly composed of quartz and greywacke [@belmiro_gravettian-solutrean_2021; @cascalheiraTecnologiaLiticaSolutrense2010; @marreirosPrimeirasComunidadesHomem2009].
+
+Although systematic raw material research has not been conducted on these materials, according to the regional geological context, they have been interpreted as local and readily accessible in the vicinity of the site [@pereira_territory_2016-1]. Frequently, the quartz and greywacke assemblages include large amounts of shattered and unknapped chunks or slabs, and have been interpreted in great part as functionally specialised in activities related to the fragmentation of bones in the case of quartz and greywack [@cascalheira_2017], or in grease rendering in the case of quartz [@manneIntensiveSubsistencePractices2012]. Previous studies from the Terrace area have also shown that when removing shatter and chunks, the percentages of chert become much more representative when compared to greywacke and quartz [@belmiro_gravettian-solutrean_2021; @belmiroProtoSolutreanLithicTechnology2020]. Based on this, despite the smaller amounts of individually plotted chert artefacts in the field database, chert continues to be one of the main raw materials to produce lithic stone tools, with complete knapping sequences and formal toolkits. The importance of chalcedony can also be seen in its use to produce formal tool kits during specific technocomplexes at the site, such as a Vale Comprido point, the fossil-director for the Proto-Solutrean in western Portugal [@belmiro_gravettian-solutrean_2021] or a laurel leaf preform in the Solutrean layers [@gibajabaoProvenienceTechnologyMorphology2013].
+
+```{r}
+#| label: fig-rm-comparison
+#| fig-cap: "Comparison of chert, chalcedony, and other raw materials piece plotted in the Terrace (a) and Shelter (b) areas of Vale Boi."
+
+# Terrace rm comparison
+## Data preparation
+context_comp <- field_data %>% # Using the field data to obtain lithic info beyond the analysed chert/chalcedony
+  mutate(Level = case_when(Level == "4B" ~ "4", # Collapsing samples from level 4B into 4
+                           Level == "7C" ~ "7",
+                           Level == 8 ~ "7", # Collapsing samples from Level 7C and Level 8 into 7
+                           TRUE ~ Level)) %>% 
+  mutate(Level = case_when( # Dividing 5 as previous
+    Level == 5 & Z > 24.1 ~ "4E/5",
+    Level == 5 & Z < 24.1 ~ "5",
+    TRUE ~ Level)) %>% 
+  filter(!Level %in% c("3B", "5B", "5C")) %>% 
+  dplyr::filter(Code %in% c("LITHIC", "POINT")) # Field data includes ALL artifacts; filtering only lithics
+
+dataset_comp <- phase_dataset %>% # Using the analysed DB to get chert/chalcedony data
+  select(ID, RMTYPE) # Selecting only ID (to join dbs and RMTYPE to know whether chert or chalcedont)
+T_comp <- full_join(context_comp, dataset_comp, by = "ID") # Joining by ID. the RMTYPE column has the RM type from the analysis and NA for those which were not analysed, and correspond to non-chert artifacts
+T_comp["RMTYPE"][is.na(T_comp["RMTYPE"])] <- "Other" # All NA's (other RMs) turned into "Other"
+
+T_comp <- T_comp %>% 
+ mutate(Rawmaterial = case_when(
+    RMTYPE == "Other" ~ "Other", # Keeping Other as Other
+    RMTYPE == "TYPE 1" ~ "Chalcedony", # Naming Chalcedony
+    RMTYPE != "Other" | RMTYPE != "TYPE 1" ~ "Chert")) %>% # Collapsing all cherts into one single category (All but Other and TYPE1)
+  dplyr::filter(Level %in% c("4", "4C", "4D", "4E", "4E/5","5", "6", "7")) # Choosing only UP levels (excluding 3)
+
+## Barplot
+T_comp_bar <- T_comp %>%
+  dplyr::group_by(Level, Rawmaterial) %>% 
+  dplyr::summarise(n = n()) %>%
+  mutate(percent = n/sum(n)) %>% 
+  ggplot(aes(x=Level, y = percent, fill = Rawmaterial)) +
+  geom_bar(stat = "identity", width = 0.5) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_minimal() + #type of theme
+  labs(x = "Terrace levels", y = "Count %") +# change labels +# change labels
+  guides(fill=guide_legend(title=NULL)) + # remove legend title
+  geom_text(aes(label=ifelse(percent >= 0.07, paste0(sprintf("%.1f", percent*100),"%"),"")),
+                position=position_stack(vjust=0.5), colour="white", size=3) +
+  theme(axis.title.x = element_text(size = 10, vjust = -1))+
+  scale_fill_manual(values = c("#C74B50", "#D49B54", "#845460", "#EAD3CB", "#BDC7C9",
+                              "#2B4F60", "#BDD2B6", "#798777", "#FCF0C8"))
+
+# Shelter rm comparison
+## Data preparation
+S_field_comp <- S_field_data
+S_data_comp <- S_dataset %>% 
+  dplyr::select(ID, RMTYPE)
+S_comp <- full_join(S_field_comp, S_data_comp, by = "ID")
+S_layerdata <- S_layerdata %>% 
+  distinct() # Keeping only individual IDs to avoid repetitions
+S_comp <- left_join(S_comp, S_layerdata, by = "ID")
+S_comp["RMTYPE"][is.na(S_comp["RMTYPE"])] <- "Other" # All NA's (other RMs) turned into "Other"
+S_comp["Layer"][is.na(S_comp["Layer"])] <- "No info" # Unknown Shelter levels turned into "No info" to avoid NA
+
+S_comp <- S_comp %>% 
+ mutate(Rawmaterial = case_when(
+    RMTYPE == "Other" ~ "Other",
+    RMTYPE == "TYPE 1" ~ "Chalcedony",
+    RMTYPE != "Other" | RMTYPE != "TYPE 1" ~ "Chert")) %>% # Collapsing all cherts into one single category
+  dplyr::mutate(Layer = case_when(
+    Layer == "c" ~ "C",
+    TRUE ~ Layer)) %>% 
+  filter(Layer %in% c("A", "B", "C")) # Choosing only Solutrean occupation layers (A, B and C)
+
+## Barplot
+S_comp_bar <- S_comp %>%
+  dplyr::group_by(Layer, Rawmaterial) %>% 
+  dplyr::summarise(n = n()) %>%
+  mutate(percent = n/sum(n)) %>% 
+  ggplot(aes(x=Layer, y = percent, fill = Rawmaterial)) +
+  geom_bar(stat = "identity", width = 0.5) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  theme_minimal() + #type of theme
+  labs(x = "Shelter levels", y = "Count %") +# change labels
+  guides(fill=guide_legend(title=NULL)) + # remove legend title
+  geom_text(aes(label=ifelse(percent >= 0.07, paste0(sprintf("%.1f", percent*100),"%"),"")),
+                position=position_stack(vjust=0.5), colour="white", size=3) +
+  theme(axis.title.x = element_text(size = 10, vjust = -1)) +
+  scale_fill_manual(values = c("#C74B50", "#D49B54", "#845460", "#EAD3CB", "#BDC7C9",
+                              "#2B4F60", "#BDD2B6", "#798777", "#FCF0C8"))
+
+## Unused barplot: here to understand how the chert ratio changes when A, B and C are collapsed since "No info" has most of the other rms.
+#S_comp %>% 
+#  dplyr::group_by(Rawmaterial) %>% 
+#  dplyr::summarise(n = n()) %>%
+#  mutate(percent = n/sum(n)) %>% 
+#  ggplot(aes(x=Rawmaterial, y = percent, fill = Rawmaterial)) +
+#  geom_bar(stat = "identity", width = 0.5) +
+#  scale_y_continuous(labels = scales::percent_format()) +
+#  theme_minimal() + #type of theme
+#  labs(x = "Shelter levels", y = "Count %") +# change labels
+#  guides(fill=guide_legend(title=NULL)) + # remove legend title
+#  geom_text(aes(label=ifelse(percent >= 0.07, paste0(sprintf("%.1f", percent*100),"%"),"")),
+#                position=position_stack(vjust=0.5), colour="white", size=3) +
+#  theme(axis.title.x = element_text(size = 10, vjust = -1)) +
+#  scale_fill_manual(values = c("#C74B50", "#D49B54", "#845460", "#EAD3CB", "#BDC7C9",
+#                              "#2B4F60", "#BDD2B6", "#798777", "#FCF0C8"))
+
+## Terrace and shelter barplots
+ggarrange(T_comp_bar, S_comp_bar, labels = c("a", "b"), nrow = 2, common.legend = TRUE, legend = "bottom")
+
+```
+
+We employed both macroscopic and petrographic methods to achieve a more comprehensive characterization of the materials, aiming to offset the inherent limitations of each method [@luedtkeArchaeologistGuideChert1992].
+
+Macroscopic analysis, while revealing several limitations related to the absence of quantitative variables [@bustilloMacroscopicClassificationFlint2009], proved to be advantageous given the extensive sample size of chalcedony and chert lithics under examination (n=4458). The distinct features of various local cherts facilitate their differentiation from cherts of neighbouring origins. Consequently, a macroscopic approach offered a non-destructive, efficient, and cost-effective method for characterizing all materials [@bustilloMacroscopicClassificationFlint2009; @tarrinoMateriasPrimasLiticas2013]. Therefore, we implemented an initial phase of macroscopic analysis, subsequently augmented by petrographic study to diminish the subjectivity of the analysis and enhance the material characterization with petrographic data. The synergistic application of these two methods has been previously validated in the characterization of Algarve region cherts, following recent geological survey efforts [@belmiroCreatingFramesReference2023]. Hence, an extensive macroscopic and petrographic collection was already available for comparative analysis with archaeological materials, employing consistent methodologies. This reference collection is the Lusolit lithotheque, hosted physically at ICArEHB (University of Algarve, Faro) and digitally at www.lusolit.icarehb.com, and aided in the characterization and source attribution of cherts.
+
+Hand samples were used throughout the macroscopic characterization for comparison with the archaeological materials, and the archaeological thin sections were compared with the previously studied geological chert thin sections. To identify the source of other lithologies which are not congruent with the regional cherts and identify possible long-distance chert procurement, we used hand samples and thin sections of cherts from central Portugal also available in the Lusolit lithotheque. The lithotheque from the Unit of Geoarchaeology and Archaeometry Applied to Historic Artistic and Monumental Heritage from the University of Cadiz (UCA) was also visited to understand the macroscopic variability of the local and regional cherts of the lower Guadalquivir basin, within the Atlantic strip of southwestern Spain (present-day provinces of Huelva and Cádiz).
+
+Following previous studies, we classify the distance of chert sources from the site as local (1-30 km from the site), regional (30-120 km), and long-distance (\>120 km) [@herrero-alonsoManagementLithicRaw2020; @tarrinoFlintRawMaterial2015].
+
+The macroscopic analysis of the archaeological materials was divided into two steps. The first step included a preliminary characterization using a hand lens of 10x magnification. This step allowed us to create types and subtypes based on similar macroscopic characteristics frequently acknowledged to be useful to describe and discern between different types of chert; these included characteristics such as colour, translucency, and feel [@luedtkeArchaeologistGuideChert1992]-the complete data dictionary for the recorded variables can be found in the Supplementary Information (Online Resource 1). In the second step, we used a Nikon SMZ25 stereomicroscope to observe each sample in further detail, which allowed us to better characterize the artefacts (especially regarding inclusions and alterations), and the previously established types - the data dictionary used for the individual samples can also be found in the Supplementary Information (Online Resource 1). Given the inherent macroscopic variability of the geological samples and archaeological specimens, as well as the number of samples, the database used for the individual analysis was simplified and focused on collecting data related to weight, cortex, and alterations. This first step was applied to a total of 4458 artefacts: a sample of 3627 chert artefacts from the UP sequence of the Terrace area (levels 7 to 4) and 831 chert artefacts from the Solutrean sequence of the Shelter area (layers A, B, C; all samples without an attributed layer on the database were excluded from the analysis).
+
+While the advantages of employing a macroscopic methodology for analysing the cherts of Vale Boi are notable, a limitation of this approach is its inability to unequivocally characterize and categorize artefacts that exhibit surface alterations typical of an open-air site, including those related to fire, since weathered and altered surface may destroy visible structures and even alter the chemical composition [@delluniversitaDevelopmentMultiparametricCharacterisation2019]. Other studies frequently exclude samples that display intense fire damage or several surface alterations [@delluniversitaDevelopmentMultiparametricCharacterisation2019; @gomezdesolerPanadellaChertMontmaneu2020; @sotoProcurementMobilityLate2016]. For the present study, whenever artefacts displayed extensive alterations and could not be unequivocally characterized (@fig-terrace-alterations), and given the inexistence of a reference collection for local altered cherts, they were analysed using the individual sample dataset (Online Resource 1) but grouped in a category of indeterminate cherts (INDET). This category included key alterations such as heat/fire-related alterations which clearly impacted the macroscopic characteristics of the samples, fully changing its color, luster and texture, and covering them in crazings (e.g., @fig-terrace-alterations a). Similarly, it also included alteration rinds that extended through most of the sample, impeding the identification of its original colour, texture, translucency, inclusions and fossils (e.g., @fig-terrace-alterations b) and the presence of extended pitting. However, whenever surface alterations were present in only a limited area of the sample leaving recognizable macroscopic features and fossils, or when key elements were distinguishable to make a characterization (e.g., reddening in the Type 2 cherts, Online Resource 2, figure s5), the samples were not collapsed into the INDET category.
+
+As seen in @tbl-indet-freq, level 4 shows the highest percentages of indeterminate artefacts, corresponding to \~40% of the total sample (n=1037). This is due to the frequent alterations of the artifacts, especially related to patinas and alteration rinds, pits, and fire/heat alterations. For all other levels in the Terrace, indeterminate represents on average \~28% of the chert artefacts, while in the Shelter the frequency of INDET is slightly lower (\~20-25%).
+
+```{r}
+#| label: fig-terrace-alterations
+#| fig-cap: Samples with extensive alterations which prevented the identification of chert type. a) artefact with cracks, white patina and reddening covering 100% of the surface; b) artefact with surface alterations, displaying a portion with patina (brown) and a portion without patina (grey), cleaned with Hydrochloric acid.
+
+knitr::include_graphics(here::here("figures/within-and-beyond/terrace_alterations.png"))
+
+```
+
+```{r}
+#| label: tbl-indet-freq
+#| tbl-cap: Number and percentage of grouped and indeterminate (INDET) artefacts by level in the Terrace (levels 4 to 7) and Shelter (A to C) areas.
+
+terrace_indet_table <- phase_dataset %>% 
+  mutate(Group = if_else(RMTYPE=="INDET", "Indeterminate", "Grouped")) %>%
+  tabyl(Group,Level) %>% 
+  adorn_totals("row") %>%
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(2) %>%
+  adorn_ns("front")
+
+shelter_indet_table <- S_dataset %>% 
+  mutate(Group = if_else(RMTYPE=="INDET", "Indeterminate", "Grouped")) %>% 
+  mutate_at(vars(Layer), ~replace_na(., "ND")) %>% 
+  filter(!Layer %in% c("D", "ND")) %>% 
+  tabyl(Group,Layer) %>% 
+  adorn_totals("row") %>%
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(2) %>%
+  adorn_ns("front")
+
+indet_table <- full_join(terrace_indet_table, shelter_indet_table, by = "Group")
+
+kable(head(indet_table))
+
+```
+
+As previously mentioned, the macroscopic study was followed by a petrographic approach. To better characterize the different chert types identified in the macroscopic analysis and aid in minimizing the inherent caveats of macroscopic methods, 22 thin sections were prepared at the Thin Section Lab (Toul, France). The samples chosen for this analysis include at least one sample from each type present throughout the stratigraphy of the Terrace area, from different archaeological levels (@tbl-TS-list). For types that showed high macroscopic variability (e.g. translucency and colour variation or differentiated bioclast facies), thin sections from sub-types were analysed to collect petrographic data that could reflect this variability. Petrographic thin sections were analysed by polarized light microscopy (Nikon LV100ND) to determine the mineral composition, textural characteristics, allochems, and bioclasts, as well as any other alterations.
+
+```{r}
+#| label: tbl-TS-list
+#| tbl-cap: List of archaeological thin sections, with the summarised description of observed macroscopic variability and sub-types.
+
+TS_list <- read_csv(here::here('data/raw_data_withinandbeyond/TS_short_list.csv'))
+
+kable(TS_list)
+
+```
+
+The complete petrographic analysis for all thin sections studied in this paper (including macroscopic and microscopic figures) can be found at our online research compendium (https://doi.org/10.17605/OSF.IO/DBFT2). A detailed macroscopic and petrographic description and figures for each type and sub-type of chert and chalcedony (Online Resource 2) and the data dictionary used for the petrographic analysis (Online Resource 1) can be found in Supplementary Information. The complete set of images of the geological thin sections can also be consulted in the LusoLit online database.
+
+The entirety of the R code used for the analysis, datasets, and visual representations contained in this paper can be accessed through our online research compendium. We used the rrtools package by Marwick et al. [-@marwickPackagingDataAnalytical2018] to create a research compendium and write a reproducible journal article. The provided files include the complete set of raw data used in the analysis, along with a custom R project [@wickhamPackagesOrganizeTest2015] containing the code required to generate all tables and figures. To enable maximum reuse, the code is made available under the MIT license, data under CC‐0, and figures under CC‐BY [additional details can be found in @marwickComputationalReproducibilityArchaeological2017].
+
+## Results
+
+```{r}
+#| label: t-table
+
+T_table <- phase_dataset %>%
+  filter(RMTYPE !="INDET") %>% 
+  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1","TYPE 2", "TYPE 3", "TYPE 4",
+                                        "TYPE 5", "TYPE 6","TYPE 7", 
+                                        "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11", "TL"))) %>%
+  tabyl(RMTYPE, Level) %>%
+  adorn_totals(c("row", "col")) %>%
+  adorn_percentages("col") %>%
+  adorn_pct_formatting(2) %>%
+  adorn_ns("front")
+
+```
+
+### Characterization and source attribution
+
+Through the macroscopic and petrographic analysis, we identified 10 main chert/chalcedony types, present throughout the stratigraphy in the Terrace and Shelter areas (a summarised characterization table can be found in the Supplementary Information, Online Resource 3). A distinct type (Type 11) was identified exclusively in the Shelter area, with only a limited presence in the Terrace (n=2), and 16 varieties, each consisting of one to three samples, were identified across various levels of both the Terrace and Shelter. The latter were clustered into a category named Trace Lithotypes (TL). Through the comparison with the reference collections, we identified cherts congruent with the local sources and cherts that are likely not local due to significant differences in appearance, fossil content, and petrography when compared to the cherts available in the geological setting located within a 30 km radius of Vale Boi. @tbl-type-source shows the different types of identified cherts and possible sources whenever attribution was possible.
+
+```{r}
+#| label: tbl-type-source
+#| tbl-cap: Chert types identified during the analysis, and potential sources. The distance column refers to the distance of the potential source from Vale Boi, as the crow flies. Only the TL samples with possible identified sources were included in the table.
+
+tibble::tribble(
+  ~"Chert type", ~"Potential source", ~"Distance from source",
+  "Type 1", "Triassic volcanic formations ", "<10 km",
+  "Type 2-5", "Lower Carixian formations, southwestern Portugal", "<20 km",
+  "Type 6", "Upper Cretaceous formations, central Portugal", "~215-250 km",
+  "Type 7", "Betic Systems, southern Spain", "~250 km",
+  "Type 8", "-", "-",
+  "Type 9", "Betic Systems, southern Spain", "~250 km",
+  "Type 10", "-", "-",
+  "Type 11", "-", "-",
+  "TL01", "South Portuguese Zone, southern/central Portugal", ">100 km",
+  "TL10-11", "Upper Cretaceous formations, central Portugal", "~215-250 km",
+  "TL15-16", "Betic Systems, southern Spain", "~250 km"
+) |>
+  knitr::kable()
+
+```
+
+#### Cherts congruent with local sources (Types 1-5)
+
+The raw materials which are congruent with local sources are the chalcedony and massive, micro-cryptocrystalline cherts (@fig-local-types). The chalcedony (Type 1; @fig-local-types a) is identified as a massive, fibrous variety without allochems (@fig-local-types a2). It represents 6.6% of the overall Terrace cherts (excluding INDET) and 2.6% in the Shelter. It presents a colourless and translucent appearance, frequently exhibiting partial or complete white patination (@fig-local-types a1). This type is marked by extensive crystallizations, irregularities, and fractures, coupled with post-depositional alterations that challenge the identification and preservation of the cortex. Both macroscopic and petrographic analyses confirm its congruence with hydrothermal chalcedony located within lenses in Triassic volcanic formations, in the known outcrops of Monte do Tolo, Taboal and Cerro Velho (\<10 km west of Vale Boi, as the crow flies; @fig-map b), which are similarly marked by irregularities and fractures.
+
+The cherts are massive micro-cryptocrystalline quartz from a marine environment (@fig-local-types b-h). They represent \~60% of the overall Terrace cherts and \~80% of the chert in the Shelter. Macroscopically, these types show variability which resulted in their separation in four different macroscopic types (Type 2 to 5). In general, these are opaque to sub-translucent cherts, with colours varying from brown, yellow, pale red, and grey, with the frequent presence of spicules and iron oxides. The differences are in their colours, nodule morphology, frequency, and variety of bioclasts (Type 2 including triaxon sponge spicules and echinoderm spines), something already identified in the geological samples [@belmiroCreatingFramesReference2023]. As seen in table @tbl-cortex_tab, whenever present, the cortex seems to show a mixture of irregular cortex and rounded cortex, both from an outcrop source. Petrographically, however, these cherts are homogeneous, except for a small number of artefacts with a banded variety within Type 5. These cherts are characterized by wackestone textures, with accessory amounts of macrocrystalline quartz and fibrous chalcedony, frequently found replacing fossils and occasionally dolomite. Type 5 shows higher percentages of micrite/sparite. In all samples, fossils range from common to very frequent, albeit frequently unidentifiable. When identifiable in thin section, they are sponge spicules (@fig-local-types b2, c2, h2), with the rare occurrence of possible foraminifera (Type 2 and Type 5) and ostracod (@fig-local-types h3) in a sample from Type 5. Porosity varies between 10% and 1%, of vug type. Despite the petrographic homogeneity between local types, this macroscopic separation was maintained for its possible usefulness in identifying preferred types of nodules or macroscopic varieties through time and for future correlation with technological data.
+
+```{r}
+#| label: tbl-cortex_tab
+#| tbl-cap: Frequency of cortex type and thickness by raw material from the Terrace area, characterized during the individual analysis of the lithic assemblage.
+
+# Cortex table
+## Preparing cortex db Terrace
+cortex_tab <- phase_dataset %>% 
+  select(RMTYPE, CORTEX, CORTEXAPPEARANCE, CORTEXTHICKNESS) %>%
+  filter(CORTEX == "YES") %>% # filtering only samples with cortex
+  filter(RMTYPE != "INDET") %>% 
+  filter(RMTYPE != "TYPE 11") %>% # removing Type 11 since it barely has samples
+  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1","TYPE 2", "TYPE 3", "TYPE 4",
+                                        "TYPE 5", "TYPE 6","TYPE 7", 
+                                        "TYPE 8", "TYPE 9", "TYPE 10", "TL"))) 
+
+cortex_tab <- cortex_tab %>% # dropping the caps and organizing value order
+  mutate(CORTEXAPPEARANCE = case_when(
+    CORTEXAPPEARANCE == "ROUNDED" ~ "Rounded",
+    CORTEXAPPEARANCE == "PEBBLE" ~ "Pebble",
+    CORTEXAPPEARANCE == "OUTCROP" | CORTEXAPPEARANCE == "Outcrop" ~ "Irregular",
+    CORTEXAPPEARANCE == "OTHER" | CORTEXAPPEARANCE == "Other" | CORTEXAPPEARANCE == "INDETERMINATE" ~ "Indeterminate",
+    TRUE ~ CORTEXAPPEARANCE)) %>%
+  dplyr::mutate(CORTEXTHICKNESS = case_when(
+    CORTEXTHICKNESS == "MEDIUM" ~ "Medium",
+    CORTEXTHICKNESS == "THICK" ~ "Thick",
+    CORTEXTHICKNESS == "THIN" ~ "Thin",
+    TRUE ~ CORTEXTHICKNESS)) %>% 
+  mutate(CORTEXAPPEARANCE = factor(CORTEXAPPEARANCE, levels = c("Irregular", "Rounded", "Pebble", "Indeterminate"))) %>%
+  mutate(CORTEXTHICKNESS = factor(CORTEXTHICKNESS, levels = c("Thin", "Medium", "Thick"))) %>% 
+  drop_na() # removing missing values that may be cortex=NO instead passed as YES
+  
+## gt summary table
+cortex_tab %>%
+  select(RMTYPE, CORTEXAPPEARANCE, CORTEXTHICKNESS) %>% 
+  tbl_summary(by=RMTYPE, label = list(CORTEXAPPEARANCE ~ "Cortex type", CORTEXTHICKNESS ~ "Thickness")) %>% 
+  modify_header(label ~ "**Variable**") %>% 
+  bold_labels()
+
+```
+
+Based on the previously described macroscopic and petrographic characteristics of the Lower Jurassic cherts of the Algarve [@belmiroCreatingFramesReference2023], we interpret Types 2, 3, 4, and 5 to be local, as they are congruent with the described characteristics representative of cherts from the Lower Jurassic found in the known outcrops Cabo S. Vicente, Foz dos Fornos, Ponta dos Altos, Praia do Belixe and Ferrel (Carixian; \<20 km from Vale Boi, as the crow flies), possibly Upper Jurassic Kimmeridgian outcrops of Mareta (\~15 km from Vale Boi, as the crow flies) and Middle Jurassic Malhão formations (80-100 km east of Vale Boi, as the crow flies) of the Algarve basin. Types 2 and 3 are congruent with the frequently available brown/yellow and red nodules and beds (@fig-local-types b-d), ranging from uncommon to very frequent fossils. These can be found in all previously mentioned outcrops. The macroscopic similarities of Types 4 and 5 are more limited (@fig-local-types e-h), as they show similarities to specific nodules, rarely found in the known outcrops, and mostly located in the inland Lower Jurassic outcrop of Ferrel (@fig-map b). As such, we interpret these cherts as local, but possibly from nodules and inland outcrops that are no longer frequently available or visible in the landscape. This is especially relevant since the inland outcrops of Ferrel are currently mostly destroyed and can be found in poor preservation conditions, due to recent human intervention and construction work, and with small, broken nodules in the surface, frequently altered [@belmiroCreatingFramesReference2023].
+
+```{r}
+#| label: fig-local-types
+#| fig-cap: "Variability of local chert types and main petrographic characteristics. a) Type 1 macroscopic and microscopic views: a1) macroscopic view with a stereomicroscope of white patina and fractures; a2) microscopic view of thin section (XPL), with visible fibrous chalcedony composition and without allochems. b) Type 3 macroscopic and microscopic views: b1) macroscopic view with a stereomicroscope of iron oxides and unidentifiable fossils; b2) microscopic view of thin section (XPL), with visible unidentifiable fossils and iron oxides. c-d) Type 2 macroscopic and microscopic views of multicoloured (c) and single-colour (d) varieties. c1) macroscopic view with a stereomicroscope of the multicoloured bands with iron oxides and unidentifiable fossils; d1) macroscopic view with a stereomicroscope of iron oxides and unidentifiable fossils; c2) microscopic view of thin section (PPL), with visible unidentifiable fossils, sponge spicules and iron oxides; d2) microscopic view of thin section (XPL), with visible unidentifiable fossils and iron oxides. e-f) Type 4 macroscopic and microscopic views: e) macroscopic view with a stereomicroscope of unidentifiable fossils and white splotches; f1) macroscopic view with a stereomicroscope of iron oxides and unidentifiable fossils within white and yellow splotches; f2) microscopic view of thin section (XPL), with visible unidentifiable fossils and iron oxides; f3) microscopic view of thin section (PPL) with a concentration of fossils (possibly sponge spicules) and a fracture. g-h) Type 5 macroscopic and microscopic views: g) macroscopic view with a stereomicroscope; h1) macroscopic view with a stereomicroscope with visible unidentifiable fossils; h2) microscopic view of thin section (PPL), with visible unidentifiable fossils, sponge spicules and iron oxides; h3) microscopic view of thin section (XPL) with small unidentifiable fossils, iron oxides and a possible ostracod replaced by fibrous chalcedony and macrocrystalline quartz."
+
+knitr::include_graphics(here::here("figures/within-and-beyond/local_grid.png"))
+
+```
+
+#### Cherts not congruent with local sources (Types 6-11 and TL)
+
+We identified six chert types with macroscopic and petrographic characteristics that are not congruent with the chert available in known outcrops in western Algarve (@fig-distance-types).
+
+```{r}
+#| label: fig-distance-types
+#| fig-cap: "Variability of non-local types and main petrographic characteristics. a-b) Type 6 macroscopic and microscopic views: a1) macroscopic view with a stereomicroscope with a small degree of white patina and no visible fossils; b1) macroscopic view with a stereomicroscope of a thick alteration rind but translucent interior where some unidentifiable fossils are visible; a2) microscopic view of thin section (PPL) with a mudstone texture; b2) microscopic of thin section (XPL) with small unidentifiable fossils and a laminar microstructure. c-d) Type 7 macroscopic and microscopic views of the peloidal facies (c) and oolitic facies (d): c1) macroscopic view with a stereomicroscope of peloids and sponge spicules; d1) macroscopic view with a stereomicroscope of poorly preserved ooids; c2) microscopic view of thin section (PPL) with packstone texture composed mainly of peloids; d2) microscopic view of thin section (PPL) with packstone texture composed mainly of ooids. e-f) Type 8 macroscopic and microscopic views, with foraminifera represented by the white and black arrows: e) macroscopic view with a stereomicroscope with abundant unidentifiable fossils and foraminifera; f1) macroscopic view with a stereomicroscope with abundant unidentifiable fossils but no visible foraminifera; f2) microscopic view of thin section (PPL) with packstone texture composed of unidentifiable fossils and foraminifera which are not visible macroscopically; f3) microscopic view of thin section (PPL) with packstone texture composed of unidentifiable fossils and foraminifera which not are visible macroscopically. g) Type 9 macroscopic and microscopic views: g1) macroscopic view with a stereomicroscope of unidentifiable fossils and two different fabrics; g2) microscopic view of thin section (XPL) with packstone texture composed of concentrations of unidentifiable fossils and opaques which create a banded microstructure. h) Type 10 macroscopic and microscopic views: h1) macroscopic view with a stereomicroscope of ooids and fractures filled with chalcedony; h2) microscopic view of thin section (PPL) with packstone texture composed of ooids with different levels of preservation."
+
+knitr::include_graphics(here::here("figures/within-and-beyond/nonlocal_grid.png"))
+
+```
+
+Type 6 (@fig-distance-types a-b) corresponds to a massive cryptocrystalline quartz with a mudstone texture, from a marine environment. It represents \~18% of the overall Terrace cherts and \~12% of the chert in the Shelter. This chert is translucent and shows a variety of colours, ranging from brown, red, and grey, which seem to vary in function of the artefact’s thickness. In unaltered samples, visible bioclasts are rare. The cortex is mostly rounded, and rarely pebble-like, ranging from thin to medium thickness (@tbl-cortex_tab). Two sub-types were individualized based on macroscopic characteristics such as colour, translucency variation, and patterns, although they may simply reflect the use of specific nodules from within Type 6’s variability. Five thin sections were produced to better characterize the macroscopic variability of this type and sub-types. The petrographic analysis shows the samples are characterized by a massive microstructure, mainly composed of cryptocrystalline quartz (between 95-97% in the samples), with accessory fibrous chalcedony found replacing fossils or filling fractures (@fig-distance-types a2-b2), and in some samples macrocrystalline quartz, microcrystalline quartz, and micrite/sparite. Allochems are opaques, iron oxides, and bioclasts. Bioclasts are unidentifiable and poorly preserved, with rare identifiable fossils such as sponge spicules, replaced by fibrous chalcedony and rarely by microcrystalline quartz. Porosity is present between \<1-1%, of vug-type when identifiable.
+
+The similarities between chert artefacts at the UP occupations of Vale Boi and the chert from the Rio Maior region (central Portugal; @fig-map a) have been previously suggested although without systematic studies to ascertain the attribution [@bicho_ecodynamics_2013; @pereira_territory_2016-1]. These Cretaceous cherts, mostly found in secondary deposition settings, are described as frequently translucent, with geodes, colours ranging from yellow to red or grey, and mineralogically homogeneous between them. Petrographic studies from central Portugal highlight the presence of iron oxide accumulations and rare fossil ghosts or frequently difficult to see in thin section [@matiasRawMaterialSourcing2016]. When identified, sponge spicules and possible rare foraminifera have been identified [@matiasAprovisionamentoMateriasprimasLiticas2012].
+
+Studies of Upper Cretaceous cherts located in the Lisbon area describe cherts with similar macroscopic characteristics (@fig-map a), with micro-cryptocrystalline quartz mudstones with bioclasts such as sponge spicules or bivalve fragments, or wackestone/packstone textures with abundant bioclasts, including ostracods and different types of foraminifers [@jordaoFlintSourcesMobility2022]. These cherts have also been reported as found in highly variable cobble morphologies and macroscopic traits, which is also observable through the reference samples from central Portugal hosted at LusoLit. Similar to the archaeological thin sections from Type 6 and congruent with other studies [@jordaoFlintSourcesMobility2022; @matiasRawMaterialSourcing2016], the thin sections produced from the Cretaceous cherts hosted at Lusolit show a massive, cryptocrystalline mudstone structure, with uncommon fossils (ghosts), iron oxides and low porosity (\<1%). From these Cretaceous cherts from central Portugal, only the dark grey nodules (sample RT231, with petrographic descriptions available in our online research compendium) showed identifiable fossils which were rare ostracods.
+
+Based on the macroscopic and petrographic similarities to the geological references from central Portugal and congruence with previous studies from this area, we interpreted Type 6 (and sub-types) as belonging to the macroscopically variable Cretaceous cherts (Upper Cenomanian formations) from central Portugal, between \~215-250 km (as the crow flies) north of Vale Boi (@fig-map a).
+
+Type 7 (@fig-distance-types c-d) is a massive micro-cryptocrystalline, peloidal/oolitic packstone, from a marine environment and possibly a high-energy, shallow depositional environment, due to the type, sorting, and preservation conditions of the ooids. In the terrace, it represents 10% of the overall Terrace cherts and less than 1% of the chert in the Shelter. It is characterized by white and grey colours. The cortex is from an outcrop, rounded and in lesser frequencies (\<30%) irregular, and varying between medium thickness to thick (@tbl-cortex_tab). This type shows several facies, with different types and concentrations of allochems and bioclasts, such as peloids (@fig-distance-types c1), ooids (@fig-distance-types d1), and sponge spicules. A detailed scheme of the facies can be found in the Supplementary Information (Online Resource 2). The petrography results show this chert has a massive microstructure and packstone texture (@fig-distance-types c2-d2). It is composed mainly of micro-cryptocrystalline quartz (80%), fibrous chalcedony (10%), and micrite (10%). Allochems are opaques, iron oxides, ooids, and peloids. The ooids are poorly preserved and only uncommonly show concentric lamellae in plane-polarized light. Unlike macroscopical observations, bioclasts under the thin section are all unidentifiable, although rare fossils may be bivalve shells. Porosity is variable (\<1-10%).
+
+The consultation of the lithotheque hosted at UCA allowed us to identify a subset of cherts with similarities to those from Type 7 from the Middle Subbetic region (Betic Systems, south Spain, @fig-map). These cherts are massive, sub-translucent, peloidal/oolitic packstones. Allochems include very frequent peloids and ooids. The peloids are densely arranged in the samples, more or less visible depending on the alterations to the surface or the thickness. The ooids are poorly sorted, with oval or round shapes, and replaced by quartz. Uncommonly the ooids show a preserved nucleus. The presence of bioclasts varies between samples, ranging between common to rare, and when present/identifiable include sponge spicules (common), foraminifera (rare to uncommon), and echinoderm spines (rare). Similar cherts have also been identified and described in previous works, describing grey cherts with peloidal and oolitic facies and occasional foraminifera [@rodriguezPrehistoricFlintExploitations2011]. Despite the non-existence of thin sections for comparison, the macroscopic similarities between the cherts allow us to interpret Type 7 as coming from the Upper Jurassic formations of the Betic Systems, located in the south and southeastern Iberian Peninsula, at least 250 km (as the crow flies) east from Vale Boi (@fig-map).
+
+Type 8 (@fig-distance-types, e-f) corresponds to a massive micro-cryptocrystalline quartz from a marine environment and shelf/platform depositional environment. It represents \~2% of the overall Terrace cherts and \~5% of the chert in the Shelter. Identified and well-preserved fossils are foraminifera from the Pfenderenidae family (@fig-distance-types e, f2), which are larger benthic foraminifera from marine environments [@boudagher-fadelChapterMesozoicLarger2008]. The association of these foraminifera indicates this chert formed from sediments deposited possibly between the Jurassic to the Cretaceous. Macroscopically, this type is characterized by grey and white colours (@fig-distance-types e-f1). The translucency ranges from sub-translucent to opaque. Whenever present, the cortex is rounded and thin (@tbl-cortex_tab). Petrographically, this type is a packstone (mudstone texture close to the edges) with a massive microstructure. It is composed of 97% micro-cryptocrystalline quartz, macrocrystalline quartz, and fibrous chalcedony mostly replacing fossils. Other minerals include uncommon iron oxides and the porosity is of vug type (3%). Fossil content is very frequent (@fig-distance-types f2-f3), albeit mostly unidentifiable and poorly preserved. Identified fossils are rare sponge spicules, rare ostracods with some degree of preservation, common small, unidentified foraminifera (100 μm) of differing preservation degrees, and as mentioned above, foraminifera from the Pfenderenidae family (500 μm). Despite the macroscopic similarities between type 8 and cherts from the Middle Subbetic region chert formations (@fig-map), the geological reference samples showed no macroscopically visible foraminifera. However, our results indicate that despite no foraminifera being visible macroscopically, they are present in thin section. The fact that no foraminifera were identified in the small number of analysed samples from the UCA lithotheque with similarities to Type 8 (n=3) may simply reflect their uncommon visibility, possibly due to patination. Another possible source for Type 8 cherts may be the Upper Cretaceous wackestone/packstone cherts with foraminifers from the Lisbon region [@jordaoFlintSourcesMobility2022]. However, these studies do not specify the existence of Pfenderenidae foraminifers. Given the lack of this specific fossil in the reference samples from the Betic chert \~250 km east and southeast, and the central Portugal cherts 215-250 km north, the probable source of Type 8 remains unknown.
+
+Type 9 (@fig-distance-types g) corresponds to a banded micro-cryptocrystalline quartz/micrite peloidal packstone. It corresponds to less than \~2% of the overall cherts in the Terrace and Shelter areas. It is opaque, has a heterogeneous structure and is characterized by a variable colour distribution: it shows a horizontal, finely laminated pattern, with grey dark bands intercalated with light grey bands (@fig-distance-types g1). Whenever present, the cortex is rounded and is generally thin (@tbl-cortex_tab). In specific samples, the cortex is present on two parallel planes of the sample (parallel to the laminations), which indicates the chert was originally available in bedded layers. Petrographically this chert is a banded packstone (banding of sedimentary origin; @fig-distance-types g2), composed mostly of micro-cryptocrystalline quartz (48%), micrite (40%), dolomite (10%), and accessory fibrous chalcedony and mica (muscovite). The allochems are peloids, unidentifiable bioclasts, iron oxides, and opaque minerals. Porosity is low (1%). Although its origin is unknown, when visiting the UCA lithotheque, we identified a small type of banded black cherts without noticeable fossils or inclusions. Despite the lack of comparative petrographic data, the macroscopic resemblances raise the possibility that Type 9 belongs to Betic chert formations in southern Spain, 250 km east (as the crow flies) from the site (@fig-map).
+
+Type 10 (@fig-distance-types h) is an oolitic packstone, massive micro-cryptocrystalline micrite/quartz from a marine environment and possibly a high-energy, shallow depositional environment, due to the type, sorting, and preservation conditions of the ooids. It represents \~1% of the overall Terrace cherts and less than 0.1% of the chert in the Shelter. Its heterogeneous structure has two types of fabrics with different macroscopic characteristics: brown (opaque) and black (sub-translucent) fabric (@fig-distance-types h1). The sample chosen for the thin section is composed of 35% micro-cryptocrystalline quartz, 53% micrite, 9% macrocrystalline quartz, and accessory fibrous chalcedony (filling fractures) and mica; the percentages of quartz and micrite might be related to the fabrics present in the artefacts. Allochems are common iron oxides and very frequent ooids. Bioclasts are rare, poorly preserved, and replaced by quartz. The porosity is intraparticle and vug (10%). The ooids are distributed homogeneously across the sample (although macroscopically visible in the brown fabric) and are highly abundant and concentrated. They are poorly sorted, varying between 500 and 20 μm (@fig-distance-types h2), show round-to-elliptical shapes and their preservation is variable: some ooids show a poorly preserved micritic structure, while others show concentric laminae structures around a round nucleus [@flugelMicrofaciesCarbonateRocks2010]. This chert shows no similarities to any consulted reference material. Despite the existence of oolitic limestones in the Algarve region correspondent to Middle and Upper Jurassic formations and often described as whiteish (Rocha et al., 1979), the presence of oolitic chert in the region is not recognized in geological and archaeological literature [@cardosoSobrePresencaLaminas2018; @rochaNoticiaExplicativaFolha1979; @verissimo_jazidas_2004] and the visit of outcrops mentioned in the geological cartography did not allow their identification.
+
+Type 11 (@fig-small-types) is a banded/laminated mudstone, characterized by the presence of a conchoidal fracture (within the nodule) and a non-conchoidal, laminar fracture (at the edges of the nodule). This chert type is grey, opaque, and without identifiable allochems. This chert shows a limited presence at the archaeological site as previously mentioned, restricted to the Solutrean occupations, and corresponding to less than 0.1% of the Terrace cherts and \~2% of Shelter cherts.
+
+```{r}
+#| label: fig-small-types
+#| fig-cap: "Macroscopic view with a stereomicroscope of non-local Type 11 and TL cherts. Type 11 – detail of banded patterns composed of parallel different fabrics; TL01 – detail of the jasper and fractures filled with chalcedony; TL02 – detail of the chalcedony with unidentified orange inclusions; TL03 – detail of two round inclusions, possibly iron oxides; TL04 - detail of massive chert with fractures filled with chalcedony; TL05 – detail of the banded pattern within the grey mudstone texture; TL06 - detail of the small, finely sorted ooids; TL07 – detail of the dendritic laminations, possibly composed of iron oxides; TL08 – detail of the mudstone structure, without the presence of allochems; TL09a/b – detail of the mossy, orange and red inclusions within the chalcedony; TL10 – detail of the speckling and laminated patterns within the mudstone structure; TL11 – detail of the banding within the mudstone structure; TL12 – detail of the poorly preserved ooids, only visible under the stereomicroscope; TL13 – detail of the bands and laminations within the mudstone texture fabric; TL14 – detail of an unidentified benthic foraminifera; TL15 – detail of the interface between the massive brown fabric and splotches; TL16 - detail of the of the massive structure with unidentifiable inclusions."
+
+knitr::include_graphics(here::here("figures/within-and-beyond/small_grid.png"))
+
+```
+
+Finally, the TL types (@fig-small-types) are characterized by several samples without macroscopic correspondence to the previously identified types or to the local cherts and chalcedony from the Algarve region previously described by Belmiro et al. [-@belmiroCreatingFramesReference2023]. These are composed mostly of blanks or retouched tools, rarely with cortex (@tbl-cortex_tab), and rarely the same TL type is found in different archaeological layers. A detailed description of these types can be found in the Supplementary Information (Online Resource 2). In both areas, the TL cherts compose less than 1% of the cherts.
+
+Apart from the types common throughout the stratigraphy of the Terrace and Shelter, Type 11 and samples from the TL type also show no identifiable source. The exceptions are TL01, TL10-11 and TL15-16.
+
+Jasper is known in the South Portuguese Zone area [@oliveiraCartaGeologicaPortugal1984], from southern/central Portugal to Spain, north of the Algarve (from Aljustrel to Beja; @fig-map), suggesting that the source of TL01 may be from south/central Portugal at a minimum distance of 100 km north and northeast from Vale Boi (as the crow flies).
+
+Similarly, despite being different from the most frequent Cretaceous nodules, the macroscopic similarities between TL10 and TL11 and specific nodules from central Portugal in the Lusolit lithotheque may indicate these cherts are from the Estremadura/Lisbon area (@fig-map a). This difference in appearance may be due to the already-mentioned variability of the nodule’s macroscopic characteristics.
+
+Finally, TL15 and TL16 show macroscopic similarities to radiolarite reference samples located at the Cadiz lithotheque, which may indicate the source of these cherts is from the Middle Subbetic region [@dominguezbellaMineralesRocasSociedades2010; @dominguez-bellaEstudioMateriasPrimas2006].
+
+### Stratigraphical distribution
+
+#### Terrace area
+
+Most chert types described above are consistently present across the Terrace stratigraphy (except for Type 11 which appears only in level 4 and in a small number of artefacts; n=2). However, being ubiquitous, we identified a difference in the percentages of chert types throughout the stratigraphy (@fig-type-per-level).
+
+In the Gravettian occupations (levels 6 and 7) and at the start of the Proto-Solutrean (level 5) local cherts make up \~45-60%, while the combined non-local cherts make up \~65-40%. Level 6 shows the highest percentages of all non-local chert use, with specific types like Type 6 representing \~30%, although when considering the sum of weight, the percentages reduce, and non-local chert represents \~50% of total chert. The percentages of local chert increase in the following occupations. In the Proto-Solutrean (levels 4E and 4E/5) and Solutrean (levels 4, 4C, and 4D) local cherts make up more than \~70% of the sample and 80% when considering the sum of weight, while non-local cherts decrease significantly and represent percentages lower than 30%. Despite the increase of local cherts during the Proto-Solutrean and Solutrean, there are still significant differences between the local types present in the two technocomplexes. During the top Proto-Solutrean occupations the grey/white cherts (Type 4) are the most present chert with percentages between 35-20%, while in the Solutrean levels, the yellow/brown cherts (Type 2) are present in the highest percentage, at \~30%.
+
+```{r}
+#| label: fig-type-per-level
+#| fig-cap: Terrace area chalcedony and chert type frequency (a) and weight sum (b) per level, without unidentifiable samples. Only percentages superior to the 5% threshold are shown in the figure. Type 1 to 5 (yellow and red colours) represent local chalcedony and cherts. Type 6, 7 and 9 represent non-local cherts with identified probable provenience (brown colours). Type 8, 10 and 11 represent non-local cherts with non-identified provenience (blue and green colours).
+#| fig-width: 10
+
+count_table <- phase_dataset %>%
+  filter(RMTYPE != "INDET") %>% 
+  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1","TYPE 2", "TYPE 3", "TYPE 4",
+                                        "TYPE 5", "TYPE 6","TYPE 7", 
+                                        "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11", "TL"))) %>%
+  dplyr::group_by(Level, RMTYPE) %>% 
+  dplyr::summarise(n = n()) %>%
+  mutate(percent = n/sum(n)) %>% 
+  mutate(Technocomplex = case_when(
+    Level == 4 | Level == "4C" | Level == "4D" ~ "Solutrean",
+    Level == "4E" | Level == "4E/5" | Level == 5 ~ "Proto-Solutrean",
+    Level == 6 | Level == 7 ~ "Gravettian")) %>% 
+  mutate(Technocomplex = factor(Technocomplex, levels = c("Solutrean", "Proto-Solutrean", "Gravettian")))
+
+count_plot <- ggplot(count_table, aes(x=Level,y=percent, fill = RMTYPE)) +
+  geom_bar(stat = "identity", width = 0.5) +
+  facet_grid(.~Technocomplex, scales = "free_x") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  #theme_minimal() + #type of theme
+  labs(y = "Count %") +# change labels
+  guides(fill=guide_legend(title=NULL)) + # remove legend title
+  geom_text(aes(label=ifelse(percent >= 0.05, paste0(sprintf("%.1f", percent*100),"%"),"")),
+                position=position_stack(vjust=0.5), colour="white", size=3) +
+  theme(axis.title.x = element_blank()) +
+  scale_fill_manual(values = c("#C74B50", "#D49B54", "#911F27", "#630A10",
+                              "#FACE7F", "#8B6969", "#CDAF95", "#2B4F60",
+                              "#996666", "#BDD2B6", "#798777", "#BDC7C9"))
+
+
+weight_table <- phase_dataset %>%
+  filter(RMTYPE != "INDET" & WEIGHT != "0") %>% 
+  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1","TYPE 2", "TYPE 3", "TYPE 4",
+                                        "TYPE 5", "TYPE 6","TYPE 7", 
+                                        "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11", "TL"))) %>%
+  dplyr::group_by(Level, RMTYPE) %>% 
+  dplyr::summarise(wsum = sum(WEIGHT)) %>% 
+  mutate(percent = wsum/sum(wsum)) %>% 
+  mutate(Technocomplex = case_when(
+    Level == 4 | Level == "4C" | Level == "4D" ~ "Solutrean",
+    Level == "4E" | Level == "4E/5" | Level == 5 ~ "Proto-Solutrean",
+    Level == 6 | Level == 7 ~ "Gravettian")) %>% 
+  mutate(Technocomplex = factor(Technocomplex, levels = c("Solutrean", "Proto-Solutrean", "Gravettian")))
+
+
+  weight_plot <- ggplot(weight_table, aes(x = Level, y = percent, fill = RMTYPE)) +
+  geom_bar(stat = "identity", width = 0.5) +
+  facet_grid(.~Technocomplex, scales = "free_x") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  #theme_minimal() + #type of theme
+  labs(x = "Level", y = "Weight %") +# change labels
+  guides(fill=guide_legend(title=NULL)) + # remove legend title
+  geom_text(aes(label=ifelse(percent >= 0.05, paste0(sprintf("%.1f", percent*100),"%"),"")),
+                position=position_stack(vjust=0.5), colour="white", size=3) +
+  theme(axis.title.x = element_blank()) + 
+  scale_fill_manual(values = c("#C74B50", "#D49B54", "#911F27", "#630A10",
+                              "#FACE7F", "#8B6969", "#CDAF95", "#2B4F60",
+                              "#996666", "#BDD2B6", "#798777", "#BDC7C9"))
+
+ggarrange(count_plot, weight_plot, labels = c("a", "b"), nrow = 2, common.legend = TRUE, legend = "bottom")
+
+```
+
+```{r}
+#| label: rm-tables
+#| include:  false
+
+# Tables f Terrace and Shelter with n(%) of chert types both overall by area and by level. Perhaps going to SOM (?)
+terrace_table <- phase_dataset %>%
+  filter(RMTYPE != "INDET") %>% 
+  select(RMTYPE, Level) %>% 
+  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1", "TYPE 2", "TYPE 3", "TYPE 4", "TYPE 5", "TYPE 6",
+                                            "TYPE 7", "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11","TL"))) %>%
+  tbl_summary(include = c(RMTYPE), by = Level) %>% 
+  add_overall()
+
+S_dataset["Layer"][is.na(S_dataset["Layer"])] <- "No info"
+shelter_table <- S_dataset %>% 
+  filter(RMTYPE != "INDET") %>%
+  filter(Layer != "D") %>% 
+  select(RMTYPE, Layer) %>% 
+  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1", "TYPE 2", "TYPE 3", "TYPE 4", "TYPE 5", "TYPE 6",
+                                            "TYPE 7", "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11","TL"))) %>%
+  tbl_summary(include = c(RMTYPE), by = Layer) %>% 
+  add_overall()
+
+```
+
+When plotting the weight, it is apparent that most of the samples are located under the 10 gr mark, with median and bottom quartiles often falling under the 5 gr line (@fig-weight). Local types, such as Type 2, Type 4, and Type 5, although mostly represented by artefacts with a medium mass (\~5-10 gr), show the heaviest and highest number of heavy artefacts. In comparison, other types, although showing some variation in the weight of artefacts, show smaller artefacts and their means and medians are frequently closer to the bottom quartile. As seen in (@fig-weight), non-local types show larger weights from level 5 to level 7.
+
+```{r}
+#| label: fig-weight
+#| fig-cap: "Terrace boxplots of chert type weight (gr) per level. Diamond shape within the boxplots represents weight mean. Type 1 to 5 (yellow and red colours) represent local chalcedony and cherts. Type 6, 7 and 9 represent non-local cherts with identified probable provenience (brown colours). Type 8, 10 and 11 represent non-local cherts with non-identified provenience (blue and green colours)."
+#| #| fig-width: 10
+
+# Weight boxplots terrace
+phase_dataset %>%
+  filter(WEIGHT !="0" & !RMTYPE %in% c("INDET","GB","TL")) %>%
+  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1","TYPE 2", "TYPE 3", "TYPE 4",
+                                        "TYPE 5", "TYPE 6","TYPE 7", 
+                                        "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11", "TL"))) %>%
+  mutate(Technocomplex = factor(Technocomplex, levels = c("Solutrean", "Proto-Solutrean", "Gravettian"))) %>%
+  ggplot(aes(RMTYPE, WEIGHT, fill = RMTYPE)) +
+  geom_boxplot(aes(fill=factor(RMTYPE)), outlier.shape=21) +
+  facet_wrap(~Technocomplex + Level) +
+  stat_summary(fun.y=mean, geom="point", shape=23) +
+  labs(y="Weight (gr)") +
+  coord_cartesian(ylim =  c(0, 40)) +
+  scale_fill_manual(values = c("#C74B50", "#D49B54", "#911F27", "#630A10",
+                              "#FACE7F", "#8B6969", "#CDAF95", "#2B4F60",
+                              "#996666", "#BDD2B6", "#798777", "#BDC7C9")) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(), axis.title.x = element_blank())
+  
+```
+
+#### Shelter area
+
+The same raw materials found in the Terrace area are also found in the Solutrean occupation of the Shelter, albeit with some differences (@fig-analysis_shelter). The local cherts make up between \~65-75% (considering both counts and weight) of the sample and are mainly composed of the brown/yellow cherts (Type 2) that frequently characterize the Lower Jurassic outcrops of the Algarve (@fig-analysis_shelter a-b). The presence of cherts not congruent with the local sources is, like level 4 in the Terrace, close to 25%, although dominated mostly by Type 6 (\~15%). Similarly to the Solutrean occupations of the Terrace, although the artefacts are generally small (lower weights), the local types show a higher variability in mass, with several outliers and heavy samples when compared to the non-local types (@fig-analysis_shelter c).
+
+```{r}
+#| label: fig-analysis_shelter
+#| fig-cap: "a-b) Shelter area chalcedony and chert type frequency (a) and weight sum (b) per level, without unidentifiable samples. Only percentages superior to the 5% threshold are shown in the figure. c): Shelter boxplots of chert type weight (gr) per level. Type 1 to 5 (yellow and red colours) represent local chalcedony and cherts. Type 6, 7 and 9 represent non-local cherts with identified probable provenience (brown colours). Type 8, 10 and 11 represent non-local cherts with non-identified provenience (blue and green colours)."
+#| #| fig-width: 10
+
+# Type per level plots fr Shelter
+## Preparing db for the barplots
+s_data_plots <- S_dataset %>% # sorting missing values and filtering non-solutrean layers
+  filter(RMTYPE != "INDET" & WEIGHT != "0") %>% 
+  mutate_at(vars(Layer), ~replace_na(., "ND")) %>% 
+  filter(CODE != "B" & Layer != "D" & Layer != "ND" & Layer != "No info") %>% #removing buckets (B)
+  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1","TYPE 2", "TYPE 3", "TYPE 4",
+                                        "TYPE 5", "TYPE 6","TYPE 7", 
+                                        "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11", "TL")))
+
+## Count barplot
+shelter_count <- s_data_plots %>%
+  dplyr::group_by(Layer, RMTYPE) %>% 
+  dplyr::summarise(n = n()) %>%
+  mutate(percent = n/sum(n)) %>% 
+  ggplot(aes(x = Layer, y = percent, fill = RMTYPE)) +
+  geom_bar(stat = "identity", width = 0.5) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  #theme_minimal() + #type of theme
+  labs(y = "Count %") +# change labels
+  guides(fill=guide_legend(title=NULL)) + # remove legend title
+  geom_text(aes(label=ifelse(percent >= 0.05, paste0(sprintf("%.1f", percent*100),"%"),"")),
+                position=position_stack(vjust=0.5), colour="white", size=3) +
+  theme(axis.title.x = element_blank()) + 
+  scale_fill_manual(values = c("#C74B50", "#D49B54", "#911F27", "#630A10",
+                              "#FACE7F", "#8B6969", "#CDAF95", "#2B4F60",
+                              "#996666", "#BDD2B6", "#798777", "#BDC7C9"))
+## Weight barplot
+shelter_weight <- s_data_plots %>%
+  dplyr::group_by(Layer, RMTYPE) %>% 
+  dplyr::summarise(wsum = sum(WEIGHT)) %>% 
+  mutate(percent = wsum/sum(wsum)) %>% 
+  ggplot(aes(x = Layer, y = percent, fill = RMTYPE)) +
+  geom_bar(stat = "identity", width = 0.5) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  #theme_minimal() + #type of theme
+  labs(y = "Weight %") +# change labels
+  guides(fill=guide_legend(title=NULL)) + # remove legend title
+  geom_text(aes(label=ifelse(percent >= 0.05, paste0(sprintf("%.1f", percent*100),"%"),"")),
+                position=position_stack(vjust=0.5), colour="white", size=3) +
+  theme(axis.title.x = element_blank()) + 
+  scale_fill_manual(values = c("#C74B50", "#D49B54", "#911F27", "#630A10",
+                              "#FACE7F", "#8B6969", "#CDAF95", "#2B4F60",
+                              "#996666", "#BDD2B6", "#798777", "#BDC7C9"))
+
+#ggplot(aes(RMTYPE, WEIGHT, fill = RMTYPE)) +
+  #geom_boxplot(aes(fill=factor(RMTYPE)), outlier.shape=21) +
+## Weight boxplot
+shelter_box <- s_data_plots %>% 
+  filter(WEIGHT !="0" & !RMTYPE %in% c("INDET","TL") & Layer != "ND") %>%
+  ggplot(aes(RMTYPE, WEIGHT, fill = RMTYPE)) +
+  geom_boxplot(aes(fill=factor(RMTYPE)), outlier.shape=21) +
+  facet_wrap(.~Layer, ncol = 1) +
+  stat_summary(fun.y=mean, geom="point", shape=23) +
+  labs(y = "Weight (gr)") +
+  #geom_jitter(shape=16, position=position_jitter(0.2)) +
+  coord_cartesian(ylim =  c(0, 35)) +
+  scale_fill_manual(values = c("#C74B50", "#D49B54", "#911F27", "#630A10",
+                              "#FACE7F", "#8B6969", "#CDAF95", "#2B4F60",
+                              "#996666", "#BDD2B6", "#798777", "#BDC7C9")) +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(), legend.position = "none", axis.title.x = element_blank())
+
+## Arrange plots in a single figure
+gg1 <- ggarrange(shelter_count, shelter_weight, labels = c("a", "b"), nrow = 2, common.legend = TRUE, legend="bottom")
+ggarrange(gg1, shelter_box, labels = c(" ", "c", ncol = 2, common.legend = TRUE, legend = "bottom"))
+  
+```
+
+## Discussion
+
+The macroscopic and petrographic analysis of chert and chalcedony lithic materials from the UP levels of the Terrace and Shelter areas at Vale Boi yielded essential insights into the procurement of raw materials and the mobility patterns of hunter-gatherers in southwestern Iberia. These materials serve as valuable indicators for identifying changes in mobility, as they reveal patterns of both local and non-local procurement and have allowed us to answer questions about landscape exploitation and territory movement through the presence (or absence) of local, regional, and long-distance cherts.
+
+The patterns of high percentages of local raw materials in all assemblages indicate a heavy reliance on nearby resources. The local chalcedony and chert indicate that the groups were sourcing a significant portion of their raw materials within approximately a 20 km radius of the site. The direct procurement of these materials is plausible, given that known chalcedony primary sources are situated to the west, about 10 km from Vale Boi (or possibly in the vicinity of the site), and chert sources are found to the east, within the inland Lower Jurassic outcrops, roughly 8 km away (@fig-map b). This hypothesis is supported by the potential existence of UP occupations near these outcrops, which might reflect quarrying and chert catchment activities during prehistory [@zambujo_jazidas_1998]. Evidence of short-distance procurement at Vale Boi includes the presence of heavy nodules (@fig-weight) with little indication of knapping and large chunks of chert from local varieties, often with parent rock still attached.
+
+It is also possible that local cherts were procured from farther distances, perhaps as part of embedded activities [@pereira_territory_2016-1]. The chert sources from the Lower and Upper Jurassic periods in Western Algarve, located along the beach and cliff areas, can be found between 15-18 km southwest of Vale Boi (@fig-map b). While our current data is not able to pinpoint which specific outcrops were exploited based on macroscopic and petrographic analysis, the identification of persistent coastal adaptions at Vale Boi [@bichoPleistoceneHuntergathererCoastal2022] and exploitation of marine resources such as shells at the site indicates that these groups visited the coast and used the available coastal resources throughout all of the UP [@belmiro_gravettian-solutrean_2021; @mannePryingNewMeaning2011]. This suggests that raw materials could have been conveniently acquired in coastal vicinities without significant detours [@binfordOrganizationFormationProcesses1979; @surovellBehavioralEcologyLithic2009].
+
+The limitations of macroscopic and petrographic methods in discerning between outcrops due to the chert nodule similarities have also impaired the specific distinction between Lower Jurassic and Upper Jurassic sources in western Algarve (within approximately a 20 km radius of the site) and Middle Jurassic cherts located in eastern Algarve (approximately 80 km to the east; @fig-map c). As such, the presence of these regional resources at Vale Boi is uncertain.
+
+A similar issue was noted by @surovellBehavioralEcologyLithic2009, who described a scenario at the Late Pleistocene archaeological site of Krmpotich (USA), where a specific type of chert found at the site could be sourced from both local and long-distance outcrops. The author suggested that some of these cherts might have been imported from distant sources or previous campsites.
+
+Consequently, we cannot rule out the possibility that some of the cherts we have identified as being sourced within a 20 km radius of Vale Boi may actually be the result of regional procurement and mobility, potentially from areas approximately 80-100 km away, where the Middle Jurassic cherts are located. Given the similarity of the raw materials and the absence of geochemical studies which have shown to be key to differentiating between cherts belonging to the same geological formations or cherts formed under similar conditions [@gomezdesolerMultitechniqueApproachCharacterization2023], and considering the studies and model mentioned above, most of these cherts likely originate from local sources, while a minor portion may be attributable to regional movements.
+
+In contrast to the Middle Jurassic cherts, the regional Upper Jurassic cherts located \~90 km east of Vale Boi (@fig-map c) have easily discernible characteristics. However, they have not been detected in the assemblages. This absence could be attributed to the limited use and transport of these nodules from their sources to Vale Boi, potentially due to the small size of the nodules (often between 3-5 cm), the difficulty of detaching them from the parent rock, or challenges related to their accessibility and visibility, given that the known outcrops are situated inland, approximately 10 km from the present coastline. This may corroborate the previously observed interest of Pleistocene hunter-gatherers in coastal environments in Iberia [@schmidtRapidClimateChange2012], which would have been characterized by rich marine productivity due to upwelling especially in the Atlantic coast [@bichoPleistoceneHuntergathererCoastal2022; @bicho_at_2008], as well as the aforementioned adaptations and use of coastal resources of hunter-gatherers from Vale Boi [@bichoPleistoceneHuntergathererCoastal2022; @mannePryingNewMeaning2011].
+
+A similar case is observed for the jaspers located in the SPZ [@oliveiraCartaGeologicaPortugal1984], located at a minimum of 100 km distance from Vale Boi, as the crow flies. Despite being a source located at closer distances when compared to the cherts of central Portugal or from southwestern Spain, the jasper occurs in trace amounts (n=3) and only in the Gravettian layers (layer 6). Occurring north and northeast, the limited amount of jasper in the assemblage may either represent a limited use of these resources in detriment of the cherts from the Lisbon and Rio Maior area, or suggest that they were used and knapped elsewhere, but not transported, either by the same groups or through exchanges by different groups.
+
+So far, we have discussed the presence of cherts whose outcrops are in relative proximity to Vale Boi and show the full usage of local chert variability (albeit with uncertainty regarding the Upper Jurassic cherts of western Algarve due to their macroscopic similarities) and the selective usage of regional cherts within the Algarve. As previously mentioned, however, it is the combined identification of local and long-distance cherts that allows us to have a better idea of the total exploited territory, as well as the possible existence of exchanges and social networks between groups occupying different territories.
+
+Although a wide variety of chert types incongruent with the regional reference collection were identified throughout the stratigraphy and classified as non-local, we were only able to ascertain the possible sources of three types: Type 6, Type 7 and Type 9. The long-distance cherts with identified sources come from distances of over \~200 km and in two main directions: 1) from the north, where Cretaceous cherts from central Portugal are found (@fig-map a); and 2) from the east, where peloidal/oolitic chert from western Andalusia is present (@fig-map), and possibly jasper, transported by the Guadiana river at the current border between Portugal and Spain.
+
+In fact, Vale Boi’s proximity to a coastal setting, with access to beaches, as well as rivers such as the Guadiana River, where raw material nodules could be transported from far-away distances, could explain the presence of long-distance cherts. In this case, the presence of cherts with sources from over 200 km would be explained by their procurement in secondary settings and a possible local movement range. However, the scarcity of pebble cortex and the predominance of rounded cortex suggest that these cherts were likely not collected from beaches or riverbeds far from the outcrops but were possibly gathered closer to the source areas [@kuhnUpperPaleolithicRaw2004]. As such, the presence of these long-distance cherts is better explained by the extended movement of human groups in the south-north and west-east axes.
+
+However, it is relevant to ask why human groups occupying Vale Boi were obtaining a considerable amount of their chert from such long distances and such specific directions, either directly through procurement or through exchanges with other groups. Although the source of the other non-local cherts is still unknown, making the directions and distances to obtain them also unknown, the identified axes of long-distance movement to the north and east may be the result of the influence of the topography on mobility patterns. Indeed, formal models that seek to explain hunter-gatherer mobility have highlighted the significance of factors such as topography on the distances travelled by groups or individuals [@brantinghamMeasuringForagerMobility2006].
+
+Similarly, friction of terrain cartography for Iberia has shown that terrain can produce different costs of travelling on foot, which differ from those directly observed on current-day maps and direct distances [@diazdelrioWhatIberianCopper2020]. In this context, distance is less related to measurements and more related to the time it costs to go from point A to point B [@zilhaoLatePersistenceMiddle2021]. For example, @diazdelrioWhatIberianCopper2020 highlights the existence of low-cost pathways through plateaus and the connectivity between the river valleys of central and south Iberia (Guadalquivir, Guadiana and Tagus).
+
+Using the same friction of terrain cartography, @zilhaoLatePersistenceMiddle2021 also identifies the possible role of terrain in hunter-gatherer mobility in the Upper Paleolithic. For example, the author highlights that the Parpalló bifacial point is found across central/south Spain and Portugal during the Upper Solutrean, and thus is considered the index fossil for this period in the region. From westernmost central Portugal to easternmost central Spain (west-east axis across Iberia), there is a distance of \~800-900 km as the crow flies. However, the Parpalló point is not found in northern Spain (Catalunya), only 200 km north of the easternmost site where the index fossil was identified. The author suggests that this separation may be explained by the friction of terrain, which divides Iberia into two halves, creating a quicker mobility pathway between central/south Spain and Portugal in opposition to the higher-cost time necessary to travel to northern Spain.
+
+As such, the observed long-distance transfer of cherts in the north/east directions by hunter-gatherers at Vale Boi might reflect this central and southern Iberia territory dynamic and the exploitation of the natural corridors for movement, explaining the substantial use of long-distance chert. In this case, the presence of a smaller subset of non-local cherts of unknown origin (TL) but not knapped at the site could represent different forms of long-distance trade of finished goods and blanks, or interactions with various social networks, potentially even indicating individual networks and mobility strategies [sensu @gamblePalaeolithicSocietiesEurope1999].
+
+Another key idea about these mobility patterns is not only their distance and direction but also their continuity throughout the UP. The detection of the same types of non-local raw materials throughout the stratigraphy at Vale Boi points to a persistent use of long-distance chert sources. This continuity cannot only be explained by the natural topographic connectivity between central and south Iberia but can also be attributed to a tradition of shared knowledge and culture regarding the locations of raw materials and other resources within the landscape, or the preservation of social networks over time.
+
+For example, @cascalheira_2017 acknowledge the adoption of specific behavioural strategies by Vale Boi hunter-gatherers in response to the regional ecological conditions, which were sustained throughout the UP at the site. Practices such as grease rendering or the functional specialization of raw materials (e.g., the use of quartz and greywacke for bone breakage activities or quartz for grease rendering) are seen as deliberate actions with significant cultural implications for future generations, influencing the adaptive choices made over time. Accordingly, chert raw material acquisition and management appear to be integral to these behavioural strategies, established from the site’s earliest occupations and perpetuated throughout the UP.
+
+However, despite the consistent presence of local and long-distance chert throughout the stratigraphy, we identified trends of changing frequencies in the different occupations, possibly also providing different interpretations about mobility and social behaviour through time. For example, the significant presence of non-local cherts during the Gravettian occupations at Vale Boi suggests extensive communication and mobility among the groups occupying the site. As previously established, however, while it would be expected for Solutrean groups to have high mobility and extended social networks, the opposite would be expected for the Gravettian occupations. As such, our results, especially those from the Gravettian occupations, diverge from the anticipated patterns.
+
+Specifically, technological analyses of lithic assemblages have unveiled notable differences between Gravettian assemblages from the Atlantic and Mediterranean coastal regions, pointing to the existence of two distinct regional Gravettian traditions in southern Iberia: the Vicentine Gravettian at Vale Boi, and the Mediterranean Gravettian identified in UP sites in southern Spain [@marreirosLithicTechnologyGravettian2015; @marreirosLithicTechnologyVariability2013]. These traditions are thought to reflect adaptations to the unique local and regional ecological settings [@bradtmoller_lithic_2016] and evolving environmental conditions [@marreirosLithicTechnologyVariability2013], potentially fostering distinct ethnographic divisions among hunter-gatherer communities [@marreirosLithicTechnologyGravettian2015]. Consequently, it would be expected for territorial or cultural demarcations to influence material usage patterns, with a shift towards a greater reliance on local resources and a diminished use of non-local raw materials during the Gravettian at Vale Boi.
+
+However, the observed prevalence of non-local chert materials could reflect not merely long-distance movements within a single cultural framework but rather the result of interactions and exchanges between different cultural groups, thus explaining the existence of distinct regional technological characteristics.
+
+This perspective aligns with Brantingham's [-@brantinghamMeasuringForagerMobility2006] discussion on social exchange, which posits that exchanges likely occurred between groups occupying distinct territories, who would meet regularly to trade raw materials. This model helps explain the presence of materials from distant sources at archaeological sites, illustrating the nuanced and interconnected nature of prehistoric social landscapes [@whallonSocialNetworksInformation2006].
+
+In this sense, interpreting the ubiquitous presence of long-distance chert at Vale Boi as a result of exchange between groups and social networks informs us that even during chronological periods where ethnographic boundaries have been suggested, there is communication and exchange between groups. This further cements the idea of interconnectedness across the Iberian territory during the UP, expanding the extensive line of contacts and networks identified across north and central Iberia [@aubryRawMaterialProcurement2004; @aubryUpperPalaeolithicLithic2016; @corchonrodriguezMobiliteTerritoiresRelations2016; @hermidaSilexNWPeninsula2016; @marreirosExploringLithicVariability2016; @ortegaMobilitatDesplacamentsDels2003; @sanchezdelatorreNewDataChert2023] to southwesternmost Iberia.
+
+However, although social networks may explain the presence of long-distance cherts at Vale Boi even during periods of demarked regional boundaries, the high/low presence of long-distance raw materials at the site may not be the direct result of a higher reliance on these networks, or their expansion or shrinkage.
+
+An alternative interpretation of the varying frequencies of non-local cherts during different periods at Vale Boi can be explained by the “Mean per Capita Occupation Span” model proposed by @surovellBehavioralEcologyLithic2009, and the “Distance/Frequency Index (DFI)” outlined by @groveMovingFarMoving2023a. These models hypothesize that shorter-term occupations are likely to show a higher proportion of non-local artefacts, whereas with longer-term settlements, the prevalence of local artefacts increases. This pattern may be attributed to environmental influences: challenging conditions such as fragmented habitats and cooler temperatures limit mobility, making long-term settlement in areas rich in local resources a preferable, lower-risk option [@surovellBehavioralEcologyLithic2009].
+
+This pattern is mirrored in the archaeological record of Vale Boi, where, aside from the earlier Gravettian of levels 6 and 7, subsequent occupations seem to adopt a logistical-settlement strategy, positioning Vale Boi as a long-term basecamp [@cascalheira_2017]. In this context, the Gravettian phase at Vale Boi could reflect a period of enhanced mobility and brief occupations, possibly interspersed with reoccupations, indicative of a significant import of non-local raw materials. This scenario parallels observations from the Late Gravettian in the French Massif central, where hunter-gatherer groups are known to have transported entire or pre-formed blocks of raw material over considerable distances (\> 200 km) for short-term, hunting-related site occupations [@delvigneGeoresourcesTechnoculturalExpressions2019]. The authors also note that in the following occupations, during the Badegoulian and Magdalenian, occupation duration increases along with a significant increase of local and semi-local raw materials.
+
+Similarly, the lower percentages of non-local cherts characterizing the phases following the Gravettian at Vale Boi could reflect a period of increased site occupation. In this context, and following the model by @surovellBehavioralEcologyLithic2009, the shift toward colder and drier climatic conditions marked by Heinrich Event 2 (HE2) during the Proto-Solutrean, followed by the Last Glacial Maximum in the Solutrean period [@belmiro_gravettian-solutrean_2021; @cascalheiraHunterGathererEcodynamics2013; @gonzalez-samperiz_steppes_2010-1; @sanchez_goni_millennial-scale_2010; @schmidtRapidClimateChange2012], could have resulted in a more challenging environment with sparser vegetation [@cascalheiraHunterGathererEcodynamics2013; @gonzalez-samperiz_steppes_2010-1]. These changes likely constrained the mobility of hunter-gatherers, fostering longer-term settlements within the resource-rich niche of southwestern Portugal [@cascalheira_2017; @schmidtRapidClimateChange2012]. Consequently, as settlements extended in duration, the reliance on non-local raw materials, whether sourced directly or acquired through trade, diminished in favour of increasingly dominant local raw materials.
+
+## Conclusions
+
+Our findings build upon earlier studies indicating that the majority of chert utilized at Vale Boi originates from local Lower Jurassic sources within a 20 km radius of the site [@pereira_territory_2016-1], with non-local materials constituting a relevant portion of the chert used. The hypothesis of long-distance procurement of Cretaceous cherts from central Portugal, situated north of Vale Boi, is corroborated by visual and petrographic evidence [@pereira_territory_2016-1; @bicho_ecodynamics_2013], and this pattern persists throughout the UP. Furthermore, the identification of cherts bearing macroscopic resemblance to the peloidal/oolitic Upper Jurassic cherts from the Betic System in southern Spain confirms a west-east mobility axis, previously inferred from techno-typological studies, also spanning the entirety of the UP period.
+
+These findings reveal a landscape of hunter-gatherers engaged in complex practices of resource management, and possibly risk management. The presence of allochthonous raw materials, albeit in small quantities during the Proto-Solutrean and Solutrean phases, underscores that the inhabitants of Vale Boi—situated on the periphery of Iberia and Europe, bordered by the sea to the south and west, and confined to the patchy refugia created by the worsening climatic conditions of the HE2 and following Glacial Maximum [@schmidtRapidClimateChange2012]—were certainly not isolated. Instead, they were part of an extensive social network, a pattern of interconnectivity that resonates with findings across western Europe [@hermidaSilexNWPeninsula2016; @corchonrodriguezMobiliteTerritoiresRelations2016; @ortegaMobilitatDesplacamentsDels2003; @aubryUpperPalaeolithicLithic2016; @aubryRawMaterialProcurement2004; @sanchezdelatorreNewDataChert2023].
+
+In southern Portugal, this interconnection among UP hunter-gatherers from diverse and distant regions of Iberia is similarly observed. This was already expected for the Proto-Solutrean and Solutrean occupations, but less so for the Gravettian where social boundaries were expected based on previously identified technological facies between regions [@marreirosLithicTechnologyGravettian2015]. Instead, our results show a high presence of long-distance raw materials during the Gravettian occupations, which may indicate that social networks were established from the first UP occupations in south Portugal and maintained through time.
+
+The outcomes of this research pave the way for continued exploration of these assemblages through diverse methodologies. Future directions include employing a geochemical approach to both the studied assemblages and the geological reference collection, aiming to enrich discussions on mobility throughout the UP at Vale Boi. This approach is anticipated to provide diagnostic elements to distinguish between cherts from Lower and Middle Jurassic units, thereby offering a comprehensive view of regional resource utilization and mobility patterns.
+
+Additionally, experimental replication and the creation of a reference collection modified through heat treatment could enhance the identification of raw material types and currently indistinguishable samples, as noted in prior research [@pereira_territory_2016-1]. Lastly, we intend to integrate technological data from current and ongoing datasets to delve deeper into the usage and management of raw materials (both local and non-local) over time, their association with different site uses, and to contextualize these practices within the broader framework of human adaptations to changing environmental conditions throughout the UP.
+
+## Supplementary Information {.unnumbered}
+
+**Online Resource 1**: Data dictionaries for macroscopic (group and individual) and petrographic analyses.
+
+**Online Resource 2**: Terrace and shelter lithotypes complete macroscopic and petrographic description.
+
+**Online resource 3**: Summarised type macroscopic and petrographic features and epoch/stage identification.
