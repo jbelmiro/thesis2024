@@ -11,12 +11,15 @@ book:
     - summary.qmd
     - geochemistry.qmd
     - references.qmd
+  appendices:
+    - appendix1.qmd
 
 bibliography: references.bib
 
 format:
   pdf:
     documentclass: scrreprt
+    number-sections: true
     keep-tex: true
     papersize: a4
     indent: true

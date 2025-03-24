@@ -8,7 +8,6 @@ execute:
   comment: "#>"
   fig-path: "../figures/"
   fig-dpi: 600
-
 ---
 
 ```{r}
@@ -31,9 +30,7 @@ library(ggpmisc)
 
 ## X-ray diffraction (XRD)
 
-Some text.
-Some other text.
-A bit more of text.
+Some text. Some other text. A bit more of text.
 
 ```{r}
 #| label: xrd-readtables
@@ -68,7 +65,6 @@ sp69_xrd <- read_csv('data/xrd_data/SP69_xrd.csv')
 
 
 ```
-
 
 ```{r}
 #| label: xrd-graphs
@@ -325,7 +321,6 @@ p_sp58 <- sp58_long |>
   annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp58_perc)))
 
 ```
-
 
 ## Scanning electron microscopy and energy dispersive X-ray spectroscopy (SEM-EDS)
 
