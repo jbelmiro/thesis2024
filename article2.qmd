@@ -1,6 +1,4 @@
 ---
-title: "Within and beyond: chert procurement patterns during the Upper Palaeolithic in Southwesternmost Iberia"
-
 execute:
   echo: false
   warning: false
