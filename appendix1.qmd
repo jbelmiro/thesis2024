@@ -10,4 +10,444 @@ execute:
 
 # Supplementary materials 1
 
+```{r}
+#| label: somxrd-library
+
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(janitor)
+
+```
+
+```{r}
+#| label: somxrd-readtables
+
+# Read grouped supporting data
+xrd_perc <- read_csv('data/xrd_data/xrd_goals.csv') # File with component percentage of all samples for annotations
+xrd_marks <- read_csv('data/xrd_data/xrd_peaks.csv') # File with peak data and d spacing for plot labels
+
+xrd_marks <- xrd_marks |> # Correct the quartz denomination on base dataset
+  dplyr::mutate(Phase = case_when(
+    Phase == "SiO2" ~ "Quartz",
+    TRUE ~ Phase))
+
+# Read individual xrd files
+sp6_xrd <- read_csv('data/xrd_data/SP6_xrd.csv')
+sp7_xrd <- read_csv('data/xrd_data/SP7_xrd.csv')
+sp10_xrd <- read_csv('data/xrd_data/SP10_xrd.csv')
+sp14_xrd <- read_csv('data/xrd_data/SP14_xrd.csv')
+sp18_xrd <- read_csv('data/xrd_data/SP18_xrd.csv')
+sp21_xrd <- read_csv('data/xrd_data/SP21_xrd.csv')
+sp28_xrd <- read_csv('data/xrd_data/SP28_xrd.csv')
+sp30_xrd <- read_csv('data/xrd_data/SP30_xrd.csv')
+sp33_xrd <- read_csv('data/xrd_data/SP33_xrd.csv')
+sp34_xrd <- read_csv('data/xrd_data/SP34_xrd.csv')
+sp40_xrd <- read_csv('data/xrd_data/SP40_xrd.csv')
+sp50_xrd <- read_csv('data/xrd_data/SP50_xrd.csv')
+sp52_xrd <- read_csv('data/xrd_data/SP52_xrd.csv')
+sp57_xrd <- read_csv('data/xrd_data/SP57_xrd.csv')
+sp59_xrd <- read_csv('data/xrd_data/SP59_xrd.csv')
+sp61_xrd <- read_csv('data/xrd_data/SP61_xrd.csv')
+sp63_xrd <- read_csv('data/xrd_data/SP63_xrd.csv')
+sp66_xrd <- read_csv('data/xrd_data/SP66_xrd.csv')
+
+```
+
+```{r}
+#| label: fig-xrd-sp6
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP6_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+# SP6 Cabo S. Vicente
+sp6_marks <- xrd_marks |>
+  filter(Sample == "SP6")
+sp6_perc <- xrd_perc |>
+  filter(Sample == "SP6") |>
+  select(-Sample, -ESD)
+
+
+sp6_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 5000) |> 
+  select(-Quartz_nb, -Dolomite_nb) |>
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 50000)) +
+  geom_point(data = sp6_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp6_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp6_perc)))
+
+```
+
+```{r}
+#| label: fig-xrd-sp7
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP7_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+sp7_marks <- xrd_marks |>
+  filter(Sample == "SP7")
+sp7_perc <- xrd_perc |>
+  filter(Sample == "SP7") |>
+  select(-Sample, -ESD)
+
+sp7_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
+  rename(Quartz = `Quartz (SiO2)`) |> 
+  rename(Dolomite = `Dolomite (CaMg(CO3)2)`) |> 
+  select(-Quartz_nb, -Dolomite_nb) |>
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 65000)) +
+  geom_point(data = sp7_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp7_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 60000, label = list(cbind(sp7_perc)))
+
+```
+
+```{r}
+#| label: fig-xrd-sp10
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP7_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+sp10_marks <- xrd_marks |>
+  filter(Sample == "SP10")
+sp10_perc <- xrd_perc |>
+  filter(Sample == "SP10") |>
+  select(-Sample, -ESD)
+
+sp10_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Calcite), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Calcite", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 55000)) +
+  geom_point(data = sp10_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp10_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 55000, label = list(cbind(sp10_perc)))
+
+```
+
+```{r}
+#| label: fig-xrd-sp14
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP7_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+sp14_marks <- xrd_marks |>
+  filter(Sample == "SP14")
+sp14_perc <- xrd_perc |>
+  filter(Sample == "SP14") |>
+  select(-Sample, -ESD)
+
+sp14_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
+  select(-Quartz_nb, -Dolomite_nb, -Halite_nb) |>
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite, Halite), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Halite", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 50000)) +
+  geom_point(data = sp14_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp14_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1", "darkgoldenrod1" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp14_perc)))
+
+```
+
+p_sp18 \<- sp18_long \|\>
+
+```{r}
+#| label: fig-xrd-sp18
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP7_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+sp18_marks <- xrd_marks |>
+  filter(Sample == "SP18")
+sp18_perc <- xrd_perc |>
+  filter(Sample == "SP18") |>
+  select(-Sample, -ESD)
+
+sp18_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
+  select(-Quartz_nb, -Dolomite_nb, -Halite_nb) |>
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite, Halite), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Halite", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 50000)) +
+  geom_point(data = sp18_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp18_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1", "darkgoldenrod1" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp18_perc)))
+
+```
+
+```{r}
+#| label: fig-xrd-sp21
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP7_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+sp21_marks <- xrd_marks |>
+  filter(Sample == "SP21")
+sp21_perc <- xrd_perc |>
+  filter(Sample == "SP21") |>
+  select(-Sample, -ESD)
+
+sp21_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |>
+  select(-Quartz_nb) |>
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 55000)) +
+  geom_point(data = sp21_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp21_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp21_perc)))
+
+```
+
+```{r}
+#| label: fig-xrd-sp28
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP7_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+sp28_marks <- xrd_marks |>
+  filter(Sample == "SP28")
+sp28_perc <- xrd_perc |>
+  filter(Sample == "SP28") |>
+  select(-Sample, -ESD)
+
+sp28_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |>
+  select(-Quartz_nb, -Dolomite_nb) |>
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 60000)) +
+  geom_point(data = sp28_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp28_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 55000, label = list(cbind(sp28_perc)))
+
+```
+
+```{r}
+#| label: fig-xrd-sp30
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP7_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+sp30_marks <- xrd_marks |>
+  filter(Sample == "SP30")
+sp30_perc <- xrd_perc |>
+  filter(Sample == "SP30") |>
+  select(-Sample, -ESD)
+
+sp30_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |>
+  select(-Quartz_nb, -Dolomite_nb) |>
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 60000)) +
+  geom_point(data = sp30_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp30_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 55000, label = list(cbind(sp30_perc)))
+
+```
+
+```{r}
+#| label: fig-xrd-sp33
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP7_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+sp33_marks <- xrd_marks |>
+  filter(Sample == "SP33")
+sp33_perc <- xrd_perc |>
+  filter(Sample == "SP33") |>
+  select(-Sample, -ESD)
+
+sp33_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |>
+  select(-Quartz_nb, -Dolomite_nb) |>
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 60000)) +
+  geom_point(data = sp33_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp33_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 55000, label = list(cbind(sp33_perc)))
+
+```
+
+```{r}
+#| label: fig-xrd-sp34
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP7_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+sp34_marks <- xrd_marks |>
+  filter(Sample == "SP34")
+sp34_perc <- xrd_perc |>
+  filter(Sample == "SP34") |>
+  select(-Sample, -ESD)
+
+sp34_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |>
+  select(-Quartz_nb) |>
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 60000)) +
+  geom_point(data = sp34_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp34_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 55000, label = list(cbind(sp34_perc)))
+
+```
+
+```{r}
+#| label: fig-xrd-sp50
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP7_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+sp50_marks <- xrd_marks |>
+  filter(Sample == "SP50")
+sp50_perc <- xrd_perc |>
+  filter(Sample == "SP50") |>
+  select(-Sample, -ESD)
+
+sp50_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |>
+  select(-Quartz_nb) |>
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 70000)) +
+  geom_point(data = sp50_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp50_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 65000, label = list(cbind(sp50_perc)))
+
+```
+
+```{r}
+#| label: fig-xrd-sp40
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP7_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+sp40_marks <- xrd_marks |>
+  filter(Sample == "SP40")
+sp40_perc <- xrd_perc |>
+  filter(Sample == "SP40") |>
+  select(-Sample, -ESD)
+
+sp40_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
+  rename(Quartz = SiO2) |> 
+  select(-SiO2_nb, -Calcite_nb) |>
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Calcite), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Calcite", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 50000)) +
+  geom_point(data = sp40_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp40_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon", "darkseagreen" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp40_perc)))
+
+```
+
+```{r}
+#| label: fig-xrd-sp52
+#| fig-cap: Plot of minerals identified through XRD in the Lower Jurassic (Carixian) chert sample from the outcrop Cabo S. Vicente (SP7_CSV). The rhombus shape signifies main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks.
+
+sp52_marks <- xrd_marks |>
+  filter(Sample == "SP52")
+sp52_perc <- xrd_perc |>
+  filter(Sample == "SP52") |>
+  select(-Sample, -ESD)
+
+sp52_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
+  select(-Quartz_nb, -Dolomite_nb, -Calcite_nb) |>
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite ,Calcite), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Calcite", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 65000)) +
+  geom_point(data = sp52_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp52_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1", "darkseagreen" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 55000, label = list(cbind(sp52_perc)))
+
+```
+
 Some supplementary materials.

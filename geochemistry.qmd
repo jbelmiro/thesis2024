@@ -40,29 +40,10 @@ xrd_perc <- read_csv('data/xrd_data/xrd_goals.csv') # File with component percen
 xrd_marks <- read_csv('data/xrd_data/xrd_peaks.csv') # File with peak data and d spacing for plot labels
 
 # Read individual xrd files
-sp6_xrd <- read_csv('data/xrd_data/SP6_xrd.csv')
-sp7_xrd <- read_csv('data/xrd_data/SP7_xrd.csv')
-sp10_xrd <- read_csv('data/xrd_data/SP10_xrd.csv')
-sp14_xrd <- read_csv('data/xrd_data/SP14_xrd.csv')
 sp15_xrd <- read_csv('data/xrd_data/SP15_xrd.csv')
-sp18_xrd <- read_csv('data/xrd_data/SP18_xrd.csv')
-sp21_xrd <- read_csv('data/xrd_data/SP21_xrd.csv')
-sp28_xrd <- read_csv('data/xrd_data/SP28_xrd.csv')
-sp30_xrd <- read_csv('data/xrd_data/SP30_xrd.csv')
-sp33_xrd <- read_csv('data/xrd_data/SP33_xrd.csv')
-sp34_xrd <- read_csv('data/xrd_data/SP34_xrd.csv')
-sp40_xrd <- read_csv('data/xrd_data/SP40_xrd.csv')
-sp50_xrd <- read_csv('data/xrd_data/SP50_xrd.csv')
-sp52_xrd <- read_csv('data/xrd_data/SP52_xrd.csv')
-sp57_xrd <- read_csv('data/xrd_data/SP57_xrd.csv')
 sp58_xrd <- read_csv('data/xrd_data/SP58_xrd.csv')
-sp59_xrd <- read_csv('data/xrd_data/SP59_xrd.csv')
-sp61_xrd <- read_csv('data/xrd_data/SP61_xrd.csv')
 sp62_xrd <- read_csv('data/xrd_data/SP62_xrd.csv')
-sp63_xrd <- read_csv('data/xrd_data/SP63_xrd.csv')
-sp66_xrd <- read_csv('data/xrd_data/SP66_xrd.csv')
 sp69_xrd <- read_csv('data/xrd_data/SP69_xrd.csv')
-
 
 ```
 
@@ -83,143 +64,19 @@ xrd_marks <- xrd_marks |>
 ## Background = "orchid"
 ## Difference = "snow4"
 
-# SP6 Cabo S. Vicente
-sp6_marks <- xrd_marks |>
-  filter(Sample == "SP6")
-sp6_perc <- xrd_perc |>
-  filter(Sample == "SP6") |>
-  select(-Sample, -ESD)
-
-sp6_xrd <- sp6_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 5000)
-
-sp6_long <- sp6_xrd %>%
-  select(-Quartz_nb, -Dolomite_nb) |>
-  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite), 
-               names_to = "Phase", 
-               values_to = "Count")
-
-p_sp6 <- sp6_long |>
-  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Background", "Difference"))) |>
-  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
-  geom_line(linewidth = 0.5) +
-  labs(x = "Diffraction Angle", y = "Intensity") +
-  theme_minimal() +
-  coord_cartesian(ylim = c(-5000, 50000)) +
-  geom_point(data = sp6_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
-  geom_label(data = sp6_marks, aes(x = Angle, y = Intensity, label = d), 
-            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
-  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
-  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp6_perc)))
-
-# SP7 Cabo S. Vicente
-
-sp7_marks <- xrd_marks |>
-  filter(Sample == "SP7")
-sp7_perc <- xrd_perc |>
-  filter(Sample == "SP7") |>
-  select(-Sample, -ESD)
-
-sp7_xrd <- sp7_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
-  rename(Quartz = `Quartz (SiO2)`) |> 
-  rename(Dolomite = `Dolomite (CaMg(CO3)2)`)
-
-sp7_long <- sp7_xrd %>%
-  select(-Quartz_nb, -Dolomite_nb) |>
-  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite), 
-               names_to = "Phase", 
-               values_to = "Count")
-
-p_sp7 <- sp7_long |>
-  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Background", "Difference"))) |>
-  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
-  geom_line(linewidth = 0.5) +
-  labs(x = "Diffraction Angle", y = "Intensity") +
-  theme_minimal() +
-  coord_cartesian(ylim = c(-5000, 65000)) +
-  geom_point(data = sp7_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
-  geom_label(data = sp7_marks, aes(x = Angle, y = Intensity, label = d), 
-            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
-  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
-  annotate(geom = "table", x = 75, y = 60000, label = list(cbind(sp7_perc)))
-
-# SP10 
-
-sp10_marks <- xrd_marks |>
-  filter(Sample == "SP10")
-sp10_perc <- xrd_perc |>
-  filter(Sample == "SP10") |>
-  select(-Sample, -ESD)
-
-sp10_xrd <- sp10_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 3000)
-
-sp10_long <- sp10_xrd %>%
-  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Calcite), 
-               names_to = "Phase", 
-               values_to = "Count")
-
-p_sp10 <- sp10_long |>
-  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Calcite", "Background", "Difference"))) |>
-  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
-  geom_line(linewidth = 0.5) +
-  labs(x = "Diffraction Angle", y = "Intensity") +
-  theme_minimal() +
-  coord_cartesian(ylim = c(-5000, 55000)) +
-  geom_point(data = sp10_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
-  geom_label(data = sp10_marks, aes(x = Angle, y = Intensity, label = d), 
-            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
-  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
-  annotate(geom = "table", x = 75, y = 55000, label = list(cbind(sp10_perc)))
-
-# SP 14
-sp14_marks <- xrd_marks |>
-  filter(Sample == "SP14")
-sp14_perc <- xrd_perc |>
-  filter(Sample == "SP14") |>
-  select(-Sample, -ESD)
-
-sp14_xrd <- sp14_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 3000)
-
-sp14_long <- sp14_xrd %>%
-  select(-Quartz_nb, -Dolomite_nb, -Halite_nb) |>
-  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite, Halite), 
-               names_to = "Phase", 
-               values_to = "Count")
-
-p_sp14 <- sp14_long |>
-  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Halite", "Background", "Difference"))) |>
-  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
-  geom_line(linewidth = 0.5) +
-  labs(x = "Diffraction Angle", y = "Intensity") +
-  theme_minimal() +
-  coord_cartesian(ylim = c(-5000, 50000)) +
-  geom_point(data = sp14_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
-  geom_label(data = sp14_marks, aes(x = Angle, y = Intensity, label = d), 
-            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
-  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1", "darkgoldenrod1" ,"orchid","snow4")) +
-  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp14_perc)))
-
 # SP15
-
 sp15_marks <- xrd_marks |>
   filter(Sample == "SP15")
 sp15_perc <- xrd_perc |>
   filter(Sample == "SP15") |>
   select(-Sample, -ESD)
 
-sp15_xrd <- sp15_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 3000)
-
-sp15_long <- sp15_xrd %>%
+sp15_plot <- sp15_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
   select(-Quartz_nb, -Dolomite_nb) |>
   pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite), 
                names_to = "Phase", 
-               values_to = "Count")
-
-p_sp15 <- sp15_long |>
+               values_to = "Count") |> 
   mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Background", "Difference"))) |>
   ggplot(aes(x = Angle, y = Count, colour = Phase)) +
   geom_line(linewidth = 0.5) +
@@ -232,65 +89,6 @@ p_sp15 <- sp15_long |>
   scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
   annotate(geom = "table", x = 75, y = 55000, label = list(cbind(sp15_perc)))
 
-
-# SP18 Praia de Belixe
-
-sp18_marks <- xrd_marks |>
-  filter(Sample == "SP18")
-sp18_perc <- xrd_perc |>
-  filter(Sample == "SP18") |>
-  select(-Sample, -ESD)
-
-sp18_xrd <- sp18_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 3000)
-
-sp18_long <- sp18_xrd %>%
-  select(-Quartz_nb, -Dolomite_nb, -Halite_nb) |>
-  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite, Halite), 
-               names_to = "Phase", 
-               values_to = "Count")
-
-p_sp18 <- sp18_long |>
-  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Halite", "Background", "Difference"))) |>
-  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
-  geom_line(linewidth = 0.5) +
-  labs(x = "Diffraction Angle", y = "Intensity") +
-  theme_minimal() +
-  coord_cartesian(ylim = c(-5000, 50000)) +
-  geom_point(data = sp18_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
-  geom_label(data = sp18_marks, aes(x = Angle, y = Intensity, label = d), 
-            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
-  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1", "palevioletred3" ,"orchid","snow4")) +
-  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp18_perc)))
-
-# SP40 Ferrel
-sp40_marks <- xrd_marks |>
-  filter(Sample == "SP40")
-sp40_perc <- xrd_perc |>
-  filter(Sample == "SP40") |>
-  select(-Sample, -ESD)
-
-sp40_xrd <- sp40_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 3000)
-
-sp40_long <- sp40_xrd %>%
-  pivot_longer(cols = c(Difference, Background, Observed, SiO2, Calcite), 
-               names_to = "Phase", 
-               values_to = "Count")
-
-p_sp40 <- sp40_long |>
-  mutate(Phase = factor(Phase, levels = c("Observed", "SiO2", "Calcite", "Background", "Difference"))) |>
-  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
-  geom_line(linewidth = 0.5) +
-  labs(x = "Diffraction Angle", y = "Intensity") +
-  theme_minimal() +
-  coord_cartesian(ylim = c(-5000, 50000)) +
-  geom_point(data = sp40_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
-  geom_label(data = sp40_marks, aes(x = Angle, y = Intensity, label = d), 
-            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
-  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
-  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp40_perc)))
-
 # SP58 Jordana
 sp58_marks <- xrd_marks |>
   filter(Sample == "SP58")
@@ -298,16 +96,12 @@ sp58_perc <- xrd_perc |>
   filter(Sample == "SP58") |>
   select(-Sample, -ESD)
 
-sp58_xrd <- sp58_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 3000)
-
-sp58_long <- sp58_xrd %>%
+sp58_plot <- sp58_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
   select(-Quartz_nb, -Calcite_nb) |>
   pivot_longer(cols = c(Difference, Background, Observed, Quartz, Calcite), 
                names_to = "Phase", 
-               values_to = "Count")
-
-p_sp58 <- sp58_long |>
+               values_to = "Count") |> 
   mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Calcite", "Background", "Difference"))) |>
   ggplot(aes(x = Angle, y = Count, colour = Phase)) +
   geom_line(linewidth = 0.5) +
@@ -319,6 +113,56 @@ p_sp58 <- sp58_long |>
             size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
   scale_colour_manual(values = c("lightsteelblue3", "salmon", "darkseagreen" ,"orchid","snow4")) +
   annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp58_perc)))
+
+# SP62 Oliveiras
+sp62_marks <- xrd_marks |> 
+  filter(Sample == "SP62")
+sp62_perc <- xrd_perc |> 
+  filter(Sample == "SP62") |> 
+  select(-Sample, -ESD)
+
+sp62_plot <- sp62_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
+  select(-Quartz_nb) |> 
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 50000)) +
+  geom_point(data = sp62_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp62_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon", "orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp62_perc)))  
+
+# SP69 Mareta
+sp69_marks <- xrd_marks |> 
+  filter(Sample == "SP69")
+sp69_perc <- xrd_perc |> 
+  filter(Sample == "SP69") |> 
+  select(-Sample, -ESD)
+
+sp69_plot <- sp69_xrd |> 
+  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
+  select(-Quartz_nb, -Calcite_nb) |> 
+  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Calcite), 
+               names_to = "Phase", 
+               values_to = "Count") |> 
+  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Calcite", "Background", "Difference"))) |>
+  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
+  geom_line(linewidth = 0.5) +
+  labs(x = "Diffraction Angle", y = "Intensity") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(-5000, 50000)) +
+  geom_point(data = sp69_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  geom_label(data = sp69_marks, aes(x = Angle, y = Intensity, label = d), 
+            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  scale_colour_manual(values = c("lightsteelblue3", "salmon", "darkseagreen" ,"orchid","snow4")) +
+  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp69_perc)))
 
 ```
 
@@ -436,6 +280,7 @@ pxrf_average <- pxrf_analysis |>
                                count = ~ sum(.x != 0, na.rm = TRUE)),
                    .names = "{.col}_{.fn}"))
 
+write.csv(pxrf_average,'data/averages_pxrf.csv', row.names = F)
 ```
 
 ```{r}
