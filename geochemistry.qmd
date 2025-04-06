@@ -1,6 +1,4 @@
 ---
-title: "geochemistry"
-
 execute:
   echo: false
   warning: false
@@ -9,6 +7,8 @@ execute:
   fig-path: "../figures/"
   fig-dpi: 600
 ---
+
+# Within chert: a multi-technique mineral and geochemical approach to the study of chert of southwestern Iberia
 
 ```{r}
 #| label: libraries
