@@ -602,3 +602,16 @@ sp66_xrd |>
 
 ```
 
+## SEM-EDS results
+
+### Geological samples
+
+#### Lower Jurassic of western Algarve
+
+The analysed samples from the Lower Jurassic outcrops are homogeneous regarding their structure, inclusions and mineral compositions. The analysis of their composition and inclusions shows no specific differences between the outcrops, and they will be described as a single group (Carixian, Lower Jurassic formations of Western Algarve, including the inland outcrop of Ferrel).
+
+They are mainly composed of cryptocrystalline quartz (predominantly silica or SiO2), and small peaks of aluminium, with a single sample also showing a high aluminium peak. Small peaks of chlorine and potassium can also be identified in less than 50% of the samples.
+
+Phosphatised skeletal remains are very frequent, occurring in more than 80% of the samples. These are all composed of calcium and phosphorus, and frequently show an associated smaller peak of sulphur (\~50% of the samples) or sulphur and fluorine (\~70% of the samples). These fossils also frequently show some oxidation, due to the associated presence of iron bands or restricted areas within the phosphatised skeletal remains. These skeletal remains are frequently irregular and indeterminate; however, a small number of samples show phosphatised skeletal remains with homogeneous oval shapes, which are currently indeterminate.
+
+Finally, iron oxides are present in all the samples, with an iron (Fe) composition. Other types of iron oxides are also present in lesser frequencies, as equally large peaks of iron and titanium (40% of the samples), iron and fluoride (20%), and titanium with a small peak of iron (\<10%). A single sample shows a high titanium peak without iron and another titanium with a smaller peak of phosphorus. Most of these iron or titanium inclusions have irregular shapes and varying sizes. Albeit rare (present in 3 samples), pyrite can be identified in the form of spherical framboids or dispersed pyrite nanocrystals.
