@@ -21,6 +21,8 @@ library(readr)
 library(dplyr)
 library(ggplot2)
 library(janitor)
+library(tidyr)
+library(ggpmisc)
 
 ```
 
@@ -603,6 +605,102 @@ sp66_xrd |>
 ```
 
 ## SEM-EDS results
+
+```{r}
+#| label: sem-graphs-som
+
+# Prepare the energy ranges
+energy_ranges <- list(
+  C = c(0.2, 0.3),
+  O = c(0.5, 0.6),
+  Al = c(1.48, 1.5),
+  Si = c(1.7, 1.8),
+  P = c(2, 2.1),
+  S = c(2.3,),
+  Ca = c(3.68, 3.7),
+  Ca_beta = c(4.01, 4.02),
+  Ti = c(4.5, 4.6),
+  Ti_beta = c(4.9, 5),
+  Ti_L = c("0.45", "0.47"),
+  Fe = c(6.38, 6.41),
+  Fe_beta = c(7.05, 7.07),
+  Fe_L = c(0.71, 0.73))
+
+# M2_3_map2
+
+M2_3_map2 <- read_csv('data/sem_data/M2_3_map2.csv')
+filtered_M2_3_map2 <- subset(M2_3_map2, Energy >= 0.2 & Energy < 9)
+
+# Extract the exact peak energy and counts to place labels
+peaks_list_M2_3_map2 <- list()
+for (element in names(energy_ranges)) {
+  range_M2_3_map2 <- energy_ranges[[element]]
+  subset_M2_3_map2 <- subset(filtered_M2_3_map2, Energy >= range_M2_3_map2[1] & Energy <= range_M2_3_map2[2])
+  if (nrow(subset_M2_3_map2) > 0) {
+    max_row_M2_3_map2 <- subset_M2_3_map2[which.max(subset_M2_3_map2$Counts), ]
+    peaks_list_M2_3_map2[[element]] <- data.frame(
+      Element = element,
+      Energy = max_row_M2_3_map2$Energy,
+      Counts = max_row_M2_3_map2$Counts
+    )
+  }
+}
+
+peaks_M2_3_map2 <- do.call(rbind, peaks_list_M2_3_map2)
+rownames(peaks_M2_3_map2) <- NULL
+peaks_M2_3_map2 <- peaks_M2_3_map2 |> 
+  filter(Counts > 100)
+
+M2_3_map2_graph <- filtered_M2_3_map2 |> 
+  select(Energy, Counts) |>
+  ggplot(aes(x = Energy, y = Counts)) +
+  geom_area(fill = "snow3", alpha = 0.7) +
+  geom_line(linewidth = 0.5, alpha = 0.5, linetype = "solid", colour = "#8B8989") +
+  labs(x = "Energy (keV)", y = "Intensity (Counts)") +
+  theme_minimal() +
+  geom_point(data = peaks_M2_3_map2, aes(x = Energy, y = Counts, colour = Element), size = 3, shape = 18) +
+  geom_label(data = peaks_M2_3_map2, aes(x = Energy, y = Counts, label = Element, colour = Element), size = 3, fill = "white", label.size = 0.2, vjust = -0.5, show.legend = FALSE) +
+  theme(legend.position="none")
+
+
+# M3_1
+
+M3_1 <- read_csv('data/sem_data/M3_1_map1_map2.csv')
+filtered_M3_1 <- subset(M3_1, Energy >= 0.2 & Energy < 9)
+
+# Extract the exact peak energy and counts to place labels
+peaks_list_M3_1 <- list()
+for (element in names(energy_ranges)) {
+  range_M3_1 <- energy_ranges[[element]]
+  subset_M3_1 <- subset(filtered_M3_1, Energy >= range_M3_1[1] & Energy <= range_M3_1[2])
+  if (nrow(subset_M3_1) > 0) {
+    max_row_M3_1 <- subset_M3_1[which.max(subset_M3_1$Counts), ]
+    peaks_list_M3_1[[element]] <- data.frame(
+      Element = element,
+      Energy = max_row_M3_1$Energy,
+      Counts = max_row_M3_1$Counts
+    )
+  }
+}
+
+peaks_M3_1 <- do.call(rbind, peaks_list_M3_1)
+rownames(peaks_M3_1) <- NULL
+peaks_M3_1 <- peaks_M3_1 |> 
+  filter(Counts > 100)
+
+M3_1_graph <- filtered_M3_1 |> 
+  select(Energy, Counts) |>
+  ggplot(aes(x = Energy, y = Counts)) +
+  geom_area(fill = "snow3", alpha = 0.7) +
+  geom_line(linewidth = 0.5, alpha = 0.5, linetype = "solid", colour = "#8B8989") +
+  labs(x = "Energy (keV)", y = "Intensity (Counts)") +
+  theme_minimal() +
+  geom_point(data = peaks_M3_1, aes(x = Energy, y = Counts, colour = Element), size = 3, shape = 18) +
+  geom_label(data = peaks_M3_1, aes(x = Energy, y = Counts, label = Element, colour = Element), size = 3, fill = "white", label.size = 0.2, vjust = -0.5, show.legend = FALSE) +
+  theme(legend.position="none")
+
+```
+
 
 ### Geological samples
 

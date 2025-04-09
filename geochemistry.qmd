@@ -25,6 +25,7 @@ library(ggfortify)
 library(FactoMineR)
 library(factoextra)
 library(ggpmisc)
+library(magick)
 
 ```
 
@@ -167,6 +168,7 @@ sp69_plot <- sp69_xrd |>
 ```
 
 ## Scanning electron microscopy and energy dispersive X-ray spectroscopy (SEM-EDS)
+
 
 ## Portable X-ray fluorescence (pXRF)
 
@@ -733,6 +735,151 @@ The analysis and result reporting protocol was established following previous st
 
 ## Results
 
+```{r}
+#| label: sem-graphs
+
+# Prepare the energy ranges
+energy_ranges <- list(
+  C = c(0.2, 0.3),
+  O = c(0.5, 0.6),
+  Al = c(1.48, 1.5),
+  Si = c(1.7, 1.8),
+  P = c(2, 2.1),
+  Ca = c(3.68, 3.7),
+  Ca_beta = c(4.01, 4.02),
+  Ti = c(4.5, 4.6),
+  Ti_beta = c(4.9, 5),
+  Ti_L = c("0.45", "0.47"),
+  Fe = c(6.38, 6.41),
+  Fe_beta = c(7.05, 7.07),
+  Fe_L = c(0.71, 0.73))
+
+# M18_8
+
+M18_8 <- read_csv('data/sem_data/M18_8.csv')
+filtered_M18_8 <- subset(M18_8, Energy >= 0.2 & Energy < 9)
+
+# Extract the exact peak energy and counts to place labels
+peaks_list_M18_8 <- list()
+for (element in names(energy_ranges)) {
+  range_M18_8 <- energy_ranges[[element]]
+  subset_M18_8 <- subset(filtered_M18_8, Energy >= range_M18_8[1] & Energy <= range_M18_8[2])
+  if (nrow(subset_M18_8) > 0) {
+    max_row_M18_8 <- subset_M18_8[which.max(subset_M18_8$Counts), ]
+    peaks_list_M18_8[[element]] <- data.frame(
+      Element = element,
+      Energy = max_row_M18_8$Energy,
+      Counts = max_row_M18_8$Counts
+    )
+  }
+}
+
+peaks_M18_8 <- do.call(rbind, peaks_list_M18_8)
+rownames(peaks_M18_8) <- NULL
+peaks_M18_8 <- peaks_M18_8 |> 
+  filter(Counts > 100)
+
+M18_8_graph <- filtered_M18_8 |> 
+  select(Energy, Counts) |>
+  ggplot(aes(x = Energy, y = Counts)) +
+  geom_area(fill = "snow3", alpha = 0.7) +
+  geom_line(linewidth = 0.5, alpha = 0.5, linetype = "solid", colour = "#8B8989") +
+  labs(x = "Energy (keV)", y = "Intensity (Counts)") +
+  theme_minimal() +
+  geom_point(data = peaks_M18_8, aes(x = Energy, y = Counts, colour = Element), size = 3, shape = 18) +
+  geom_label(data = peaks_M18_8, aes(x = Energy, y = Counts, label = Element, colour = Element), size = 3, fill = "white", label.size = 0.2, vjust = -0.5, show.legend = FALSE) +
+  theme(legend.position="none")
+
+# M18_7
+
+M18_7 <- read_csv('data/sem_data/M18_7.csv')
+filtered_M18_7 <- subset(M18_7, Energy >= 0.2 & Energy < 9)
+
+# Extract the exact peak energy and counts to place labels
+peaks_list_M18_7 <- list()
+for (element in names(energy_ranges)) {
+  range_M18_7 <- energy_ranges[[element]]
+  subset_M18_7 <- subset(filtered_M18_7, Energy >= range_M18_7[1] & Energy <= range_M18_7[2])
+  if (nrow(subset_M18_7) > 0) {
+    max_row_M18_7 <- subset_M18_7[which.max(subset_M18_7$Counts), ]
+    peaks_list_M18_7[[element]] <- data.frame(
+      Element = element,
+      Energy = max_row_M18_7$Energy,
+      Counts = max_row_M18_7$Counts
+    )
+  }
+}
+
+peaks_M18_7 <- do.call(rbind, peaks_list_M18_7)
+rownames(peaks_M18_7) <- NULL
+peaks_M18_7 <- peaks_M18_7 |> 
+  filter(Counts > 100)
+
+M18_7_graph <- filtered_M18_7 |> 
+  select(Energy, Counts) |>
+  ggplot(aes(x = Energy, y = Counts)) +
+  geom_area(fill = "snow3", alpha = 0.7) +
+  geom_line(linewidth = 0.5, alpha = 0.5, linetype = "solid", colour = "#8B8989") +
+  labs(x = "Energy (keV)", y = "Intensity (Counts)") +
+  theme_minimal() +
+  geom_point(data = peaks_M18_7, aes(x = Energy, y = Counts, colour = Element), size = 3, shape = 18) +
+  geom_label(data = peaks_M18_7, aes(x = Energy, y = Counts, label = Element, colour = Element), size = 3, fill = "white", label.size = 0.2, vjust = -0.5, show.legend = FALSE) +
+  theme(legend.position="none")
+
+# M4_3
+
+M4_3 <- read_csv('data/sem_data/M4_3.csv')
+filtered_M4_3 <- subset(M4_3, Energy >= 0.2 & Energy < 9)
+
+# Extract the exact peak energy and counts to place labels
+peaks_list_M4_3 <- list()
+for (element in names(energy_ranges)) {
+  range_M4_3 <- energy_ranges[[element]]
+  subset_M4_3 <- subset(filtered_M4_3, Energy >= range_M4_3[1] & Energy <= range_M4_3[2])
+  if (nrow(subset_M4_3) > 0) {
+    max_row_M4_3 <- subset_M4_3[which.max(subset_M4_3$Counts), ]
+    peaks_list_M4_3[[element]] <- data.frame(
+      Element = element,
+      Energy = max_row_M4_3$Energy,
+      Counts = max_row_M4_3$Counts
+    )
+  }
+}
+
+peaks_M4_3 <- do.call(rbind, peaks_list_M4_3)
+rownames(peaks_M4_3) <- NULL
+peaks_M4_3 <- peaks_M4_3 |> 
+  filter(Counts > 100)
+
+M4_3_graph <- filtered_M4_3 |> 
+  select(Energy, Counts) |>
+  ggplot(aes(x = Energy, y = Counts)) +
+  geom_area(fill = "snow3", alpha = 0.7) +
+  geom_line(linewidth = 0.5, alpha = 0.5, linetype = "solid", colour = "#8B8989") +
+  labs(x = "Energy (keV)", y = "Intensity (Counts)") +
+  theme_minimal() +
+  geom_point(data = peaks_M4_3, aes(x = Energy, y = Counts, colour = Element), size = 3, shape = 18) +
+  geom_label(data = peaks_M4_3, aes(x = Energy, y = Counts, label = Element, colour = Element), size = 3, fill = "white", label.size = 0.2, vjust = -0.5, show.legend = FALSE) +
+  theme(legend.position="none")
+
+# C: 0.2-0.3
+# O: 0.5-0.6
+# Al: 1.48-1.5
+# Si: 1.7-1.75
+# P: 2-2.1
+# Ti: 4.5-4.6 and 4.9-5
+
+  #coord_cartesian(ylim = c(-5000, 55000))+
+  #geom_point(data = sp15_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
+  #geom_label(data = sp15_marks, aes(x = Angle, y = Intensity, label = d), 
+    #        size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
+  #scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
+  #annotate(geom = "table", x = 75, y = 55000, label = list(cbind(sp15_perc)))
+
+
+
+```
+
 In this section we present the summarised results, focusing on the main observed patterns and differences between formations and archaeological chert types. A detailed description of the SEM-EDS results for each formation and chert type and table of occurrences for identified elements and minerals can be found in the SOM (++).
 
 All analysed samples are mainly composed of quartz; in all samples, the atomic percentage of oxygen is approximately double of the atomic percentage of silica, showing a 2:1 ratio (table +).
@@ -761,7 +908,13 @@ By observing the surfaces of samples and the presence of skeletal remains, some 
 #| label: fig-t6-general
 #| fig-cap: "A-D: General view and details from an archaeological sample from non-local chert type (T6). A: general view of the sample with uncommon inclusions. B: detail of an inclusion seen in A,  composed mostly of iron and small peaks of calcium and phosphorus, making this inclusion a possible oxidised skeletal remains of a fossil. C: general view of the sample with no visible inclusions. D: detail of a small and irregular iron inclusion."
 
-knitr::include_graphics(here::here("figures/within-chert/M18_7_M18_8.png"))
+#knitr::include_graphics(here::here("figures/within-chert/M18_7_M18_8.png"))
+M18_7_M18_8_fig <- magick::image_read(here::here("figures/within-chert/M18_7_M18_8.png"))
+M18_7_M18_8_gg <- cowplot::ggdraw() + cowplot::draw_image(M18_7_M18_8_fig)
+
+M18_7_M18_8_plots <- plot_grid(M18_7_graph, M18_8_graph, labels = c(1, 2))
+
+plot_grid(M18_7_M18_8_gg, M18_7_M18_8_plots, ncol = 1, rel_heights = c(1, 1))
 
 ```
 
