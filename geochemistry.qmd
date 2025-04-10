@@ -862,22 +862,6 @@ M4_3_graph <- filtered_M4_3 |>
   geom_label(data = peaks_M4_3, aes(x = Energy, y = Counts, label = Element, colour = Element), size = 3, fill = "white", label.size = 0.2, vjust = -0.5, show.legend = FALSE) +
   theme(legend.position="none")
 
-# C: 0.2-0.3
-# O: 0.5-0.6
-# Al: 1.48-1.5
-# Si: 1.7-1.75
-# P: 2-2.1
-# Ti: 4.5-4.6 and 4.9-5
-
-  #coord_cartesian(ylim = c(-5000, 55000))+
-  #geom_point(data = sp15_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
-  #geom_label(data = sp15_marks, aes(x = Angle, y = Intensity, label = d), 
-    #        size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
-  #scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
-  #annotate(geom = "table", x = 75, y = 55000, label = list(cbind(sp15_perc)))
-
-
-
 ```
 
 In this section we present the summarised results, focusing on the main observed patterns and differences between formations and archaeological chert types. A detailed description of the SEM-EDS results for each formation and chert type and table of occurrences for identified elements and minerals can be found in the SOM (++).
