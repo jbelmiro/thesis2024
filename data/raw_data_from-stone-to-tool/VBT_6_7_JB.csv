@@ -1,0 +1,782 @@
+ID,CLASS,COREPREPARPROD,PIECECOMPLETENESS,CORTEX,CORTEXLOCATION,PLATFORMTYPE,PLATFORMCORTEX,SCARCOUNT,THICKNESS,MAXWIDTH,LENGTH,COREPLATFORM,MAINFACECORTEX,MAINFACESCARCOUNT,COREABANDON,RETOUCHEDPIECETYPOLOGY
+H18-3438,Shatter,,,0%,,,,,,,,,,,,
+H18-3444,Shatter,,,0%,,,,,,,,,,,,
+H18-3474,FlakeFrag,,Proximal,0%,,Plain,No,3,6.37,25.52,,,,,,
+H18-3490,Core,,,1-30%,,,,,16.9,30.9,25.5,Crushed,1-30%,7,AngleLoss,
+H18-3492,Flake,,,1-30%,ProxLeftLat,Cortical,YesComplete,5,10.7,37.7,31.25,,,,,
+H18-3499,Shatter,,,0%,,,,,,,,,,,,
+H21-4551,ElongBlankFrag,,Distal,0%,,,,3,3.56,9.31,,,,,,
+H18-3501,Shatter,,,31-60%,,,,,,,,,,,,
+H18-3512,RetouchedPiece,,,0%,,Plain,No,7,9.2,30,30.5,,,,,Retouched flake
+H18-3514,Flake,,,1-30%,DistalRightLat,Crushed,No,5,9.75,17.5,31.64,,,,,
+H18-3530,RetouchedPiece,,,1-30%,RightLateral,Plain,No,4,7.31,19.92,25.69,,,,,Splintered piece
+H18-3531,RetouchedPiece,,,0%,,Dihedral,YesPartial,7,9.33,18.7,26.45,,,,,Retouched flake
+H18-3532,RetouchedPiece,,,31-60%,ProxLeftLat,Plain,YesPartial,3,6.92,25.82,25.38,,,,,Splintered piece
+H18-3540,CoreFrag,,,0%,,,,5,11.53,,,,,,,
+H18-3548,FlakeFrag,,Mesial,0%,,,,1,2.45,20.41,,,,,,
+H18-3550,ElongBlankFrag,,Distal,0%,,,,5,2.5,11.2,,,,,,
+H18-3561,FlakeFrag,,Siret,0%,,,,4,6.34,24.81,,,,,,
+H18-3566,FlakeFrag,,Proximal,1-30%,LeftLateral,Plain,No,3,5.39,19.21,,,,,,
+H18-3576,Shatter,,,31-60%,,,,,,,,,,,,
+H18-3581,Flake,,,1-30%,RightLateral,Plain,No,3,5.71,24.11,21,,,,,
+H18-3584,ElongBlankFrag,,Distal,0%,,,,2,4.28,7.13,,,,,,
+H18-3586,FlakeFrag,,Distal,0%,,,,3,3.56,19.93,,,,,,
+H18-3603,FlakeFrag,,Proximal,0%,,Dihedral,No,3,3.5,19.4,,,,,,
+H18-3606,Flake,,,0%,,Plain,No,4,4.3,16.1,14.8,,,,,
+H18-3607,Shatter,,,0%,,,,,,,,,,,,
+H18-3608,ElongBlank,,,1-30%,DistalLeftLat,Plain,No,5,5.7,14.1,39.3,,,,,
+H18-3622,Flake,,,1-30%,RightLateral,Winged,No,4,6.8,13.6,23.2,,,,,
+H18-3626,RetouchedPiece,,,61-99%,LeftLateral,Crushed,No,1,8.48,22.9,30.06,,,,,Burin
+H18-3628,Flake,,,0%,,Cortical,YesComplete,2,1.8,23.8,19.9,,,,,
+H18-3630,Shatter,,,31-60%,,,,,,,,,,,,
+H18-3637,ElongBlank,,,1-30%,Proximal,Plain,YesComplete,2,1.8,9,19.9,,,,,
+H18-3643,FlakeFrag,,Mesial,0%,,,,2,5.9,20.4,,,,,,
+H18-3657,Flake,,,0%,,Crushed,No,4,4.73,16.16,21.14,,,,,
+H18-3669,RetouchedPiece,,,0%,,Cortical,YesComplete,3,7.1,25.6,25.2,,,,,Retouched flake
+H18-3678,BurinSpall,,,1-30%,Proximal,,,4,17.45,,,,,,,
+H18-3682,Shatter,,,31-60%,,,,,,,,,,,,
+H18-3683,Flake,,,0%,,Winged,No,3,2.53,17.92,15.07,,,,,
+H18-3690,RetouchedPiece,,,0%,,Removed,,2,5.97,33.92,33.01,,,,,Burin
+H18-3692,Shatter,,,0%,,,,,,,,,,,,
+H18-3698,Flake,,,100%,,Winged,YesComplete,0,6.2,29.3,27.5,,,,,
+H18-3699,Shatter,,,1-30%,,,,,,,,,,,,
+H18-3705,FlakeFrag,,Distal,1-30%,Distal,,,2,5.33,13.59,,,,,,
+H18-3712,Core,,,0%,,,,,8.23,22.42,24,Plain,0%,4,AngleLoss,
+H18-3717,FlakeFrag,,Distal,0%,,,,3,6.79,18.87,,,,,,
+H18-3718,Flake,,,61-99%,Distal,Winged,No,2,3.5,13,22.8,,,,,
+H18-3739,Shatter,,,0%,,,,,,,,,,,,
+H18-3744,ElongBlank,,,1-30%,Distal,Crushed,No,5,5.21,12.68,35.03,,,,,
+H18-3780,ElongBlankFrag,,Mesial,0%,,,,2,2.64,8.83,,,,,,
+H18-3784,Shatter,,,0%,,,,,,,,,,,,
+H18-3792,RetouchedPiece,,,0%,,Cortical,YesComplete,2,4.08,21.12,27.47,,,,,Notch
+H18-3794,RetouchedPiece,,,0%,,Plain,No,5,5.41,12.47,31.35,,,,,Burin
+H18-3801,Flake,,,31-60%,Mesial,Plain,No,2,8.4,8.46,23.32,,,,,
+H18-3802,FlakeFrag,,Distal,0%,,,,2,2.6,18.77,,,,,,
+H18-3809,FlakeFrag,,Distal,0%,,,,3,4.7,18.54,,,,,,
+H18-3814,RetouchedPiece,,,0%,,Cortical,YesComplete,3,3.8,8.7,21.1,,,,,Retouched bladelet
+H18-3823,FlakeFrag,,Mesial,0%,,,,2,4.05,19.41,,,,,,
+H18-3828,Shatter,,,31-60%,,,,,,,,,,,,
+H18-3833,FlakeFrag,,Distal,0%,,,,2,2.71,21.66,,,,,,
+H18-3839,Core,,,1-30%,,,,,10.51,37.6,21.05,Plain,0%,5,AngleLoss,
+H18-3858,RetouchedPiece,,,0%,,Crushed,No,4,7.62,8.47,27.1,,,,,Burin
+H18-3872,Flake,,,0%,,Dihedral,No,4,6.4,15.9,23.4,,,,,
+H18-3891,Flake,,,0%,,Plain,No,6,9.1,21.6,26.5,,,,,
+H18-3905,Flake,,,0%,,Plain,No,2,2.9,21.1,16.7,,,,,
+H18-3920,FlakeFrag,,Distal,0%,,,,2,6.3,24.99,,,,,,
+H18-3955,Flake,,,0%,,Plain,No,5,7,17.5,26.5,,,,,
+H18-3962,ElongBlank,,,1-30%,LeftLateral,Plain,No,3,7.12,12.96,28.41,,,,,
+H18-3971,Flake,,,1-30%,RightLateral,Plain,No,5,9.3,31.6,36.6,,,,,
+H18-3999,RetouchedPiece,,,1-30%,LeftLateral,Crushed,No,3,10.78,20.56,25.3,,,,,Splintered piece
+H18-4002,Core,,,1-30%,,,,,13.7,20.5,20.3,Plain,0%,7,AngleLoss,
+H18-4007,RetouchedPiece,,,0%,,Removed,,7,4.94,14.43,23.71,,,,,Burin
+H18-4016,Shatter,,,0%,,,,,,,,,,,,
+H18-4017,FlakeFrag,,Distal,0%,,,,2,3.74,21.22,,,,,,
+H18-4047,FlakeFrag,,Siret,0%,,,,3,6.08,20.13,,,,,,
+H18-4070,FlakeFrag,,Proximal,100%,,Cortical,YesComplete,3,10.11,23.47,,,,,,
+H18-4071,FlakeFrag,,Distal,61-99%,LeftLateral,,,2,2.83,18.74,,,,,,
+H18-4076,Flake,,,0%,,Cortical,YesComplete,2,3,24,17,,,,,
+H18-4085,Shatter,,,31-60%,,,,,,,,,,,,
+H18-4092,Core,,,31-60%,,,,,21,30.4,33.9,Plain,0%,14,NaturalImperfection,
+H18-4104,FlakeFrag,,Distal,1-30%,Distal,,,1,3.22,17.13,,,,,,
+H18-4118,Flake,,,1-30%,LeftLateral,Plain,No,4,5.8,15,28,,,,,
+H18-4120,FlakeFrag,,Distal,0%,,,,3,7.35,24.97,,,,,,
+H18-4180,Flake,,,61-99%,Distal,Plain,No,2,5.96,18.57,16.23,,,,,
+H18-4189,Flake,,,0%,,Dihedral,No,12,17.25,39.24,40.15,,,,,
+H18-4200,Shatter,,,0%,,,,,,,,,,,,
+H18-4205,RetouchedPiece,,,0%,,Removed,,3,4.28,20.17,16.08,,,,,Retouched flake
+H18-4207,RetouchedPiece,,,0%,,Plain,No,4,8.95,51.73,67.11,,,,,Endscrapper
+H18-4229,Shatter,,,1-30%,,,,,,,,,,,,
+H18-4261,RetouchedPiece,,,31-60%,Distal,Crushed,No,5,12.33,26.21,22.23,,,,,Retouched flake
+H18-4277,Flake,,,0%,,Dihedral,No,4,5.4,23.3,18.9,,,,,
+H18-4288,FlakeFrag,,Distal,1-30%,Mesial,,,4,6.66,16.39,,,,,,
+H18-4295,ElongBlank,,,1-30%,LeftLateral,Plain,No,1,4,11,36.5,,,,,
+H18-4296,Flake,,,1-30%,LeftLateral,Plain,YesPartial,4,3.15,14.03,24.74,,,,,
+H18-4301,FlakeFrag,,Distal,1-30%,Distal,,,3,3.91,19.58,,,,,,
+H19-3440,RetouchedPieceFrag,,Other,1-30%,LeftLateral,,,3,7.3,14.08,,,,,,Retouched piece fragment
+H19-3939,FlakeFrag,,Proximal,1-30%,RightLateral,Crushed,YesPartial,2,4.98,16.74,,,,,,
+H19-3944,CoreFrag,,,0%,,,,4,21.25,,,,,,,
+H19-3952,Flake,,,0%,,Cortical,YesComplete,4,5.89,16.25,17.52,,,,,
+H19-3989,Flake,,,61-99%,Mesial,Dihedral,YesPartial,3,12.23,27.09,49.84,,,,,
+H19-4013,Flake,,,1-30%,RightLateral,Plain,No,2,3.47,18.78,23.59,,,,,
+H19-4030,ElongBlankFrag,,Distal,31-60%,LeftLateral,,,1,4.3,11.7,,,,,,
+H19-4032,Flake,,,0%,,Plain,No,6,9.4,21.6,40.3,,,,,
+H19-4033,RetouchedPiece,,,0%,,Plain,No,4,6.4,17.7,29.4,,,,,Burin
+H19-4038,ElongBlank,,,31-60%,RightLateral,Plain,No,2,6.9,11,34,,,,,
+H19-4045,FlakeFrag,,Proximal,0%,,Crushed,No,2,4,22.4,,,,,,
+H19-4048,RetouchedPiece,,,1-30%,LeftLateral,Plain,No,5,13.52,20.57,32.9,,,,,Splintered piece
+H19-4057,Shatter,,,61-99%,,,,,,,,,,,,
+H19-4058,FlakeFrag,,Proximal,61-99%,RightLateral,Cortical,YesComplete,2,6.9,24.5,,,,,,
+H19-4063,RetouchedPiece,,,0%,,Plain,No,9,9.03,31.51,51.66,,,,,Endscrapper
+H19-4071,Core,,,31-60%,,,,,31.6,31.4,21.3,Other,31-60%,3,NaturalImperfection,
+H19-4091,Shatter,,,31-60%,,,,,,,,,,,,
+H19-4094,Flake,,,0%,,Dihedral,No,3,5.49,19.23,17.71,,,,,
+H19-4117,BurinSpall,,,0%,,,,4,4.4,,,,,,,
+H19-4120,Shatter,,,1-30%,,,,,,,,,,,,
+H19-4193,FlakeFrag,,Siret,0%,,,,1,3.96,12.57,,,,,,
+H19-4195,FlakeFrag,,Mesial,0%,,,,3,3.48,20.39,,,,,,
+H19-4196,RetouchedPiece,,,0%,,Cortical,YesComplete,7,10.2,23.4,34.8,,,,,Endscrapper
+H19-4223,FlakeFrag,,Siret,0%,,,,2,2.88,16.79,,,,,,
+H19-4225,Core,,,31-60%,,,,,17.44,26,18.46,Plain,0%,3,Hinge,
+H19-4226,RetouchedPiece,,,0%,,Plain,No,2,9.13,34.12,33.88,,,,,Endscrapper
+H19-4247,ElongBlank,,,0%,,Crushed,No,3,4.22,8.68,24.03,,,,,
+H19-4248,BurinSpall,,,1-30%,LeftLateral,,,2,7.4,,,,,,,
+H19-4254,Shatter,,,0%,,,,,,,,,,,,
+H19-4265,FlakeFrag,,Proximal,1-30%,Proximal,Cortical,YesComplete,3,6.3,14.9,,,,,,
+H19-4274,RetouchedPiece,,,0%,,Removed,,7,8.75,15.94,29.68,,,,,Retouched flake
+H19-4277,Flake,,,0%,,Dihedral,No,2,4.2,12.9,22.8,,,,,
+H19-4283,Flake,,,0%,,Dihedral,No,3,10.42,36.1,36.49,,,,,
+H19-4307,RetouchedPiece,,,0%,,Crushed,No,5,5.1,23.5,26.5,,,,,Splintered piece
+H19-4309,Flake,,,1-30%,Distal,Plain,No,6,11.2,18.4,34.2,,,,,
+H19-4338,RetouchedPiece,,,0%,,Crushed,No,5,3,12.7,17.3,,,,,Splintered piece
+H19-4340,Shatter,,,1-30%,,,,,,,,,,,,
+H19-4342,ElongBlankFrag,,Distal,0%,,,,3,5.06,9.52,,,,,,
+H19-4346,Flake,,,1-30%,Distal,Plain,No,4,8.45,30.67,31.45,,,,,
+H19-4409,CoreFrag,,,1-30%,LeftLateral,,,3,13.82,,,,,,,
+H19-4420,FlakeFrag,,Distal,0%,,,,1,4.35,22.1,,,,,,
+H20-3955,BurinSpall,,,0%,,,,5,10.02,,,,,,,
+H20-3976,FlakeFrag,,Proximal,0%,,Plain,No,5,7.68,30.2,,,,,,
+H20-3984,RetouchedPiece,,,0%,,Crushed,No,3,7.74,24.89,23.31,,,,,Splintered piece
+H20-3989,Flake,,,31-60%,RightLateral,Crushed,YesPartial,3,6.94,17.95,23.05,,,,,
+H20-3990,Flake,,,0%,,Plain,No,3,2.5,16,16,,,,,
+H20-4017,RetouchedPiece,,,0%,,Plain,No,2,7.08,10.9,20.29,,,,,Retouched burin spall
+H20-4022,CorePreparProd,CoreTablet,,1-30%,Proximal,Cortical,YesComplete,4,4.16,12.66,23.21,,,,,
+H20-4024,ElongBlankFrag,,Distal,0%,,,,3,1.53,5.12,,,,,,
+H20-4067,FlakeFrag,,Proximal,0%,,Plain,No,3,4.86,22.95,,,,,,
+H20-4083,Flake,,,0%,,Plain,No,3,5.3,19.9,20.8,,,,,
+H20-4084,RetouchedPiece,,,0%,,Plain,No,5,15.65,9.15,26.18,,,,,Burin
+H20-4094,Flake,,,0%,,Crushed,No,3,3.92,22.02,19.1,,,,,
+H20-4111,FlakeFrag,,Distal,0%,,,,5,4.3,23.5,,,,,,
+H20-4116,Flake,,,0%,,Plain,No,2,3.27,16.25,13.88,,,,,
+H20-4118,Flake,,,0%,,Crushed,No,7,9.61,38.41,47.56,,,,,
+H20-4120,Shatter,,,0%,,,,,,,,,,,,
+H20-4142,RetouchedPiece,,,1-30%,Distal,Faceted,No,5,7.7,23.56,32.55,,,,,Burin
+H20-4170,RetouchedPiece,,,0%,,Crushed,No,7,9.5,16.6,36.45,,,,,Burin
+H20-4180,Shatter,,,61-99%,,,,,,,,,,,,
+H20-4187,RetouchedPiece,,,1-30%,LeftLateral,Crushed,No,4,7.27,12.49,29.92,,,,,Burin
+H20-4188,Flake,,,1-30%,Proximal,Cortical,YesComplete,4,6.58,24.1,44.75,,,,,
+H20-4209,RetouchedPiece,,,0%,,Dihedral,No,2,7.91,25.17,14.91,,,,,Notch
+H20-4213,RetouchedPiece,,,0%,,Crushed,No,4,10.29,21.71,40.28,,,,,Burin
+H20-4243,FlakeFrag,,Proximal,0%,,Plain,,3,7,21.67,0,,,,,
+H20-4281,ElongBlank,,,0%,,Crushed,No,4,3.13,10.69,23.7,,,,,
+H20-4329,ElongBlank,,,0%,,Plain,No,3,5.24,11.82,28.41,,,,,
+H20-4331,RetouchedPiece,,,0%,,Removed,,3,5.51,22.83,28.52,,,,,Retouched flake
+H20-4336,RetouchedPiece,,,0%,,Plain,No,4,3.87,16.9,25.15,,,,,Retouched burin
+H20-4343,FlakeFrag,,Distal,0%,,,,3,9.9,21.8,,,,,,
+H20-4359,Shatter,,,61-99%,,,,,,,,,,,,
+H20-4384,FlakeFrag,,Distal,0%,,,,1,2.24,15.81,,,,,,
+H20-4390,FlakeFrag,,Distal,0%,,,,3,3.62,19.71,,,,,,
+H20-4400,RetouchedPiece,,,0%,,Removed,,2,8.28,31.38,28.21,,,,,Endscrapper
+H20-4402,FlakeFrag,,Mesial,0%,,,,3,2.8,13.8,,,,,,
+H20-4403,Flake,,,0%,,Plain,No,4,10.8,33.4,35.1,,,,,
+H20-4405,RetouchedPiece,,,0%,,Removed,,6,5.56,23.43,21.84,,,,,Burin
+H20-4418,FlakeFrag,,Distal,0%,,,,3,6.85,44.9,,,,,,
+H20-4437,Shatter,,,0%,,,,,,,,,,,,
+H21-1819,FlakeFrag,,Siret,0%,,,,2,5,11.92,,,,,,
+H21-4408,BurinSpall,,,0%,,,,4,4.73,,,,,,,
+H21-4409,Core,,,31-60%,,,,,22.3,25.8,34.5,Cortical,0%,6,AngleLoss,
+H21-4420,BurinSpall,,,0%,,,,6,7.3,,,,,,,
+H21-4433,Shatter,,,31-60%,,,,,,,,,,,,
+H21-4434,BurinSpall,,,0%,,,,3,5.57,,,,,,,
+H21-4441,Core,,,1-30%,,,,,32.11,28.93,32.52,Plain,0%,4,NaturalImperfection,
+H21-4450,ElongBlank,,,1-30%,LeftLateral,Plain,No,4,2.7,9.8,23.3,,,,,
+H21-4532,RetouchedPiece,,,0%,,Crushed,No,11,11,21.7,29.2,,,,,Splintered piece with notch
+H21-4536,FlakeFrag,,Distal,61-99%,Distal,,,2,3.8,12.41,,,,,,
+H21-4539,Flake,,,0%,,Crushed,No,4,2.38,23.71,22.02,,,,,
+H18-3500,RetouchedPiece,,,31-60%,RightLateral,Removed,,1,3.8,13.2,23.3,,,,,Retouched flake
+H21-4564,CoreFrag,,,0%,,,,7,14.18,,,,,,,
+H21-4631,Shatter,,,31-60%,,,,,,,,,,,,
+H21-4634,Core,,,31-60%,,,,,27.8,30.6,38.2,Plain,1-30%,6,Hinge,
+H21-4650,ElongBlank,,,0%,,Linear,No,2,2.4,6.9,26.8,,,,,
+H21-4655,Core,,,31-60%,,,,,14.28,17.24,24.72,Cortical,0%,5,AngleLoss,
+H21-4668,RetouchedPiece,,,0%,,Plain,No,1,29.26,7.78,37.02,,,,,Burin
+H21-4696,FlakeFrag,,Siret,0%,,,,1,5.43,15.21,,,,,,
+H21-4702,Flake,,,0%,,Plain,No,5,11.3,33.6,54,,,,,
+H21-4724,Flake,,,0%,,Cortical,YesComplete,3,4.99,18.86,16.84,,,,,
+H21-4727,RetouchedPiece,,,31-60%,LeftLateral,Cortical,YesComplete,2,12.58,19.69,33.67,,,,,Endscrapper
+H21-4739,Flake,,,1-30%,Proximal,Plain,No,6,11.6,23.22,16.48,,,,,
+H21-4742,RetouchedPiece,,,0%,,Removed,,2,4.65,21.55,27.11,,,,,Retouched flake
+H21-4751,FlakeFrag,,Siret,0%,,,,2,7.77,29.07,,,,,,
+H21-4774,RetouchedPiece,,,0%,,Plain,No,4,5.77,9.18,20.99,,,,,Burin
+H21-4776,Flake,,,1-30%,Distal,Plain,No,4,6.72,23.44,26.22,,,,,
+H21-4779,CoreFrag,,,31-60%,Mesial,,,5,14.34,,,,,,,
+H21-4788,Flake,,,31-60%,Distal,Dihedral,No,5,6.41,18.61,26.55,,,,,
+H21-4790,ElongBlankFrag,,Siret,0%,,,,3,6.79,13.03,,,,,,
+H21-4808,Flake,,,0%,,Plain,No,7,7.4,24,36.4,,,,,
+H21-4809,Flake,,,0%,,Plain,No,5,4.8,23.5,17.9,,,,,
+H21-4811,Core,,,1-30%,,,,,12.1,17.9,31.3,Plain,0%,5,AngleLoss,
+H21-4846,FlakeFrag,,Proximal,61-99%,LeftLateral,Plain,No,2,5.44,12.8,,,,,,
+I18-3240,Flake,,,0%,,Other,No,4,7.8,16.5,21,,,,,
+I18-3276,Shatter,,,1-30%,,,,,,,,,,,,
+I18-3279,FlakeFrag,,Proximal,0%,,Plain,No,4,4.35,17.58,,,,,,
+I18-3301,RetouchedPiece,,,1-30%,LeftLateral,Plain,No,1,4.2,15.7,38.1,,,,,Denticulate
+I18-3312,Flake,,,0%,,Cortical,YesComplete,4,3.1,15.6,15.8,,,,,
+I18-3323,Flake,,,0%,,Plain,No,3,2.15,16.02,17.72,,,,,
+I18-3327,Shatter,,,0%,,,,,,,,,,,,
+I18-3331,Flake,,,0%,,Plain,No,5,9.8,26.6,38.1,,,,,
+I18-3335,ElongBlankFrag,,Siret,0%,,,,2,9.45,11.97,,,,,,
+I18-3344,Flake,,,1-30%,Distal,Cortical,YesComplete,2,9.8,27.8,23.2,,,,,
+I18-3351,FlakeFrag,,Siret,0%,,,,2,4.15,11.11,,,,,,
+I18-3364,RetouchedPiece,,,0%,,Plain,No,4,4.9,20.3,23.9,,,,,Notch
+I18-3388,FlakeFrag,,Siret,0%,,,,2,10.51,24.28,,,,,,
+I18-3400,Flake,,,0%,,Cortical,YesComplete,4,6.07,20.74,24.18,,,,,
+I18-3402,Shatter,,,1-30%,,,,,,,,,,,,
+I18-3404,RetouchedPieceFrag,,Other,0%,,,,4,21.03,29.42,,,,,,Retouched piece fragment
+I18-3410,RetouchedPiece,,,0%,,Removed,,2,4.12,24.15,27.81,,,,,Burin
+I18-3448,Flake,,,0%,,Plain,No,4,3.9,12.9,21.4,,,,,
+I18-3453,RetouchedPiece,,,0%,,Crushed,No,4,9,9.7,28,,,,,Burin
+I18-3457,RetouchedPiece,,,61-99%,RightLateral,Cortical,YesComplete,1,7.46,18.16,36.16,,,,,Retouched flake
+I18-3489,Flake,,,0%,,Cortical,YesComplete,3,5.82,23.95,19.74,,,,,
+I18-3495,FlakeFrag,,Mesial,0%,,,,3,4.3,15.6,,,,,,
+I18-3499,Flake,,,0%,,Crushed,No,7,3.08,14.89,19.17,,,,,
+I18-3530,Core,,,0%,,,,,19.4,26.1,42,Crushed,0,6,AngleLoss,
+I18-3542,Shatter,,,31-60%,,,,,,,,,,,,
+I18-3575,Shatter,,,1-30%,,,,,,,,,,,,
+I18-3628,RetouchedPiece,,,0%,,Plain,No,5,5,17.3,16.9,,,,,Retouched flake
+I18-3642,ElongBlankFrag,,Proximal,0%,,Plain,No,2,3.64,11.5,,,,,,
+I18-3657,FlakeFrag,,Siret,0%,,,,3,5.32,8.57,,,,,,
+I18-3663,FlakeFrag,,Siret,0%,,,,2,4.31,23.45,,,,,,
+I18-3669,Core,,,1-30%,,,,,17.44,23.2,24.2,Plain,1-30%,4,AngleLoss,
+I18-3677,RetouchedPiece,,,0%,,Removed,,3,4,14.2,31.6,,,,,Retouched blade
+I18-3687,Shatter,,,61-99%,,,,,,,,,,,,
+I18-3692,RetouchedPiece,,,1-30%,Distal,Crushed,No,5,12.7,22.2,24,,,,,Splintered piece
+I18-3698,Flake,,,0%,,Plain,No,4,13.2,18.2,30.2,,,,,
+I18-3715,Flake,,,0%,,Plain,No,5,3,14.5,24.2,,,,,
+I18-3716,Shatter,,,31-60%,,,,,,,,,,,,
+I18-3729,FlakeFrag,,Mesial,0%,,,,2,3.03,22.9,,,,,,
+I18-3731,Shatter,,,0%,,,,,,,,,,,,
+I18-3742,Flake,,,0%,,Plain,No,2,4.3,19.5,21.8,,,,,
+I18-3747,RetouchedPiece,,,0%,,Crushed,No,6,7.2,25.5,22.3,,,,,Splintered piece
+I18-3752,Flake,,,0%,,Plain,No,2,2.45,19.6,11.03,,,,,
+I18-3755,Flake,,,0%,,Plain,No,2,5.4,20.7,22.5,,,,,
+I18-3760,ElongBlankFrag,,Distal,0%,,,,2,2.79,10.69,,,,,,
+I18-3769,Shatter,,,0%,,,,,,,,,,,,
+I18-3773,RetouchedPiece,,,0%,,Crushed,No,2,5.51,18.7,22.58,,,,,Burin
+I18-3780,FlakeFrag,,Proximal,1-30%,Proximal,Cortical,YesComplete,4,3.73,16.24,,,,,,
+I18-3790,Flake,,,0%,,Plain,No,5,7,24,39.6,,,,,
+I18-3823,BurinSpall,,,0%,,,,3,2.4,,,,,,,
+I18-3849,Flake,,,1-30%,LeftLateral,Plain,No,4,4.86,17.67,24.41,,,,,
+I18-3855,Flake,,,0%,,Plain,No,5,7.1,23,23.7,,,,,
+I18-3863,Flake,,,0%,,Winged,No,4,8.1,23.2,30.8,,,,,
+I18-3877,FlakeFrag,,Distal,0%,,,,3,3.13,12.84,,,,,,
+I18-3879,Shatter,,,0%,,,,,,,,,,,,
+I18-3884,ElongBlankFrag,,Mesial,0%,,,,2,2.56,6.08,,,,,,
+I18-3897,Shatter,,,1-30%,,,,,,,,,,,,
+I18-3898,Shatter,,,31-60%,,,,,,,,,,,,
+I18-3902,Flake,,,31-60%,Distal,Cortical,YesComplete,5,7.8,31.41,36.13,,,,,
+I18-3910,Flake,,,0%,,Dihedral,No,3,7.34,19.2,28.94,,,,,
+I18-3911,FlakeFrag,,Mesial,0%,,,,1,2.81,13.92,,,,,,
+I18-3916,FlakeFrag,,Mesial,0%,,,,3,6.51,17.26,,,,,,
+I18-3919,Flake,,,0%,,Plain,No,2,5.98,20.32,19.03,,,,,
+I18-3929,Flake,,,1-30%,LeftLateral,Cortical,YesComplete,2,3.2,22.2,18.2,,,,,
+I18-3941,ElongBlank,,,1-30%,Distal,Plain,No,3,13.07,21.44,42.84,,,,,
+I18-3948,RetouchedPiece,,,0%,,Plain,No,4,9.51,17.33,26.14,,,,,Burin
+I18-3957,BurinSpall,,,0%,,,,3,3.58,,,,,,,
+I18-3965,RetouchedPiece,,,0%,,Cortical,YesComplete,5,6.4,27.7,26.9,,,,,Splintered piece with lateral retouch
+I18-3967,ElongBlankFrag,,Distal,0%,,,,2,4.25,9.35,,,,,,
+I18-3969,Core,,,31-60%,,,,,21.8,28.5,20.2,Cortical,1-30%,5,Hinge,
+I18-3978,Flake,,,1-30%,RightLateral,Cortical,YesComplete,1,4.4,31.4,14.6,,,,,
+I18-3993,ElongBlankFrag,,Distal,0%,,,,2,3.1,7.97,,,,,,
+I18-4000,FlakeFrag,,Distal,1-30%,Distal,,,2,4.63,21.25,,,,,,
+I18-4016,RetouchedPiece,,,61-99%,Mesial,Plain,No,5,31.75,22.61,17.38,,,,,Carenated endscrapper
+I18-4017,RetouchedPiece,,,1-30%,RightLateral,Removed,,3,10.26,19.53,19.94,,,,,Endscrapper
+I18-4028,FlakeFrag,,Distal,61-99%,Distal,,,1,8,34.11,,,,,,
+I18-4029,ElongBlankFrag,,Siret,0%,,,,2,4.32,9.94,,,,,,
+I18-4049,Flake,,,0%,,Cortical,YesComplete,2,2.5,14,17.1,,,,,
+I18-4065,ElongBlankFrag,,Distal,0%,,,,3,3.3,10,,,,,,
+I18-4100,Flake,,,0%,,Winged,No,2,5.57,22.4,18.95,,,,,
+I18-4116,FlakeFrag,,Siret,0%,,,,4,6.2,10.5,,,,,,
+I18-4138,Shatter,,,31-60%,,,,,,,,,,,,
+I18-4139,RetouchedPiece,,,0%,,Plain,No,5,7.5,12.8,25.4,,,,,Burin
+I18-4157,RetouchedPiece,,,0%,,Removed,,3,4.54,19.32,21.62,,,,,Burin
+I18-4176,Flake,,,0%,,Crushed,No,8,12.02,32.03,34.89,,,,,
+I18-4197,ElongBlankFrag,,Distal,0%,,,,3,1.8,5.8,,,,,,
+I18-4212,CorePreparProd,CoreTablet,,0%,,Plain,No,1,6.92,18.11,11.95,,,,,
+I18-4224,FlakeFrag,,Distal,1-30%,RightLateral,,,3,4.56,21.44,,,,,,
+I18-4255,FlakeFrag,,Distal,0%,,,,2,3.3,13.8,,,,,,
+I18-4265,FlakeFrag,,Siret,0%,,,,3,10.82,9.02,,,,,,
+I18-4273,Shatter,,,1-30%,,,,,,,,,,,,
+I18-4321,Flake,,,1-30%,DistalLeftLat,Crushed,No,3,3.7,15.1,25.3,,,,,
+I18-4325,RetouchedPiece,,,0%,,Cortical,YesComplete,3,4.88,30.27,28.04,,,,,Retouched flake
+I18-4326,RetouchedPiece,,,1-30%,Proximal,Cortical,YesComplete,2,5.57,11.45,20.93,,,,,Retouched flake
+I18-4329,Flake,,,1-30%,DistalRightLat,Winged,No,6,4.5,22.7,14.1,,,,,
+I18-4333,RetouchedPiece,,,61-99%,Distal,Plain,No,4,6.7,24.8,33.5,,,,,Endscrapper
+I18-4334,Flake,,,61-99%,Distal,Dihedral,No,4,9.57,23.23,24.1,,,,,
+I18-4350,CorePreparProd,CoreTrim,,0%,,Winged,No,6,9.6,15,35.1,,,,,
+I18-4357,Shatter,,,1-30%,,,,,,,,,,,,
+I18-4361,RetouchedPiece,,,0%,,Removed,,3,8.86,17.08,13.03,,,,,Notch
+I18-4366,Flake,,,1-30%,Proximal,Cortical,YesComplete,3,4.66,21.93,31.45,,,,,
+I18-4385,Flake,,,1-30%,LeftLateral,Plain,YesPartial,3,861,21.75,16.11,,,,,
+I18-4386,Flake,,,100%,,Plain,No,0,4.4,23.03,15.73,,,,,
+I18-4387,BurinSpall,,,0%,,,,4,7.08,,,,,,,
+I18-4392,Shatter,,,0%,,,,,,,,,,,,
+I18-4403,CoreFrag,,,31-60%,Distal,,,4,13.79,,,,,,,
+I18-4408,BurinSpall,,,0%,,,,2,6.71,,,,,,,
+I18-4413,Core,,,0%,,,,,14.8,39,36.5,Plain,0%,7,NaturalImperfection,
+I18-4424,FlakeFrag,,Proximal,1-30%,ProxRightLat,Dihedral,YesPartial,3,11.9,19.3,,,,,,
+I18-4426,ElongBlankFrag,,Distal,1-30%,Proximal,,,4,4.6,14.3,,,,,,
+I18-4429,FlakeFrag,,Distal,0%,,,,4,7.04,19.66,,,,,,
+I18-4436,Shatter,,,1-30%,,,,,,,,,,,,
+I18-4440,FlakeFrag,,Distal,0%,,,,5,7.1,16.8,,,,,,
+I18-4445,FlakeFrag,,Other,0%,,,,2,4.49,35.94,,,,,,
+I18-4468,Shatter,,,31-60%,,,,,,,,,,,,
+I18-4478,Flake,,,0%,,Plain,No,4,3.8,24.6,14.5,,,,,
+I18-4487,Flake,,,31-60%,LeftLateral,Cortical,YesComplete,2,12.53,25.29,23.4,,,,,
+I18-4519,Core,,,0%,,,,,31.64,35.28,43.26,Plain,0%,7,NaturalImperfection,
+I18-4574,RetouchedPiece,,,0%,,Plain,YesPartial,5,5.9,27.6,27.8,,,,,Denticulate
+I18-4579,ElongBlank,,,0%,,Plain,No,2,4.5,8.74,25.15,,,,,
+I18-4585,FlakeFrag,,Mesial,0%,,,,2,3.3,38.25,,,,,,
+I18-4592,RetouchedPieceFrag,,Proximal,0%,,Plain,No,4,3.46,12.01,,,,,,Retouched bladelet
+I18-4618,RetouchedPiece,,,0%,,Dihedral,No,3,3.66,12.99,19.27,,,,,Denticulate
+I18-4621,RetouchedPiece,,,0%,,Dihedral,No,3,5.8,26.1,42.8,,,,,Denticulate
+I18-4630,Shatter,,,31-60%,,,,,,,,,,,,
+I18-4658,Flake,,,31-60%,DistalRightLat,Plain,YesComplete,8,9.2,36.7,49.4,,,,,
+I18-4667,FlakeFrag,,Proximal,0%,,Winged,No,3,4.22,21.99,,,,,,
+I18-4673,RetouchedPiece,,,0%,,Plain,No,4,4.5,20,21.4,,,,,Notch
+I18-4685,RetouchedPiece,,,0%,,Removed,,2,3.57,6.94,26.17,,,,,Backed bladelet
+I18-4691,Flake,,,0%,,Plain,No,5,5.57,20.14,20.18,,,,,
+I18-4724,Core,,,0%,,,,,25.77,23.79,16.82,Dihedral,0%,4,Fracture,
+I18-4729,Shatter,,,1-30%,,,,,,,,,,,,
+I18-4745,ElongBlankFrag,,Mesial,0%,,,,3,3.61,68.18,,,,,,
+I18-4747,RetouchedPiece,,,0%,,Plain,No,4,36.84,70.69,72.02,,,,,Splintered piece
+I18-4750,RetouchedPiece,,,0%,,Crushed,No,2,7.7,13.1,32,,,,,Burin
+I18-4769,FlakeFrag,,Proximal,1-30%,RightLateral,Plain,No,1,3.33,26.5,,,,,,
+I19-2907,RetouchedPiece,,,0%,,Plain,No,5,6.64,19.21,20,,,,,Splintered piece
+I19-292,Flake,,,0%,,Plain,No,6,7.1,25.7,36,,,,,
+I19-2921,ElongBlank,,,31-60%,LeftLateral,Plain,YesComplete,2,3.6,11.9,23.4,,,,,
+I19-2922,RetouchedPiece,,,31-60%,LeftLateral,Plain,YesPartial,2,4.94,19.48,29.33,,,,,Burin
+I19-2938,RetouchedPiece,,,0%,,Removed,,2,5.11,9.32,17.07,,,,,Backed flake
+I19-2943,RetouchedPiece,,,0%,,Plain,No,5,5.47,16.83,32.38,,,,,Burin
+I19-2952,RetouchedPiece,,,0%,,Crushed,No,6,3.63,11.46,19.19,,,,,Burin
+I19-2955,RetouchedPiece,,,0%,,Crushed,No,2,3.85,11.94,21.3,,,,,Burin on truncation
+I19-2956,Flake,,,0%,,Plain,No,4,14.37,25.2,27.74,,,,,
+I19-2968,Flake,,,0%,,Plain,No,2,1.3,6.9,7.3,,,,,
+I19-2980,CoreFrag,,,31-60%,Proximal,,,6,15.97,,,,,,,
+I19-2999,FlakeFrag,,Siret,0%,,,,6,5.7,17,,,,,,
+I19-3069,FlakeFrag,,Proximal,31-60%,LeftLateral,Plain,No,3,9.83,20.05,,,,,,
+I19-3096,BurinSpall,,,1-30%,Distal,,,5,7.11,,,,,,,
+I19-3120,RetouchedPieceFrag,,Distal,31-60%,RightLateral,,,2,8.34,11.92,,,,,,Burin
+I19-3122,FlakeFrag,,Proximal,0%,,Plain,No,3,4.61,16.11,,,,,,
+I19-3127,RetouchedPiece,,,31-60%,ProxRightLat,Plain,YesPartial,5,6,16.1,28.7,,,,,Notch
+I19-3135,RetouchedPiece,,,0%,,Plain,No,5,6.27,15.1,25.08,,,,,Burin
+I19-3144,Flake,,,0%,,Plain,No,5,7.2,24.1,24.5,,,,,
+I19-3150,FlakeFrag,,Distal,1-30%,Distal,,,3,4.53,16.21,,,,,,
+I19-3157,Shatter,,,31-60%,,,,,,,,,,,,
+I19-3160,RetouchedPiece,,,1-30%,RightLateral,Plain,No,4,8.17,12.91,25.63,,,,,Burin
+I19-3173,CorePreparProd,CoreTrim,,0%,,Plain,No,7,15.2,22.5,29.2,,,,,
+I19-3195,Flake,,,1-30%,Distal,Cortical,YesComplete,3,6.62,18.8,16.76,,,,,
+I19-3205,Flake,,,0%,,Dihedral,No,4,3.67,17.01,20.34,,,,,
+I19-3206,Flake,,,1-30%,Distal,Linear,No,3,4.85,19.07,30.85,,,,,
+I19-3209,RetouchedPiece,,,0%,,Faceted,No,4,8.83,17.17,40.85,,,,,Retouched blade
+I19-3210,RetouchedPiece,,,0%,,Crushed,No,6,9.12,17.62,31.33,,,,,Splintered piece
+I19-3211,FlakeFrag,,Distal,0%,,,,2,9.44,25.72,,,,,,
+I19-3215,Shatter,,,31-60%,,,,,,,,,,,,
+I19-3229,Flake,,,61-99%,RightLateral,Plain,YesPartial,2,9.4,36.63,23.51,,,,,
+I19-3252,Core,,,31-60%,,,,,13.04,27.05,36.3,Plain,0%,5,NaturalImperfection,
+I19-3253,Flake,,,1-30%,Proximal,Cortical,YesComplete,2,3.9,14.7,17.9,,,,,
+I19-3284,RetouchedPiece,,,61-99%,Proximal,Cortical,YesComplete,2,10.39,18.05,38.56,,,,,Endscrapper
+I19-3287,Shatter,,,31-60%,,,,,,,,,,,,
+I19-3293,RetouchedPiece,,,0%,,Plain,No,4,6.25,25.51,19.76,,,,,Notch
+I19-3301,FlakeFrag,,Other,1-30%,Distal,,,1,2.62,14.77,,,,,,
+I19-3315,Flake,,,0%,,Plain,No,4,5.9,28,19.2,,,,,
+I19-3316,RetouchedPieceFrag,,Other,0%,,,,2,7.65,16.02,,,,,,Retouched piece fragment
+I19-3331,ElongBlankFrag,,Distal,0%,,,,5,3.3,10.43,,,,,,
+I19-3337,CorePreparProd,CoreFront,,0%,,Plain,No,6,9.1,13.8,24,,,,,
+I19-3343,BurinSpall,,,0%,,,,4,1.99,,,,,,,
+I19-3385,Flake,,,0%,,Dihedral,No,3,6.1,24.31,18.28,,,,,
+I19-3397,Shatter,,,31-60%,,,,,,,,,,,,
+H21-4494,Shatter,,,0%,,,,,,,,,,,,
+I19-3407,RetouchedPiece,,,1-30%,DistalLeftLat,Crushed,No,5,5.5,15.2,29.96,,,,,Burin
+I19-3408,Shatter,,,1-30%,,,,,,,,,,,,
+I19-3415,FlakeFrag,,Distal,0%,,,,5,4,16.3,,,,,,
+I19-3426,Flake,,,0%,,Dihedral,No,4,2.8,19.8,23.8,,,,,
+I19-3427,RetouchedPieceFrag,,Other,0%,,,,2,5.91,24.08,,,,,,Retouched piece fragment
+I19-3430,Shatter,,,31-60%,,,,,,,,,,,,
+I19-3439,Shatter,,,1-30%,,,,,,,,,,,,
+I19-3495,CorePreparProd,Overhang,,0%,,Plain,No,3,7.77,27.81,10.54,,,,,
+I19-3511,RetouchedPiece,,,0%,,Plain,No,3,8.91,20.16,19.72,,,,,Retouched flake
+I19-3512,RetouchedPiece,,,0%,,Plain,No,4,5.42,16.12,26.38,,,,,Burin
+I19-3515,BurinSpall,,,0%,,,,2,6,,,,,,,
+I19-3522,Flake,,,0%,,Plain,YesPartial,4,13.86,22.7,40.03,,,,,
+I19-3527,BurinSpall,,,0%,,,,3,6.72,,,,,,,
+I19-3536,ElongBlankFrag,,Distal,1-30%,Mesial,,,2,3.44,6.01,,,,,,
+I19-3544,FlakeFrag,,Other,0%,,,,3,9.2,20.5,,,,,,
+I19-3546,Flake,,,0%,,Cortical,YesComplete,3,6.47,21.42,21.51,,,,,
+I19-3561,RetouchedPiece,,,1-30%,Distal,Crushed,No,4,5,18.8,38,,,,,Endscrapper
+I19-3563,Flake,,,1-30%,ProxRightLat,Plain,YesPartial,3,5.07,20.9,36.11,,,,,
+I19-3586,CorePreparProd,CoreFront,,0%,,Plain,No,3,10.65,34.85,22.5,,,,,
+I19-3589,RetouchedPiece,,,1-30%,RightLateral,Crushed,No,4,5.8,29.5,24.9,,,,,Splintered piece
+I19-3620,ElongBlank,,,0%,,Plain,No,4,4.3,18.8,47.5,,,,,
+I19-3621,FlakeFrag,,Proximal,31-60%,LeftLateral,Dihedral,YesPartial,3,6.96,16.88,,,,,,
+I19-3628,Flake,,,0%,,Dihedral,No,3,4.5,14.4,19.4,,,,,
+I19-3629,Flake,,,1-30%,Distal,Plain,No,3,6.12,23.03,29.33,,,,,
+I19-3641,Core,,,0%,,,,,11.9,11.8,23.3,Plain,0%,5,NoReason,
+I19-3665,BurinSpall,,,0%,,,,3,4.64,,,,,,,
+I19-3685,RetouchedPiece,,,0%,,Plain,No,5,6.12,17.95,21.78,,,,,Burin
+I19-3699,RetouchedPiece,,,1-30%,Distal,Crushed,No,4,6.4,13.3,32.8,,,,,Retouched blade
+I19-3700,Flake,,,61-99%,ProxRightLat,Cortical,YesComplete,2,8.51,31.71,30.94,,,,,
+I19-3706,Flake,,,0%,,Plain,No,6,10.2,30,28.7,,,,,
+I19-3722,FlakeFrag,,Proximal,0%,,Plain,No,2,4.77,22.03,,,,,,
+I19-3739,Flake,,,0%,,Dihedral,No,4,5.61,20.82,21.52,,,,,
+I19-3751,Shatter,,,0%,,,,,,,,,,,,
+I19-3763,ElongBlankFrag,,Distal,0%,,,,2,3.16,4.12,,,,,,
+I19-3776,ElongBlank,,,0%,,Crushed,No,5,2.22,10.44,23.3,,,,,
+I19-378,RetouchedPiece,,,0%,,Removed,,4,4.8,17.3,29.4,,,,,Retouched flake
+I19-3782,ElongBlankFrag,,Mesial,61-99%,LeftLateral,,,2,2.8,11.5,,,,,,
+I19-3788,RetouchedPiece,,,1-30%,ProxRightLat,Plain,YesPartial,5,10.41,16.64,22.12,,,,,Burin
+I19-3808,ElongBlankFrag,,Distal,1-30%,Distal,,,5,3.9,10.4,,,,,,
+I19-3865,RetouchedPiece,,,0%,,Crushed,No,4,4.03,13.96,22.49,,,,,Burin
+I19-3871,RetouchedPiece,,,0%,,Plain,No,4,6.2,24.1,21,,,,,Retouched flake
+I19-3877,RetouchedPiece,,,61-99%,Distal,Plain,No,7,10.1,31.6,18,,,,,Notch
+I19-3878,Flake,,,0%,,Plain,No,3,5.6,17.3,15,,,,,
+I19-3881,FlakeFrag,,Distal,31-60%,Mesial,,,4,13.44,52.92,,,,,,
+I19-3887,Flake,,,1-30%,Distal,Crushed,No,3,12.68,22.03,24.46,,,,,
+I19-3891,Flake,,,31-60%,Distal,Plain,No,2,5.89,17.63,22.64,,,,,
+I19-3902,RetouchedPieceFrag,,Proximal,0%,,Plain,No,2,3.45,7.77,,,,,,Backed bladelet
+I19-3908,FlakeFrag,,Mesial,1-30%,LeftLateral,,,2,2,16.2,,,,,,
+I19-3915,Flake,,,61-99%,Distal,Other,No,1,4.7,26.1,27.6,,,,,
+I19-3920,Shatter,,,1-30%,,,,,,,,,,,,
+I19-3921,FlakeFrag,,Distal,31-60%,Distal,,,3,2.58,12.6,,,,,,
+I19-3927,Shatter,,,0%,,,,,,,,,,,,
+I19-3947,RetouchedPiece,,,1-30%,RightLateral,Plain,No,3,5.3,22.9,23.4,,,,,Retouched flake
+I19-3952,Shatter,,,31-60%,,,,,,,,,,,,
+I19-3968,ElongBlankFrag,,Siret,0%,,,,2,7.1,19.2,,,,,,
+I19-3973,BurinSpall,,,0%,,,,3,6.71,,,,,,,
+I19-3983,Flake,,,0%,,Plain,No,5,7.4,22.5,17.36,,,,,
+I19-3999,Shatter,,,1-30%,,,,,,,,,,,,
+I19-4009,Shatter,,,1-30%,,,,,,,,,,,,
+I19-4012,FlakeFrag,,Mesial,100%,,,,0,5.93,21.46,,,,,,
+I19-4013,Flake,,,0%,,Winged,No,2,2.36,26.2,15.27,,,,,
+I19-4019,RetouchedPieceFrag,,Distal,0%,,,,3,7.18,19.65,,,,,,Splintered piece fragment
+I19-4031,CoreFrag,,,31-60%,Proximal,,,2,17.04,,,,,,,
+I19-4035,RetouchedPiece,,,0%,,Plain,No,2,6.4,22.51,20.79,,,,,Retouched flake
+I19-4039,Flake,,,0%,,Plain,No,5,3.9,51,48.1,,,,,
+I19-4040,BurinSpall,,,1-30%,Proximal,,,3,6.14,,,,,,,
+I19-4076,Shatter,,,1-30%,,,,,,,,,,,,
+I19-4099,Flake,,,0%,,Plain,No,3,8.24,21.77,32.96,,,,,
+I19-4103,Flake,,,0%,,Plain,No,3,4.2,9.6,14.7,,,,,
+I19-4111,RetouchedPiece,,,1-30%,LeftLateral,Removed,,5,13.76,32.83,31.99,,,,,Endscrapper
+I19-4119,Flake,,,1-30%,ProxLeftLat,Plain,No,3,3.2,46.8,46.1,,,,,
+I19-4136,Flake,,,1-30%,LeftLateral,Plain,YesPartial,1,7.6,22.8,33.6,,,,,
+I19-4159,RetouchedPiece,,,0%,,Removed,,3,2.29,5.06,23.2,,,,,Double backed bladelet
+I20-1445,BurinSpall,,,31-60%,Mesial,,,3,10.15,,,,,,,
+I20-3391,Flake,,,0%,,Plain,No,2,2.07,13.64,19.96,,,,,
+I20-3415,Shatter,,,0%,,,,,,,,,,,,
+I20-3434,ElongBlankFrag,,Proximal,0%,,Plain,No,3,4.3,12.2,,,,,,
+I20-3471,FlakeFrag,,Siret,1-30%,Proximal,,,1,6.17,13.03,,,,,,
+I20-3483,Flake,,,0%,,Plain,No,3,8.69,15.4,29.79,,,,,
+I20-3484,Core,,,31-60%,,,,,17.8,39.7,26.8,Plain,1-30%,6,AngleLoss,
+I20-3500,BurinSpall,,,0%,,,,3,5.21,,,,,,,
+I20-3503,Shatter,,,0%,,,,,,,,,,,,
+I20-3531,Flake,,,1-30%,LeftLateral,Plain,YesPartial,3,10.22,31.27,20.79,,,,,
+I20-3539,ElongBlankFrag,,Distal,1-30%,LeftLateral,,,2,3.26,13.36,,,,,,
+I20-3542,RetouchedPiece,,,0%,,Crushed,No,2,4.42,24.82,16.07,,,,,Notch
+I20-3551,Flake,,,1-30%,RightLateral,Plain,YesPartial,1,5.35,16.28,25.72,,,,,
+I20-3597,RetouchedPiece,,,1-30%,Proximal,Crushed,YesComplete,4,7.87,24.56,35,,,,,Burin splintered piece
+I20-3603,Core,,,0%,,,,,39.23,46.02,23.59,Plain,0%,3,AngleLoss,
+I20-3613,ElongBlank,,,61-99%,LeftLateral,Cortical,YesComplete,2,6,12,28.2,,,,,
+I20-3623,Flake,,,0%,,Plain,No,3,5.61,18.27,24.22,,,,,
+I20-3632,RetouchedPieceFrag,,Other,0%,,,,3,5.71,9.05,,,,,,Retouched piece fragment
+I20-3633,ElongBlank,,,1-30%,Proximal,Cortical,YesComplete,3,4.15,10.93,35.92,,,,,
+I20-3644,ElongBlank,,,1-30%,Distal,Plain,No,2,6.46,16.4,31.88,,,,,
+I20-3653,Shatter,,,0%,,,,,,,,,,,,
+I20-3656,Flake,,,1-30%,DistalRightLat,Plain,No,2,4.4,12.9,51.8,,,,,
+I20-3668,RetouchedPiece,,,0%,,Crushed,No,5,8.5,10.88,22.19,,,,,Burin
+I20-3691,ElongBlankFrag,,Distal,1-30%,LeftLateral,,,5,5.1,8.9,,,,,,
+I20-3709,Shatter,,,61-99%,,,,,,,,,,,,
+I20-3713,Shatter,,,61-99%,,,,,,,,,,,,
+I20-3722,FlakeFrag,,Distal,1-30%,LeftLateral,,,4,5.03,16.69,,,,,,
+I20-3727,FlakeFrag,,Distal,0%,,,,4,7.38,29.2,,,,,,
+I20-3730,FlakeFrag,,Distal,1-30%,LeftLateral,,,3,3.7,15.2,,,,,,
+I20-374,Flake,,,1-30%,RightLateral,Plain,No,3,6.77,13.18,26.1,,,,,
+I20-3745,Core,,,31-60%,,,,,30,41.2,35.4,Plain,1-30%,6,AngleLoss,
+I20-3751,FlakeFrag,,Siret,0%,,,,2,2.9,13.5,,,,,,
+I20-3756,Flake,,,61-99%,Mesial,Plain,YesComplete,2,17.3,45.8,68.6,,,,,
+I20-3761,Flake,,,61-99%,LeftLateral,Crushed,YesPartial,3,6.25,20.88,32.56,,,,,
+I20-3764,Flake,,,0%,,Plain,No,7,9.7,48.2,30.2,,,,,
+I20-3787,FlakeFrag,,Mesial,0%,,,,1,3.74,19.17,,,,,,
+I20-3801,Flake,,,0%,,Plain,No,4,8.3,30.7,33.5,,,,,
+I20-3809,RetouchedPiece,,,1-30%,Proximal,Cortical,YesComplete,4,8.17,29.76,36.24,,,,,Endscrapper
+I20-3836,Shatter,,,31-60%,,,,,,,,,,,,
+I20-3843,FlakeFrag,,Other,0%,,,,4,9.09,23.73,0,,,,,
+I20-3850,Flake,,,0%,,Plain,No,2,4.66,20.79,26.58,,,,,
+I20-3861,ElongBlankFrag,,Distal,0%,,,,3,3.5,8.2,,,,,,
+I20-3876,FlakeFrag,,Proximal,1-30%,LeftLateral,Plain,No,1,3.6,12.6,,,,,,
+I20-3878,ElongBlank,,,0%,,Dihedral,No,6,14.36,24.64,50.77,,,,,
+I20-3880,Flake,,,0%,,Plain,No,4,3.02,14.41,23.67,,,,,
+I20-3886,Flake,,,1-30%,LeftLateral,Plain,No,4,9.37,27.82,38.24,,,,,
+I20-3900,RetouchedPiece,,,61-99%,Proximal,Plain,YesPartial,1,8.44,29.18,32.11,,,,,Endscrapper
+I20-3955,FlakeFrag,,Proximal,0%,,Plain,,6,5.17,32.08,0,,,,,
+I20-3966,BurinSpall,,,0%,,,,2,10.22,,,,,,,
+I20-3991,RetouchedPiece,,,0%,,Crushed,YesPartial,2,3.66,28.93,19.91,,,,,Splintered piece
+I20-3992,RetouchedPiece,,,1-30%,Distal,Crushed,No,9,12.2,23.3,40.24,,,,,Burin
+I20-3997,FlakeFrag,,Distal,1-30%,Distal,,,6,5.8,18.4,,,,,,
+I20-4000,Shatter,,,0%,,,,,,,,,,,,
+I20-4003,Shatter,,,1-30%,,,,,,,,,,,,
+I20-4010,FlakeFrag,,Siret,0%,,,,2,3.68,19.57,,,,,,
+I20-4020,Core,,,1-30%,Proximal,Cortical,YesComplete,1,20.66,23.52,45.44,Plain,0%,5,NoReason,
+I20-4048,Flake,,,1-30%,RightLateral,Crushed,No,3,7.39,27.89,32.71,,,,,
+I20-4052,RetouchedPiece,,,0%,,Plain,No,2,2.06,9.65,24.02,,,,,Retouched bladelet
+I20-4060,RetouchedPiece,,,0%,,Removed,,3,2.72,7.01,22.28,,,,,Backed bladelet
+I20-4072,RetouchedPiece,,,0%,,Removed,,1,3,5.4,22.9,,,,,Backed bladelet
+I20-4084,RetouchedPiece,,,61-99%,LeftLateral,Dihedral,No,4,7.91,18.84,23.3,,,,,Notch
+I20-4107,BurinSpall,,,0%,,,,4,6.3,,,,,,,
+I20-4118,RetouchedPiece,,,31-60%,LeftLateral,Crushed,YesPartial,5,15.4,29.27,47.29,,,,,Splintered piece
+I20-4121,Flake,,,0%,,Winged,No,4,3.9,15.1,22.7,,,,,
+I20-4130,RetouchedPiece,,,1-30%,LeftLateral,Removed,,1,5.92,13.34,28.03,,,,,Retouched flake
+I20-4143,FlakeFrag,,Distal,1-30%,DistalRightLat,,,4,6.72,12.93,,,,,,
+I20-4171,Flake,,,0%,,Plain,No,2,5.6,33.8,53.1,,,,,
+I20-4182,ElongBlank,,,0%,,Plain,No,3,4,5.4,20.6,,,,,
+I20-4189,Flake,,,100%,,Plain,YesPartial,1,5,12,23,,,,,
+I20-4194,Core,,,1-30%,,,,,26.1,36.13,22.83,Plain,0%,5,NaturalImperfection,
+I20-4207,ElongBlank,,,31-60%,LeftLateral,Other,YesPartial,1,3.81,5.43,21.86,,,,,
+I20-4226,CoreFrag,,,1-30%,RightLateral,,,4,26.25,,,,,,,
+I20-4231,Flake,,,1-30%,DistalRightLat,Plain,No,4,7.1,36.5,23.7,,,,,
+I20-4234,Flake,,,0%,,Crushed,No,2,5.89,14.18,24.56,,,,,
+I20-4238,FlakeFrag,,Distal,1-30%,Distal,,,2,2.31,14.01,,,,,,
+I21-3789,Core,,,1-30%,,,,,19.97,24.46,20.09,Other,0%,2,Hinge,
+I21-3797,RetouchedPiece,,,0%,,Plain,No,5,9.83,21.31,32.8,,,,,Burin
+I21-3807,Flake,,,31-60%,Distal,Plain,YesPartial,5,9.5,27.1,25.3,,,,,
+I21-3820,Shatter,,,0%,,,,,,,,,,,,
+I21-3828,Shatter,,,0%,,,,,,,,,,,,
+I21-3832,FlakeFrag,,Distal,0%,,,,2,4.6,18.3,,,,,,
+I21-3844,RetouchedPiece,,,1-30%,Proximal,Cortical,YesComplete,4,8.78,13.98,29.11,,,,,Burin
+I21-3847,FlakeFrag,,Siret,31-60%,Distal,,,2,11.4,18.8,,,,,,
+I21-3857,Flake,,,61-99%,LeftLateral,Dihedral,YesPartial,2,7.04,18.53,23.34,,,,,
+I19-3402,Flake,,,0%,,Cortical,YesComplete,7,5.9,35.8,16.2,,,,,
+I21-3860,CoreFrag,,,1-30%,Distal,,,7,21.1,,,,,,,
+I21-3867,Flake,,,0%,,Dihedral,No,6,7.55,25.14,20.53,,,,,
+I21-3876,Flake,,,0%,,Plain,No,2,3.99,14.19,18.37,,,,,
+I21-3893,RetouchedPiece,,,1-30%,RightLateral,Cortical,YesComplete,7,11.1,25.8,29.1,,,,,Splintered piece with lateral retouch
+I21-3895,Flake,,,1-30%,Proximal,Dihedral,YesPartial,5,4.1,18.9,17.5,,,,,
+I21-3907,Shatter,,,0%,,,,,,,,,,,,
+I21-3914,RetouchedPiece,,,1-30%,LeftLateral,Linear,No,5,9.87,24.74,24.3,,,,,Notch
+I21-3936,RetouchedPiece,,,1-30%,ProxLeftLat,Crushed,YesPartial,6,7.32,20.94,30.32,,,,,Splintered piece
+I21-3939,RetouchedPiece,,,0%,,Crushed,No,3,10.87,16.72,24.13,,,,,Burin on truncation
+I21-3940,Shatter,,,1-30%,,,,,,,,,,,,
+I21-3943,Flake,,,0%,,Plain,No,7,7.5,18.4,29.4,,,,,
+I21-3955,RetouchedPiece,,,0%,,Removed,,4,6.28,14.62,43.3,,,,,Retouched blade
+I21-3985,Shatter,,,1-30%,,,,,,,,,,,,
+I21-4005,RetouchedPiece,,,0%,,Crushed,No,4,10.7,7.81,26.46,,,,,Multiple burin
+I21-4023,RetouchedPiece,,,0%,,Removed,No,4,11.74,32.15,23.06,,,,,Endscrapper
+I21-4041,RetouchedPiece,,,0%,,Crushed,No,7,13.4,21.1,4.7,,,,,Splintered piece
+I21-4049,Flake,,,1-30%,Distal,Plain,No,4,5.54,14.36,26.24,,,,,
+I21-4073,CoreFrag,,,1-30%,LeftLateral,,,4,8.4,,,,,,,
+I21-4084,RetouchedPiece,,,1-30%,Mesial,Plain,YesPartial,3,6.84,19,21.9,,,,,Perforator
+I21-4085,ElongBlankFrag,,Distal,1-30%,LeftLateral,,,2,3.4,11.1,,,,,,
+I21-4094,Core,,,31-60%,,,,,42,32.2,22.6,Plain,0%,4,NaturalImperfection,
+I21-4105,RetouchedPiece,,,1-30%,DistalLeftLat,Crushed,No,6,10.19,16.47,43,,,,,Retouched blade
+I21-4109,Flake,,,0%,,Plain,YesPartial,2,5.73,21.41,23.06,,,,,
+I21-4118,FlakeFrag,,Siret,0%,,,,2,5.49,11.59,,,,,,
+I21-4121,Flake,,,1-30%,RightLateral,Plain,No,2,3.98,25.42,23.34,,,,,
+I21-4122,FlakeFrag,,Distal,0%,,,,3,4.34,27.68,,,,,,
+I21-4128,CoreFrag,,,0%,,,,2,22.63,,,,,,,
+I21-4131,RetouchedPiece,,,1-30%,Proximal,Plain,YesComplete,3,7.68,25.48,36.81,,,,,Retouched flake
+I21-4134,FlakeFrag,,Distal,0%,,,,2,8.02,36.76,,,,,,
+I21-4146,FlakeFrag,,Distal,1-30%,Distal,,,2,5.6,20.92,,,,,,
+I21-4165,FlakeFrag,,Proximal,0%,,Plain,No,3,8.76,24.51,,,,,,
+I21-4174,RetouchedPiece,,,31-60%,RightLateral,Plain,YesPartial,1,4.59,12.32,21.05,,,,,Retouched flake
+I21-4187,ElongBlank,,,0%,,Plain,No,7,5.3,10.4,27.2,,,,,
+J18-1016,Flake,,,1-30%,Proximal,Cortical,YesComplete,2,2.45,12.44,19.25,,,,,
+J18-1019,Flake,,,1-30%,Distal,Plain,No,4,11,39.9,31.7,,,,,
+J18-1022,ElongBlank,,,1-30%,Distal,Winged,No,5,4.21,17.01,44.96,,,,,
+J18-1025,ElongBlankFrag,,Distal,1-30%,Proximal,,,3,1.7,9.5,,,,,,
+J18-1048,FlakeFrag,,Other,0%,,,,1,4.6,18.1,,,,,,
+J18-1053,Shatter,,,0%,,,,,,,,,,,,
+J18-1075,RetouchedPieceFrag,,Distal,0%,,,,2,7.55,14.79,,,,,,Retouched flake
+J18-1077,Flake,,,1-30%,RightLateral,Plain,No,3,8.72,18.55,24.9,,,,,
+J18-1085,FlakeFrag,,Other,0%,,,,2,4.22,10.73,,,,,,
+J18-1092,Flake,,,0%,,Dihedral,No,4,4.86,13.53,20.51,,,,,
+J18-1112,Shatter,,,1-30%,,,,,,,,,,,,
+J18-1122,Flake,,,1-30%,Distal,Crushed,No,5,7.98,24.29,19.41,,,,,
+J18-1125,Flake,,,0%,,Crushed,No,3,4.77,24.76,23.96,,,,,
+J18-1133,Shatter,,,0%,,,,,,,,,,,,
+J18-1142,RetouchedPiece,,,1-30%,LeftLateral,Crushed,YesPartial,5,13.68,18.54,54.31,,,,,Burin
+J18-1248,Shatter,,,0%,,,,,,,,,,,,
+J18-129,Shatter,,,0%,,,,,,,,,,,,
+J18-132,Flake,,,0%,,Dihedral,No,2,3.5,12.8,12.7,,,,,
+J18-158,Shatter,,,0%,,,,,,,,,,,,
+J18-166,Flake,,,0%,,Plain,No,4,7,22.9,32.9,,,,,
+J18-177,FlakeFrag,,Proximal,0%,,Plain,No,4,6.5,28.5,,,,,,
+J18-186,RetouchedPiece,,,0%,,Plain,No,4,5.78,14.62,14.29,,,,,Burin
+J18-188,ElongBlankFrag,,Distal,1-30%,Distal,,,5,3.3,16.7,,,,,,
+J18-199,Flake,,,1-30%,LeftLateral,Cortical,YesComplete,2,11.97,26.84,30.48,,,,,
+J18-215,FlakeFrag,,Distal,0%,,,,1,4,19.8,,,,,,
+J18-221,Shatter,,,31-60%,,,,,,,,,,,,
+J18-228,Flake,,,0%,,Linear,No,6,4.33,20.59,26.11,,,,,
+J18-235,Flake,,,0%,,Dihedral,No,6,7.53,12.79,20.12,,,,,
+J18-236,Shatter,,,31-60%,,,,,,,,,,,,
+J18-239,FlakeFrag,,Proximal,1-30%,RightLateral,Dihedral,No,3,5.5,22.7,,,,,,
+J18-271,ElongBlankFrag,,Distal,0%,,,,2,2.7,9.4,,,,,,
+J18-274,Core,,,61-99%,,,,,14.05,37.89,44.85,Dihedral,1-30%,6,AngleLoss,
+J18-275,RetouchedPiece,,,0%,,Plain,No,5,20.57,20.99,36.96,,,,,Burin
+J18-277,Flake,,,61-99%,RightLateral,Cortical,YesPartial,4,6.51,40.62,27.84,,,,,
+J18-295,RetouchedPiece,,,0%,,Plain,No,2,10.3,22.7,40.6,,,,,Retouched flake siret fragment
+J18-303,FlakeFrag,,Distal,0%,,,,5,8.8,20.9,,,,,,
+J18-306,FlakeFrag,,Siret,0%,,,,2,6,17.9,,,,,,
+J18-307,FlakeFrag,,Distal,0%,,,,2,2.34,40.34,,,,,,
+J18-309,Flake,,,0%,,Plain,No,2,5.2,18.1,13.4,,,,,
+J18-318,ElongBlank,,,0%,,Plain,No,3,2.5,6.6,20.7,,,,,
+J18-319,Flake,,,1-30%,Distal,Dihedral,No,3,2.6,15.2,17.7,,,,,
+J18-328,Shatter,,,1-30%,,,,,,,,,,,,
+J18-331,ElongBlank,,,0%,,Plain,No,3,2.2,6.1,23.7,,,,,
+J18-344,Shatter,,,0%,,,,,,,,,,,,
+J18-351,Shatter,,,0%,,,,,,,,,,,,
+J18-356,ElongBlankFrag,,Proximal,31-60%,LeftLateral,Plain,No,2,6.2,15.8,,,,,,
+J18-357,RetouchedPiece,,,1-30%,RightLateral,Crushed,No,8,4.92,20.43,26.51,,,,,Splintered piece
+J18-361,Flake,,,0%,,Plain,No,5,7.55,17.8,30.99,,,,,
+J18-363,Shatter,,,61-99%,,,,,,,,,,,,
+J18-366,ElongBlank,,,1-30%,Distal,Plain,No,4,8.8,15.9,35.2,,,,,
+J18-381,Shatter,,,0%,,,,,,,,,,,,
+J18-384,ElongBlankFrag,,Distal,0%,,,,2,1.95,5.63,,,,,,
+J18-385,BurinSpall,,,0%,,,,3,5.33,,,,,,,
+J18-387,ElongBlankFrag,,Distal,0%,,,,3,4.6,12,,,,,,
+J18-388,RetouchedPiece,,,1-30%,Distal,Crushed,No,4,11.54,48.16,34.19,,,,,Splintered piece
+J18-389,RetouchedPiece,,,61-99%,RightLateral,Plain,YesPartial,6,14.78,28.57,46.67,,,,,Retouched flake
+J18-391,Flake,,,31-60%,LeftLateral,Plain,YesPartial,2,3.8,14.31,20.48,,,,,
+J18-394,RetouchedPiece,,,0%,,Removed,,1,3.21,14.78,22.23,,,,,Retouched flake
+J18-412,Flake,,,0%,,Plain,No,5,2.7,15.9,14.9,,,,,
+J18-415,Shatter,,,1-30%,,,,,,,,,,,,
+J18-420,CorePreparProd,CoreFront,,0%,,Plain,No,6,9.14,37.3,30.85,,,,,
+J18-4313,Flake,,,1-30%,LeftLateral,Plain,YesPartial,2,5.2,16.9,15.7,,,,,
+J18-47,Flake,,,0%,,Cortical,YesComplete,7,15,20.6,19.6,,,,,
+J18-52,RetouchedPiece,,,0%,,Crushed,No,6,13.37,28.88,36.91,,,,,Burin
+J18-53,RetouchedPiece,,,0%,,Crushed,No,4,4.1,13.76,27.77,,,,,Splintered piece
+J18-57,Shatter,,,0%,,,,,,,,,,,,
+J18-586,Flake,,,0%,,Plain,No,5,4.62,13.82,15.38,,,,,
+J18-62,Shatter,,,0%,,,,,,,,,,,,
+J18-63,ElongBlank,,,1-30%,Proximal,Cortical,YesComplete,3,4.66,9.5,27.43,,,,,
+J18-68,FlakeFrag,,Proximal,1-30%,RightLateral,Plain,No,3,7.9,21.3,,,,,,
+J18-72,RetouchedPiece,,,1-30%,DistalLeftLat,Plain,No,4,4.8,15.3,28.3,,,,,Retouched flake
+J18-73,RetouchedPiece,,,0%,,Removed,,3,5.3,7.3,25.8,,,,,Retouched bladelet
+J18-74,ElongBlankFrag,,Mesial,1-30%,Distal,,,3,5.1,11.4,,,,,,
+J18-78,Flake,,,1-30%,RightLateral,Other,YesPartial,5,13.5,23,35.6,,,,,
+J18-81,RetouchedPiece,,,1-30%,Distal,Other,No,5,12.39,19.28,35.56,,,,,Endscrapper
+J18-816,RetouchedPiece,,,0%,,Plain,No,4,8.22,15.39,20.18,,,,,Burin
+J18-821,Core,,,0%,,,,,16.5,29,34.3,Plain,0%,7,NaturalImperfection,
+J18-83,Flake,,,0%,,Dihedral,No,3,6.68,14.56,20.64,,,,,
+J18-869,Shatter,,,0%,,,,,,,,,,,,
+J18-878,Shatter,,,0%,,,,,,,,,,,,
+J18-884,Flake,,,31-60%,Distal,Crushed,YesComplete,4,6.05,25.97,30.7,,,,,
+J18-886,Flake,,,0%,,Dihedral,No,2,3.38,20.6,9.18,,,,,
+J18-889,FlakeFrag,,Other,1-30%,LeftLateral,,,3,2.9,24.2,,,,,,
+J18-981,RetouchedPiece,,,1-30%,RightLateral,Crushed,No,4,10.23,23.8,22.08,,,,,Splintered piece
+J18-984,FlakeFrag,,Mesial,0%,,,,2,2,15.8,,,,,,
+J19-1,RetouchedPieceFrag,,Proximal,0%,,Crushed,No,3,4.57,23.41,,,,,,Splintered piece fragment
+J19-17,RetouchedPiece,,,0%,,Plain,No,9,7.9,19.8,29.6,,,,,Multiple burin
+J19-177,RetouchedPiece,,,0%,,Plain,No,6,5.7,19.3,22,,,,,Retouched flake
+J19-187,Flake,,,1-30%,LeftLateral,Plain,No,3,6.2,19.3,21.2,,,,,
+J19-19,CoreFrag,,,31-60%,,Cortical,YesPartial,2,15,0,0,,,,,
+J19-196,BurinSpall,,,0%,,,,3,9.47,,,,,,,
+J19-197,Shatter,,,61-99%,,,,,,,,,,,,
+J19-205,FlakeFrag,,Distal,0%,,,,5,4.71,16.8,,,,,,
+J19-220,Shatter,,,31-60%,,,,,,,,,,,,
+J19-259,Shatter,,,0%,,,,,,,,,,,,
+J19-260,FlakeFrag,,Distal,0%,,,,5,12.53,20.71,,,,,,
+J19-261,RetouchedPiece,,,0%,,Removed,,2,5.21,14.09,21.85,,,,,Endscrapper-burin
+J19-263,Shatter,,,31-60%,,,,,,,,,,,,
+J19-269,FlakeFrag,,Distal,0%,,,,7,8.51,16.19,,,,,,
+J19-278,Core,,,1-30%,,,,,18.48,31.75,27.93,Faceted,0%,4,NoReason,
+J19-29,Shatter,,,31-60%,,,,,,,,,,,,
+J19-293,Shatter,,,0%,,,,,,,,,,,,
+J19-30,Flake,,,0%,,Plain,No,4,6.12,30.08,43.93,,,,,
+J19-300,Flake,,,1-30%,RightLateral,Crushed,No,3,5.79,26.74,32.44,,,,,
+J19-313,Shatter,,,0%,,,,,,,,,,,,
+J19-317,FlakeFrag,,Siret,1-30%,Distal,,,3,4.02,23.11,,,,,,
+J19-329,RetouchedPiece,,,0%,,Dihedral,No,8,14.3,32.1,26.9,,,,,Burin on truncation
+J19-369,ElongBlankFrag,,Proximal,0%,,Other,No,3,3.5,12.3,,,,,,
+J19-39,Shatter,,,31-60%,,,,,,,,,,,,
+J19-4,BurinSpall,,,1-30%,Proximal,,,4,6.9,,,,,,,
+J19-56,FlakeFrag,,Siret,31-60%,RightLateral,,,1,2.9,17.6,,,,,,
+J19-7,FlakeFrag,,Proximal,31-60%,LeftLateral,Plain,,1,4.54,12.2,0,,,,,
+J20-101,Shatter,,,0%,,,,0,0,0,0,,,,,
+J20-22,Flake,,,0%,,Plain,No,4,3.3,16,19,,,,,
+J20-24,ElongBlank,,,1-30%,Proximal,Plain,YesComplete,3,2.2,10.2,26.1,,,,,
+J20-30,Shatter,,,1-30%,,,,,,,,,,,,
+J20-38,FlakeFrag,,Proximal,0%,,Crushed,No,3,8.81,27.81,,,,,,
+J20-44,Shatter,,,0%,,,,,,,,,,,,
+J20-6,Flake,,,31-60%,RightLateral,Plain,No,1,5.8,17.8,21.7,,,,,
+J20-92,ElongBlankFrag,,Distal,31-60%,Distal,,,3,3.25,8.4,,,,,,
+J20-97,BurinSpall,,,0%,,,,2,5.27,,,,,,,
+J20-98,Flake,,,0%,,Linear,No,4,3.24,13.43,22.14,,,,,
+J21-1,Shatter,,,1-30%,,,,,,,,,,,,
+J21-11,RetouchedPieceFrag,,Other,0%,,,,4,7.09,12.21,,,,,,Retouched piece fragment
+J21-12,Flake,,,1-30%,RightLateral,Plain,No,2,4.1,15.1,9.4,,,,,
+J21-15,FlakeFrag,,Distal,0%,,,,4,4.8,13,,,,,,
+J21-21,RetouchedPiece,,,0%,,Plain,No,8,11.6,21.8,34.6,,,,,Splintered piece with lateral retouch
+J21-5,Flake,,,0%,,Cortical,YesComplete,2,4.4,16.6,13.3,,,,,
+J21-57,ElongBlank,,,0%,,Linear,No,4,2.88,7.38,21.61,,,,,
+J21-63,FlakeFrag,,Distal,1-30%,Distal,,,6,6,14,,,,,,
+J21-8,RetouchedPiece,,,0%,,Plain,No,6,4.24,10.15,19.83,,,,,Notch
+J21-82,CoreFrag,,,1-30%,Proximal,,,4,6.65,,,,,,,
+K18-100,Shatter,,,0%,,,,,,,,,,,,
+K18-104,FlakeFrag,,Distal,31-60%,Distal,,,3,3.11,17.99,,,,,,
+K18-109,ElongBlankFrag,,Proximal,0%,,Plain,No,3,4.34,10.95,,,,,,
+K18-111,FlakeFrag,,Distal,1-30%,LeftLateral,,,2,6.4,17,,,,,,
+K18-138,CoreFrag,,,1-30%,Distal,,,4,15.1,,,,,,,
+K18-149,FlakeFrag,,Distal,0%,,,,4,4.5,13.2,,,,,,
+K18-155,Shatter,,,0%,,,,,,,,,,,,
+K18-161,RetouchedPiece,,,0%,,Plain,No,4,4.1,22.96,19.51,,,,,Burin
+K18-162,RetouchedPiece,,,0%,,Removed,,2,3.64,4.48,28.81,,,,,Backed bladelet
+K18-165,RetouchedPiece,,,0%,,Plain,No,4,8.4,20.1,26.6,,,,,Retouched flake
+K18-255,BurinSpall,,,31-60%,Mesial,,,3,7.22,,,,,,,
+K18-259,Flake,,,0%,,Plain,No,4,2.55,12.63,17.54,,,,,
+K18-267,CoreFrag,,,31-60%,Distal,,,4,19.49,,,,,,,
+K18-64,FlakeFrag,,Distal,1-30%,Distal,,,3,1.96,15.13,,,,,,
+K18-83,FlakeFrag,,Proximal,0%,,Crushed,No,2,2.31,16.36,,,,,,
+K18-85,Flake,,,0%,,Plain,No,4,5.5,13.7,20.5,,,,,
+K18-87,BurinSpall,,,31-60%,RightLateral,,,1,7.6,,,,,,,
+K18-92,Shatter,,,31-60%,,,,,,,,,,,,
+K19-122,FlakeFrag,,Other,0%,,,,1,3,19.5,,,,,,
+K19-126,RetouchedPiece,,,1-30%,Proximal,Cortical,YesComplete,4,10.15,9.8,29.84,,,,,Burin
+K19-14,FlakeFrag,,Proximal,0%,,Winged,No,1,2.42,18.19,,,,,,
+K19-38,RetouchedPiece,,,1-30%,Distal,Plain,No,4,8.07,27.43,27.41,,,,,Retouched flake
+K19-81,ElongBlankFrag,,Distal,0%,,,,3,2.97,37.93,,,,,,
+K19-9,RetouchedPiece,,,31-60%,Mesial,Other,No,1,14.28,29.73,41.58,,,,,Endscrapper
+K19-95,CoreFrag,,,0%,,,,2,20.31,,,,,,,
+K20-11,Flake,,,1-30%,Distal,Cortical,YesComplete,2,6.56,16.86,25.46,,,,,
+K20-31,Flake,,,1-30%,RightLateral,Dihedral,No,5,6.29,32.92,36.73,,,,,
+K20-46,Flake,,,31-60%,DistalLeftLat,Crushed,No,3,3.77,14.23,20.77,,,,,
+K21-15,FlakeFrag,,Distal,1-30%,RightLateral,,,5,10.45,24.13,,,,,,
+L18-103,Core,,,0%,,,,,23.1,17.3,17.7,Plain,0%,3,NaturalImperfection,
+L18-106,ElongBlankFrag,,Mesial,1-30%,Mesial,,,3,2.17,6.97,,,,,,
+L18-11,RetouchedPiece,,,0%,,Plain,No,6,6.92,18.98,38.72,,,,,Burin
+L18-111,Flake,,,0%,,Cortical,YesComplete,3,5.46,18.45,16.79,,,,,
+L18-115,RetouchedPieceFrag,,Distal,0%,,,,2,7.88,21.27,,,,,,Retouched piece fragment
+L18-125,FlakeFrag,,Distal,0%,,,,3,3.32,11.82,,,,,,
+L18-126,Flake,,,31-60%,Mesial,Plain,YesPartial,3,4,22.3,28,,,0,,
+L18-139,ElongBlank,,,61-99%,RightLateral,Plain,YesPartial,1,7.57,11.37,21.39,,,,,
+L18-166,Flake,,,1-30%,Proximal,Plain,YesComplete,3,4.4,11,19.3,,,,,
+L18-172,Shatter,,,1-30%,,,,,,,,,,,,
+L18-180,BurinSpall,,,61-99%,LeftLateral,,,1,5.51,,,,,,,
+L18-204,Flake,,,1-30%,RightLateral,Cortical,YesComplete,4,14.6,18.2,35.7,,,,,
+L18-261,FlakeFrag,,Distal,0%,,,,4,5.84,21.6,,,,,,
+L18-262,Shatter,,,0%,,,,,,,,,,,,
+L18-270,RetouchedPiece,,,0%,,Other,No,5,7.44,14.09,29.28,,,,,Burin
+L18-284,ElongBlank,,,0%,,Plain,No,5,5.8,11.4,55.2,,,,,
+L18-288,Flake,,,61-99%,LeftLateral,Plain,YesComplete,2,3.1,10,19,,,,,
+L18-298,Flake,,,0%,,Winged,No,2,2.43,14.67,17.8,,,,,
+L18-301,Shatter,,,0%,,,,,,,,,,,,
+L18-329,Flake,,,1-30%,RightLateral,Cortical,YesComplete,3,6.1,17.3,21.2,,,,,
+L18-351,ElongBlankFrag,,Distal,0%,,,,2,3.27,6.94,,,,,,
+L18-352,Shatter,,,0%,,,,,,,,,,,,
+L18-38,Flake,,,0%,,Plain,No,3,12.2,41.4,50.9,,,0,,
+L18-389,RetouchedPiece,,,0%,,Crushed,No,5,13.57,10.65,24.84,,,,,Burin
+L19-96,FlakeFrag,,Distal,0%,,,,2,2.1,15.6,,,,,,
+L18-297,FlakeFrag,,Distal,1-30%,Distal,,,2,7.2,25.76,31.19,,,,,
+H18-3480,RetouchedPiece,,,0%,,Dihedral,No,2,4.97,24.64,21.12,,,,,Retouched flake
+H19-3984,RetouchedPieceFrag,,Distal,0%,,,,3,4.1,11.28,,,,,,Retouched bladelet frag
+H18-3667,RetouchedPiece,,,0%,,Plain,No,3,7.64,23.14,27.98,,,,,Burin
+H19-4159,Flake,,,1-30%,Distal,Winged,No,2,4.83,24.49,32.88,,,,,
+H19-4001,RetouchedPiece,,,0%,,Plain,No,4,9.93,25.38,29.92,,,,,Notch
+I21-4119,BurinSpall,,,0%,,Crushed,No,4,5.81,,,,,,,
+I18-3696,CorePreparProd,CoreTrim,,0%,,Faceted,No,6,15.2,23.24,35.67,,,,,
+H18-3569,Flake,,,0%,,Crushed,No,2,6.18,18.23,30.79,,,,,
+H19-4114,BurinSpall,,,0%,,Plain,No,2,3.87,,,,,,,
+I19-3715,FlakeFrag,,Distal,61-99%,Mesial,,,2,5.2,21.75,,,,,,
+I21-4097,RetouchedPiece,,,0%,,Other,No,5,14.44,35.46,36.64,,,,,Endscrapper
+H19-4031,CorePreparProd,CrestedPiece,,0%,,Plain,No,5,3.58,7.09,24.55,,,,,
+J18-375,FlakeFrag,,Distal,0%,,,,1,7.18,31.61,,,,,,
+I18-4309,BurinSpall,,,0%,,Plain,No,3,4.95,,,,,,,
+I19-3681,Flake,,,0%,,Plain,No,4,10.41,36.52,34.21,,,,,
+I19-3686,RetouchedPieceFrag,,Distal,0%,,,,2,7.36,13.22,,,,,,Retouched flake frag
+I19-3833,BurinSpall,,,0%,,Crushed,No,2,4.39,,,,,,,
