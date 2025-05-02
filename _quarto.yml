@@ -25,9 +25,9 @@ format:
     documentclass: scrreprt
     number-sections: true
     keep-tex: true
-    papersize: a4
     indent: true
-    linestretch: 2
+    papersize: a4
+    linestretch: 1.5
 
 editor: visual
 

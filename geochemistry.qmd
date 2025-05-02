@@ -169,7 +169,6 @@ sp69_plot <- sp69_xrd |>
 
 ## Scanning electron microscopy and energy dispersive X-ray spectroscopy (SEM-EDS)
 
-
 ## Portable X-ray fluorescence (pXRF)
 
 ```{r}

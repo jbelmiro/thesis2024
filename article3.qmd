@@ -94,7 +94,7 @@ This study aims to refine our understanding of lithic resource provisioning, use
 #| label: tbl-expectations
 #| tbl-cap: "Expected results of the technological and metric comparison between local and non-local cherts."
 
-hypotheses <- readr::read_csv(here::here('analysis/data/tables/hypotheses_short.csv'))
+hypotheses <- readr::read_csv(here::here('data/raw_data_from-stone-to-tool/hypotheses_short.csv'))
 
 knitr::kable(hypotheses)
 
@@ -110,7 +110,7 @@ Vale Boi is located on the western coast of the Algarve region, southern Portuga
 #| label: fig-map
 #| fig-cap: "a) Location of the archaeological site of Vale Boi (orange box) within the Iberian Peninsula; b) Photo of the limestone hill with terrace and shelter locations; c) Schematic of the site area. Figures b-c) were adapted from Cascalheira et al., 2017. Figure a) was produced with resource to the open-source software QGIS (https://qgis.org/)"
 
-knitr::include_graphics(here::here("analysis/figures/VB_map.png"))
+knitr::include_graphics(here::here("figures/from-stone-to-tool/VB_map.png"))
 
 ```
 
@@ -133,7 +133,7 @@ Quartz and greywacke are locally available from streambeds near the site, wherea
 #| fig-cap: "Simplified scheme of chert types identified in the UP sequence of the Terrace and Shelter areas of Vale Boi: a) local chert macroscopic variability (T1 to T5), including chalcedony (T1; top left); b) non-local chert types present in all occupations except for T11 which is only present in the Solutrean; c) TL09 (left) and TL06 (right) varieties within the trace lithologies group (TL) composed of non-local cherts with 1-3 samples per TL type and limited to specific archaeological levels and areas. Summarised from Belmiro et al., (2025)"
 #| out-width: "500"
 
-knitr::include_graphics(here::here("analysis/figures/types_short.png"))
+knitr::include_graphics(here::here("figures/from-stone-to-tool/types_short.png"))
 
 ```
 
@@ -212,18 +212,18 @@ The entirety of the R code used for the analysis, datasets, and visual represent
 
 # Reading the datasets
 ## Technological data
-gravettian_tech <- read_csv(here::here('analysis/data/raw_data/VBT_6_7_JB.csv'))
-proto_tech <- read_csv(here::here('analysis/data/raw_data/VBT_4E_5_JB.csv'))
-solutrean_JC <- read_csv(here::here('analysis/data/raw_data/VBR_ABC_JC.csv'))
-solutrean_points <- read_csv(here::here('analysis/data/raw_data/shelter_points_JC.csv'))
+gravettian_tech <- read_csv(here::here('data/raw_data_from-stone-to-tool/VBT_6_7_JB.csv'))
+proto_tech <- read_csv(here::here('data/raw_data_from-stone-to-tool/VBT_4E_5_JB.csv'))
+solutrean_JC <- read_csv(here::here('data/raw_data_from-stone-to-tool/VBR_ABC_JC.csv'))
+solutrean_points <- read_csv(here::here('data/raw_data_from-stone-to-tool/shelter_points_JC.csv'))
 
 ## RM data
-shelter_RM <- read_csv(here::here('analysis/data/raw_data/MACRO_IND_SHELTER.csv')) # Shelter RM analysis
-terrace_RM <- read_csv(here::here('analysis/data/raw_data/MACRO_IND_TERRACE.csv')) # Terrace RM analysis
+shelter_RM <- read_csv(here::here('data/raw_data_withinandbeyond/MACRO_IND_SHELTER.csv')) # Shelter RM analysis
+terrace_RM <- read_csv(here::here('data/raw_data_withinandbeyond/MACRO_IND_TERRACE.csv')) # Terrace RM analysis
 
 ## Context data
-context <- read_csv(here::here('analysis/data/raw_data/VB_Terrace_context.csv')) # Terrace Field DB - lithic artefact info
-xyz <- read_csv(here::here('analysis/data/raw_data/VB_Terrace_xyz.csv')) # Terrace Field DB - just coordinates
+context <- read_csv(here::here('data/raw_data_withinandbeyond/VB_Terrace_context.csv')) # Terrace Field DB - lithic artefact info
+xyz <- read_csv(here::here('data/raw_data_withinandbeyond/VB_Terrace_xyz.csv')) # Terrace Field DB - just coordinates
 
 ```
 
@@ -907,7 +907,7 @@ Finally, the Solutrean shows no relevant differences in the frequencies of retou
 #| label: tbl-results-sum
 #| tbl-cap: "Summarised results for analysis parameters between grouped chert types (local and non-local) by assemblage. Core sizes (P6) for the local Proto-Solutrean cherts are presented in mean values instead." 
 
-p_results <- readr::read_csv(here::here('analysis/data/tables/results_sum.csv'))
+p_results <- readr::read_csv(here::here('data/raw_data_from-stone-to-tool/results_sum.csv'))
 
 knitr::kable(p_results)
 
