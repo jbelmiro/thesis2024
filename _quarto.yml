@@ -24,10 +24,13 @@ format:
   pdf:
     documentclass: scrreprt
     number-sections: true
+    toc: true
+    toc-title: "Table of contents"
+    lof: true
+    lot: true
     keep-tex: true
     indent: true
     papersize: a4
-    linestretch: 1.5
+    linestretch: 2
 
 editor: visual
-

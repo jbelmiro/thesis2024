@@ -137,6 +137,8 @@ S_dataset <- S_dataset %>%
 
 **Authors**: Joana Belmiro^1^, Xavier Terradas^2^, Salvador Dominguez-Bella^3^, João Cascalheira^1^
 
+\pagebreak
+
 ^1^ Interdisciplinary Center for Archaeology and the Evolution of Human Behaviour (ICArEHB), University of Algarve; ^2^ CSIC; ^3^ UCA
 
 **Reference**: xxx
