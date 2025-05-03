@@ -4,925 +4,365 @@ execute:
   warning: false
   message: false
   comment: "#>"
-  fig-path: "../figures/"
-  fig-dpi: 600
 ---
 
-# Within chert: a multi-technique mineral and geochemical approach to the study of chert of southwestern Iberia {#sec-chapter4}
-
 ```{r}
-#| label: libraries
+#| label: within-library
 
 library(readr)
 library(dplyr)
-library(janitor)
-library(tidyr)
-library(gt)
-library(ggplot2)
-library(cowplot)
-library(tidyverse)
-library(ggfortify)
-library(FactoMineR)
-library(factoextra)
-library(ggpmisc)
-library(magick)
+library(kableExtra)
+library(knitr)
 
 ```
 
-## X-ray diffraction (XRD)
+# Within chert: a multi-technique mineral and geochemical approach to the study of chert of southwestern Iberia {#sec-chapter4}
 
-Some text. Some other text. A bit more of text.
+## Abstract {.unnumbered}
 
-```{r}
-#| label: xrd-readtables
+Recent advances in the study of chert in the Algarve have applied macroscopic and petrographic methods to geological samples from regional chert-bearing formations and archaeological materials from the Upper Palaeolithic assemblages of Vale Boi to explore hunter-gatherer mobility and technological organisation. However, key questions regarding human behaviour, mobility, and raw material selection remain unanswered, largely due to the limitations of macroscopic and petrographic methods in fully characterising the cherts. This study expands the characterisation of both geological and archaeological samples through the application of additional analytical methods, aiming to address critical research questions and assess the potential of these methods for chert characterisation in the Algarve and at Vale Boi. The results demonstrate that a multi-layered analytical approach is most effective for chert characterisation. While the applied geochemical methods yield strong results in distinguishing between cherts of different geological periods, they struggle to differentiate between cherts from the same period but different epochs. By building on previous analyses, this research contributes to broader discussions on lithic procurement strategies, human mobility, and exchange networks in southwestern Iberia during the Upper Palaeolithic.
 
-# Read grouped supporting data
-xrd_perc <- read_csv('data/xrd_data/xrd_goals.csv') # File with component percentage of all samples for annotations
-xrd_marks <- read_csv('data/xrd_data/xrd_peaks.csv') # File with peak data and d spacing for plot labels
+**Keywords**: Geoarchaeology; XRD; SEM-EDS; pXRF
 
-# Read individual xrd files
-sp15_xrd <- read_csv('data/xrd_data/SP15_xrd.csv')
-sp58_xrd <- read_csv('data/xrd_data/SP58_xrd.csv')
-sp62_xrd <- read_csv('data/xrd_data/SP62_xrd.csv')
-sp69_xrd <- read_csv('data/xrd_data/SP69_xrd.csv')
+## Introduction
 
-```
+The study of lithic raw materials has been a key topic in archaeology, as stone tools are ubiquitous in the archaeological record and identified as key element in hunter-gatherer cultural, economical and social organisation [@odellLithicAnalysis2006; @gamblePalaeolithicSocietiesEurope1999; @tostevinSeeingLithicsMiddlerange2012; @andrefskyRawMaterialAvailabilityOrganization1994; @andrefskyLithics1998; @shottTechnologicalOrganizationSettlement1986]. Among these materials, chert played a crucial role in lithic tool production, making its study, characterisation and sourcing a key issue in archaeological research, particularly in Upper Palaeolithic (UP) assemblages [e.g., @larickPerigordChertsAnalytical2011; @soto_chert_2018; @tomassoUrgonianChertProvence2019; @eixeaGeochemicalPetrographicAnalyses2023; @jensenFunctionalAnalysisPrehistoric1988; @brandlGenesisProvenanceClassification2013; @brandlMultiLayeredChert2016; @luedtkeIdentificationSourcesChert1979]. Determining the origins of chert artefacts reveals patterns of raw material availability and provides valuable insights into prehistoric procurement strategies, territorial behaviours, and long-distance exchange networks over time [@ambroseSocialEcologicalModels1990; @kuhnFormalApproachDesign1994; @surovellBehavioralEcologyLithic2009; @whallonSocialNetworksInformation2006; @torrenceProductionExchangeStone1986; @binfordWillowSmokeDogs1980].
 
-```{r}
-#| label: xrd-graphs
+Chert sourcing studies have frequently relied on macroscopic and petrographic techniques, providing valuable insights into raw material formations and procurement by hunter-gatherer groups [e.g., @garcia-simonMonegrostypeChertPetrographic2016; @matiasRawMaterialSourcing2016; @tomassoUrgonianChertProvence2019; @gomezdesolerPanadellaChertMontmaneu2020]. While these methods remain essential in lithic sourcing, they also have limitations. Their reliance on physical appearance and petrographic homogeneity can make it difficult to distinguish geologically similar cherts, especially in cases of long-distance procurement. Moreover, although macroscopic analysis is non-destructive, thin-section petrography requires destructive sampling, raising concerns about the preservation of archaeological materials [@brandlMultiLayeredChert2016; @luedtkeArchaeologistGuideChert1992].
 
-xrd_marks <- xrd_marks |>
-  dplyr::mutate(Phase = case_when(
-    Phase == "SiO2" ~ "Quartz",
-    TRUE ~ Phase))
+Recent research has increasingly incorporated geochemical and spectroscopic techniques to address these challenges and refine chert sourcing methodologies. Luedtke (1978, 1979, 1992) highlights the value of chemical data combined with multivariate statistical analysis, while Brandl (2016) integrates petrographic and geochemical approaches within the Multi-Layered Chert Sourcing (MLA) framework.
 
-# Colour codes
-## Observed = "lightsteelblue3"
-## Quartz = "salmon"
-## Dolomite = "steelblue1"
-## Calcite = "darkseagreen"
-## Halite = "darkgoldenrod1"
-## Background = "orchid"
-## Difference = "snow4"
+As seen in the previous chapters, we have applied macroscopic and petrographic approaches to the study of cherts from the Algarve region (Belmiro et al., 2023, 2025). However, the chert-bearing formations from the Algarve region remain largely unexplored through other analytical techniques.
 
-# SP15
-sp15_marks <- xrd_marks |>
-  filter(Sample == "SP15")
-sp15_perc <- xrd_perc |>
-  filter(Sample == "SP15") |>
-  select(-Sample, -ESD)
+An exception would be the Lower Jurassic (Carixian) and Upper Jurassic (Malm) limestone and dolomitic limestone formations from western Algarve [@rochaNoticiaExplicativaFolha1979], which show previous mineral and geochemical characterisations [@ribeiro_evolucao_2005]. However, given the geological scope of the study, only 3 chert samples from the Carixian and 3 samples of the Malm were analysed. While providing a basis for mineral and chemical composition of these cherts, it is key to expand the analysis to a more robust sample size.
 
-sp15_plot <- sp15_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
-  select(-Quartz_nb, -Dolomite_nb) |>
-  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Dolomite), 
-               names_to = "Phase", 
-               values_to = "Count") |> 
-  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Dolomite", "Background", "Difference"))) |>
-  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
-  geom_line(linewidth = 0.5) +
-  labs(x = "Diffraction Angle", y = "Intensity") +
-  theme_minimal() +
-  coord_cartesian(ylim = c(-5000, 55000)) +
-  geom_point(data = sp15_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
-  geom_label(data = sp15_marks, aes(x = Angle, y = Intensity, label = d), 
-            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
-  scale_colour_manual(values = c("lightsteelblue3", "salmon", "steelblue1" ,"orchid","snow4")) +
-  annotate(geom = "table", x = 75, y = 55000, label = list(cbind(sp15_perc)))
+Similarly, the Upper Palaeolithic chert assemblages from the site of Vale Boi have yet to be further characterised through geochemical methods. These may be key to address open research topics and questions by recent studies focusing on chert provisioning and selection during the UP at Vale Boi.
 
-# SP58 Jordana
-sp58_marks <- xrd_marks |>
-  filter(Sample == "SP58")
-sp58_perc <- xrd_perc |>
-  filter(Sample == "SP58") |>
-  select(-Sample, -ESD)
+For example, the Lower Jurassic (Carixian) cherts, located near Vale Boi (\<20 km) show macroscopic and petrographic similarities to the Middle Jurassic (Malhão formation) cherts located eastwards (\>70 km). This makes the differentiation between specific chert formations unclear [@belmiroCreatingFramesReference2023]. Making this distinction is critical for understanding regional mobility patterns and whether local cherts at Vale Boi are a mix of local (\<30 km) and regional (30-120 km) resources [@tarrinoFlintRawMaterial2015; @herrero-alonsoManagementLithicRaw2020].
 
-sp58_plot <- sp58_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
-  select(-Quartz_nb, -Calcite_nb) |>
-  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Calcite), 
-               names_to = "Phase", 
-               values_to = "Count") |> 
-  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Calcite", "Background", "Difference"))) |>
-  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
-  geom_line(linewidth = 0.5) +
-  labs(x = "Diffraction Angle", y = "Intensity") +
-  theme_minimal() +
-  coord_cartesian(ylim = c(-5000, 50000)) +
-  geom_point(data = sp58_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
-  geom_label(data = sp58_marks, aes(x = Angle, y = Intensity, label = d), 
-            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
-  scale_colour_manual(values = c("lightsteelblue3", "salmon", "darkseagreen" ,"orchid","snow4")) +
-  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp58_perc)))
+Questions regarding nodule selection may also be further explored to further characterise close-range chert procurement. This is particularly relevant for the Lower Jurassic (Carixian) cherts which show different degrees of dolomitization, with a clear impact on the knapping quality. By further characterising the mineral and chemical composition of geological cherts from all outcrops and macroscopic variability, and comparing with the archaeological samples, we may explore behaviours associated to selection associated with nodule quality (sensu higher silicification).
 
-# SP62 Oliveiras
-sp62_marks <- xrd_marks |> 
-  filter(Sample == "SP62")
-sp62_perc <- xrd_perc |> 
-  filter(Sample == "SP62") |> 
-  select(-Sample, -ESD)
+Additionally, evidence suggests that non-local materials were frequently introduced into the archaeological site, indicating complex long-distance procurement dynamics. However, these findings were based on macroscopic and petrographic studies, which leaves room for further characterization to strengthen source attributions and test current hypotheses. This is especially relevant for archaeological chert types for which we did not have a direct comparison regarding petrography, as for example T7 possibly originating from the Betic systems (south Spain) or other types for which a source could not be identified (T8-11).
 
-sp62_plot <- sp62_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
-  select(-Quartz_nb) |> 
-  pivot_longer(cols = c(Difference, Background, Observed, Quartz), 
-               names_to = "Phase", 
-               values_to = "Count") |> 
-  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Background", "Difference"))) |>
-  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
-  geom_line(linewidth = 0.5) +
-  labs(x = "Diffraction Angle", y = "Intensity") +
-  theme_minimal() +
-  coord_cartesian(ylim = c(-5000, 50000)) +
-  geom_point(data = sp62_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
-  geom_label(data = sp62_marks, aes(x = Angle, y = Intensity, label = d), 
-            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
-  scale_colour_manual(values = c("lightsteelblue3", "salmon", "orchid","snow4")) +
-  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp62_perc)))  
+To further explore these questions and topics, this study employs an integrated analytical approach to geological chert samples from local, regional, and non-local formations, as well as archaeological assemblages from the UP levels of Vale Boi to accomplish the following goals:
 
-# SP69 Mareta
-sp69_marks <- xrd_marks |> 
-  filter(Sample == "SP69")
-sp69_perc <- xrd_perc |> 
-  filter(Sample == "SP69") |> 
-  select(-Sample, -ESD)
+-   Expand the characterization of chert samples from the Algarve region, including data on their mineral and chemical composition. This will deepen our understanding of the characteristics of outcrops across the region and make this information accessible to the scientific community through its integration in our online lithotheque (https://lusolit.icarehb.com).
 
-sp69_plot <- sp69_xrd |> 
-  dplyr::mutate(Difference = Observed - Calculated - 3000) |> 
-  select(-Quartz_nb, -Calcite_nb) |> 
-  pivot_longer(cols = c(Difference, Background, Observed, Quartz, Calcite), 
-               names_to = "Phase", 
-               values_to = "Count") |> 
-  mutate(Phase = factor(Phase, levels = c("Observed", "Quartz", "Calcite", "Background", "Difference"))) |>
-  ggplot(aes(x = Angle, y = Count, colour = Phase)) +
-  geom_line(linewidth = 0.5) +
-  labs(x = "Diffraction Angle", y = "Intensity") +
-  theme_minimal() +
-  coord_cartesian(ylim = c(-5000, 50000)) +
-  geom_point(data = sp69_marks, aes(x = Angle, y = Intensity + 600, colour = Phase), size = 3, shape = 18) +
-  geom_label(data = sp69_marks, aes(x = Angle, y = Intensity, label = d), 
-            size = 3, fill = "white", label.size = 0.2, vjust = -1, show.legend = FALSE) +
-  scale_colour_manual(values = c("lightsteelblue3", "salmon", "darkseagreen" ,"orchid","snow4")) +
-  annotate(geom = "table", x = 75, y = 50000, label = list(cbind(sp69_perc)))
+-   Assess the potential of mineral and chemical analyses to distinguish between macroscopic and petrographically similar chert samples from the Lower Jurassic Carixian (west Algarve) and Middle Jurassic Malhão (east Algarve formations.
+
+-   Use geochemical methods to further characterize the archaeological samples, as well as geological samples from other regions of interest (e.g., Cretaceous cherts from central Portugal and cherts from the Betic Systems of southern Spain). This will enable us to compare the geological and archaeological data, testing, corroborating, and strengthening the petrographic and macroscopic source attributions of archaeological chert types. Additionally, comparing local geological and archaeological data may provide valuable insights into the selection of nodules for knapping, especially considering the known process of dolomitization in the Lower Jurassic outcrops.
+
+-   Test the potential of various techniques and approaches to enhance the interpretation of archaeological chert raw materials and human mobility patterns. Specifically, we will assess whether these methods effectively characterize and differentiate between chert types from various formations, both regional and long-distance, and enable accurate source attribution of archaeological lithic artefacts.
+
+To accomplish these goals, we apply three different methods: X-Ray Diffraction (XRD) to regional Algarve chert samples; Scanning Electron Microscopy coupled with X-Ray Microscopy (SEM-EDS) to regional Algarve chert samples and all identified chert types from the Upper Palaeolithic sequence at the Terrace of Vale Boi; and portable X-Ray Fluorescence (pXRF) to all previously mentioned samples, including additional chert samples from central Portugal (Rio Maior region) and southern Portugal (Betic systems).
+
+By refining the characterization of chert in the region, improving source attribution at the site, and identifying the strengths and weaknesses of different analytical methods, this research contributes to broader discussions on lithic procurement, human mobility, and exchange networks in southwestern Iberia during the UP.
+
+## Materials and methods
+
+Given the particularities of each analytical technique used in this study, availability of samples and level of destructiveness on the artefacts, and research questions, different samples were used in each method. These methods, they application in chert characterization studies, especially in Iberia, and summarized methodology are further discussed below.
+
+@tbl-samples shows the samples used for each method. These included chert geological samples from different regions of Iberia, with a focus on the Algarve region. The Algarve materials include geological samples from western and eastern Algarve basin collected from 2021 and 2022 prospection works [@belmiroCreatingFramesReference2023]. The western groups include the Triassic formation cherts (fibrous chalcedony), also identified as chalcedony (Triassic west, hereon TW), the Lower Jurassic (Carixian) formation (Lower Jurassic west, hereon LJW) and Upper Jurassic (Malm) formations (Upper Jurassic west, hereon UJW) [@rochaNoticiaExplicativaFolha1979; @terrinhaBaciaAlgarveEstratigrafia2006; @ribeiro_evolucao_2005].
+
+```{r} 
+#| label: tbl-samples
+#| tbl-cap: "Number of samples (chips) used for the SEM-EDS study, by a) geological formation for the geological samples, and by b) type for the archaeological samples."
+
+#Read table 
+tbl_samples <- read_csv(here::here('data/within-chert/geochem_samples_n.csv')) # Turn NAs into empty strings
+tbl_samples <- tbl_samples %>%
+  mutate(across(everything(), ~ replace(.x, is.na(.x), "")))
+
+knitr::kable(tbl_samples)
 
 ```
 
-## Scanning electron microscopy and energy dispersive X-ray spectroscopy (SEM-EDS)
+The eastern groups include the Middle Jurassic (Malhão) formation (Middle Jurassic east, MJE hereon) and the Jordana formation (Upper Jurassic east, hereon UJW) [@manuppellaNoticiaExplicativaFolha2007; @terrinhaBaciaAlgarveEstratigrafia2006].
 
-## Portable X-ray fluorescence (pXRF)
+Other geological samples included in the study were the central Portugal (Rio Maior region) cherts from the Cretaceous formation (hereon CPT; @matiasRawMaterialSourcing2016), previously prospected and collected by previous researchers [@pereirab_presenting_2016], and the southern Portugal cherts from the Upper Jurassic of the Betic systems [@rodriguezPrehistoricFlintExploitations2011] (hereon UCA), obtained from the lithotheque of the Unit of Geoarchaeology and Archaeometry Applied to Historic Artistic and Monumental Heritage (University of Cadiz).
 
-```{r}
-#| label: database-read
+The archaeological samples used for the study are from the archaeological site of Vale Boi, mainly the Terrace and Shelter areas. The samples were chosen based on the groups identified in our previous works [@belmiroChertProcurementPatterns2025], with T1-5 corresponding to the archaeological chert types corresponding to local types, T6 possibly originating from central Portugal Cretaceous formation, T7 and T9 with sources possibly from southern Portugal Betic systems and T8 and T10-11 without a current identified source.
 
-pxrf_raw <- read_csv('data/pxrf_data_dec.csv')
+For further reproducibility and replicability, and working towards the goal of open science [@Marwick2017], all analyses were performed through R Studio. The R code used for the analysis, datasets, and visual representations presented in this paper are available through our online repository (https://doi.org/10.17605/OSF.IO/DBFT2). We utilised the rrtools package by Marwick et al. [-@marwickPackagingDataAnalytical2018] to create a research compendium and produce a reproducible journal article. The repository includes the complete set of raw data used in the analysis, along with a custom R project [@wickhamPackagesOrganizeTest2015] that contains the necessary code to generate all tables and figures. To facilitate broad reuse, the code is provided under the MIT license, the data under CC‐0, and the figures under CC‐BY.
 
-```
+### X-Ray Diffraction (XRD)
 
-```{r}
-#| label: database-setup
+X-ray diffraction (XRD) is a widely used laboratory technique for examining the atomic structure of crystalline materials [@adamsXRAYABSORPTIONDIFFRACTION2005]. The minerals are crystalline, meaning their atoms are arranged in a three-dimensional repeating pattern. The crystal structure is defined by the arrangement of atoms within a single unit cell, as well as the cell’s size and shape.
 
-## DB setup
-pxrf_db <- pxrf_raw |> 
-  filter(!Sample_ID %in% c("I19-1751", "H21-2126")) # Removing 2 altered samples
-pxrf_analysis <- pxrf_db |> 
-  select("Sample_ID", "pXRF_ID", "Formation/Type",
-         "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "Fe2O3", "Cu",
-         "Sr", "Zr") |>  # Removed elements with 0 or <LOD values in all samples or in high percentages in all groups
-  mutate(`Formation/Type` = case_when(
-    `Formation/Type` == "TYPE 1" ~ "T1",
-    `Formation/Type` == "TYPE 2" | `Formation/Type` == "TYPE 2B" | `Formation/Type` == "TYPE 2R" ~ "T2",
-    `Formation/Type` == "TYPE 3" ~ "T3",
-    `Formation/Type` == "TYPE 4" ~ "T4",
-    `Formation/Type` == "TYPE 5" ~ "T5",
-    `Formation/Type` == "TYPE 6" | `Formation/Type` == "TYPE 6LLB" | `Formation/Type` == "TYPE 6E" ~ "T6",
-    `Formation/Type` == "TYPE 7" ~ "T7",
-    `Formation/Type` == "TYPE 8" ~ "T8",
-    `Formation/Type` == "TYPE 9" ~ "T9",
-    `Formation/Type` == "TYPE 10" ~ "T10",
-    `Formation/Type` == "TYPE 11" ~ "T11",
-    TRUE ~ `Formation/Type`
-  ))
-  
-```
+XRD works by directing a beam of X-rays onto a crystal, causing the rays to diffract and produce a characteristic diffraction pattern. The d-spacings—the distances between parallel planes of atoms in the crystal lattice—are derived from the angular positions and intensities of the diffracted beams. These d-spacings serve as a unique fingerprint for crystalline compounds, allowing for mineral identification [@marshallEncyclopediaGeochemistry1998].
 
-```{r}
-#| label: fig-lod
-#| fig-cap: A barplot.
+Although powder-XRD is a destructive technique, it has been used alongside petrographic characterisation (thin-section analysis) to gain a comprehensive understanding of the petrographic and mineral composition of lithic raw materials, such as chert, in both geological and archaeological contexts. This combined approach enables comparisons with potential archaeological implications, particularly in raw material sourcing studies in the Iberian Peninsula [e.g., @columbuMultiAnalyticalTechniquesDefine2023; @gomezdesolerMultitechniqueApproachCharacterization2023; @ortegaChertCastelltallatFormation2018].
 
-# Table to see the occurrence of 0 or <LOD values within each element and by rm type, to choose the elements in which to apply statistics.
-# Combine the multiple columns into a single table
-lod_tab <- pxrf_db |>
-  select(-contains("Err")) |>
-  select(-pXRF_ID, -Application, -Method, -ElapsedTime, -`Cal Check`, -Sample_ID) |>
-  mutate(across(.cols = MgO:U,
-                .fns = ~ case_when(
-                  . == 0 ~"Success 0",
-                  . > 0 ~ "Success",
-                  TRUE ~ as.character(.))
-                ))
-# Reshape the data into a long format
-lod_tab_long <- lod_tab |>
-  pivot_longer(cols = MgO:U,  # Assuming these columns contain the 'Success' and 'LOD' values
-               names_to = "Element",  # New column for the names of elements
-               values_to = "Value")   # New column for the corresponding Success/LOD values
+This study utilised X-ray diffraction (XRD) to determine the mineral composition of 23 geological powdered samples of chert from the Algarve region (@tbl-samples). These samples represent at least one specimen from each outcrop, with a focus on primary and sub-primary locations across all chert-bearing formations in the region. A detailed description of the sample preparation process is available in our online research repository (Online resource 1).
 
-lod_tab_summary <- lod_tab_long |>
-  group_by(Element, Value) |>
-  summarise(Count = n(), .groups = "drop")  # Count the occurrences of Success and LOD for each Element
+The samples were analysed using a Bruker AXS D8 Discover XRD with the Da Vinci design, equipped with a Cu Kα source operating at 40 kV and 40 mA, and a Lynxeye 1D detector. Scans were conducted from 3° to 75° 2θ, with a 0.05° 2θ step, at the HERCULES Laboratory, University of Évora.
 
-# Reshape the data into a wide format using pivot_wider
-lod_tab_table <- lod_tab_summary |>
-  pivot_wider(names_from = Value, values_from = Count, values_fill = list(Count = 0)) |> 
-  filter(Success > 80) |> 
-  select(Element, Success, "< LOD")
-lod_tab_table_long <- lod_tab_table |> 
-  pivot_longer(cols = c(Success, `< LOD`), names_to = "Metric", values_to = "Count") |> 
-  mutate(Metric = factor(Metric, levels = c("Success", "< LOD"))) 
-lod_tab_table_long |> 
-  ggplot(aes(x = Element, y = Count, fill = Metric)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Comparison of Success and < LOD", y = "Count") +
-  theme_minimal() +
-  scale_fill_manual(values = c("Success" = "#99D3A7", "< LOD" = "#ED7673"))
+Preliminary phase identification was performed using Diffrac.Suite™ (Bruker) and further refined with Profex (version 5.2.9) after converting raw files using PowDll Converter. All data processed in Profex was organised and plotted in R Studio, where visual representations of the XRD data were also generated.
 
+Three additional samples (SP21, SP40, and a geological sample from the Triassic outcrop of Western Algarve) had previously been sent for XRD analysis and interpretation at Geociencias Barcelona-CSIC (@tbl-samples). The analysis was conducted using a Bruker D8-A25 XRD, equipped with a Cu source (wavelength λ = 1.5405 Å) and an ultra-fast PSD detector (Lynxeye). The diffraction spectrum data were interpreted using the Diffrac.Suite software by Bruker by a technician.
 
-# Create the bar plot
-ggplot(lod_tab_summary, aes(x = Element, y = Count, fill = Value)) +
-  geom_bar(stat = "identity", position = "stack") +  # Use stat = "identity" to use summarized counts
-  scale_fill_manual(values = c("Success" = "darkseagreen", "Success 0" = "lightgoldenrod1", "< LOD" = "indianred3")) +
-  labs(title = "Summarized Success and LOD Counts by Element",
-       y = "Count", 
-       fill = " ") +
-  theme_minimal() +
- # facet_wrap(~ Element, scales = "free_y") +  # Facet by Element with independent y-axes
-  theme(axis.text.x = element_text(hjust = 1),
-        axis.title.x = element_blank()) +
-  #geom_text(data = lod_tab_summary_filtered, aes(label = Count), position=position_stack(vjust=0.5), colour="white", size = 3) +
-  coord_flip() +
-  scale_y_continuous(breaks = seq(0, max(lod_tab_summary$Count), by = 20))
+### Scanning Electron Microscopy-X-Ray Microscopy (SEM-EDS)
 
-```
+Scanning electron microscopy coupled with energy-dispersive X-ray spectroscopy (SEM-EDS or SEM-EDX) provides various types of data by combining SEM imaging with elemental analysis. SEM is an electron microscopy technique that generates high-resolution images by directing a beam of electrons onto a specimen’s surface. As the electron beam interacts with the sample, it scatters as backscattered electrons and emits X-rays. As different atomic elements release characteristic X-ray at specific energies, it is possible to identify the elements present in the sample [@kirkbrideANALYTICALTECHNIQUESSpectroscopic2000] using an Energy dispersive detector (EDS).
 
-```{r}
-#| label: averages
+Although SEM-EDS is a versatile and efficient method, EDS has a relatively high chemical analysis limit of detection [@kirkbrideANALYTICALTECHNIQUESSpectroscopic2000].
 
-pxrf_average <- pxrf_analysis |> 
-  select(-Sample_ID, -pXRF_ID) |>
-  mutate(`Formation/Type` = case_when(
-    `Formation/Type` == "T2" | `Formation/Type` == "T3" | `Formation/Type` == "T4" | `Formation/Type` == "T5" ~ "T2-5", TRUE ~ `Formation/Type`
-  )) |> 
-  mutate(`Formation/Type` = factor(`Formation/Type`, levels = c("TW", "LJW", "MJE", "UJW", "UJE", "CPT", "UCA", "T1", "T2-5", "T6", "T7", "T8", "T9", "T10", "T11"))) |>
-  mutate(across(-`Formation/Type`, ~ as.numeric(.))) |>    # Convert valid numbers
-  mutate(across(where(is.numeric), ~ ifelse(is.na(.), 0, .))) |>  # Replace NAs with 0
-  group_by(`Formation/Type`) |> 
-  summarise(across(where(is.numeric),
-                   .fns = list(mean = ~ round(mean(.x, na.rm = TRUE), 4), 
-                               sd = ~ round(sd(.x, na.rm = TRUE), 4),
-                               count = ~ sum(.x != 0, na.rm = TRUE)),
-                   .names = "{.col}_{.fn}"))
+Despite this limitation, EDS coupled with SEM has been widely used alongside other techniques, such as petrography, XRD, and XRF, to characterise geological and archaeological lithic resources, including chert raw materials. This combined approach enhances the understanding of a formation’s characteristics and aids in identifying sources in provenance studies in the Iberian Peninsula [e.g., @abrunhosaPetrographicSEMEDXCharacterization2020; @columbuMultiAnalyticalTechniquesDefine2023; @costaLithicArrowheadsSiliceous2022; @ortegaChertCastelltallatFormation2018].
 
-write.csv(pxrf_average,'data/averages_pxrf.csv', row.names = F)
-```
+This study employed scanning electron microscopy and energy-dispersive X-ray spectroscopy (SEM-EDS) to analyse the surface structure and elemental composition of the samples. The analysis included 39 geological samples from all five chert-bearing formations (@tbl-samples). Additionally, 27 samples were examined from archaeological artefacts, representing all previously identified chert types (@tbl-samples).
 
-```{r}
-#| label: boxplots
+The samples consisted of lithic chips mounted in resin and sanded until minimal to no scratches were visible under the microscope. A detailed description of the sample preparation process and analysis is available in our online repository (Online resource 1).
 
-# Boxplot data preparation
-boxplots_pxrf <- pxrf_analysis |> 
-  select(-Sample_ID, -pXRF_ID) |> 
-  filter(!`Formation/Type` %in% c("TW", "T1", "T9", "T10", "T11")) |> # Removing chalcedony
-  mutate(across(-`Formation/Type`, ~ as.numeric(.)))
-  #pivot_longer(cols = c("MgO", "Al2O3", "SiO2", "P2O5", "S", "Cl", "K2O", "CaO", "TiO2", "Fe2O3", "Cu",
-        # "Sr", "Zr"), names_to = "Variable", values_to = "Value")
-boxplots_pxrf <- boxplots_pxrf |> 
-  mutate(`Formation/Type` = case_when(
-    `Formation/Type` == "T2" | `Formation/Type` == "T3" | `Formation/Type` == "T4" | `Formation/Type` == "T5" ~ "T2-5", TRUE ~ `Formation/Type`
-  )) |> 
-  mutate(`Formation/Type` = factor(`Formation/Type`, levels = c("TW", "LJW", "MJE", "UJW", "UJE", "CPT", "UCA", "T1", "T2-5", "T6", "T7", "T8", "T9", "T10", "T11")))
+The chip analysis was conducted at the HERCULES Laboratory (Évora) using a variable pressure Hitachi S3700N SEM, coupled with a Quantax EDS microanalysis system. Specifically, the Quantax system is equipped with a Bruker AXS 5010 XFlash Silicon Drift Detector, which offers a spectral resolution of 129 eV at FWHM for MnKα. The EDS elemental analysis and quantification was carried out with the ESPRIT software by Bruker.
 
-## Al2O3
-count_data_al2o3 <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, Al2O3) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(Al2O3)) |> 
-  summarise(n = n(), .groups = "drop") 
+The analysis focused on identifying representative traits of the samples for characterization and comparison. Images were captured at 250x and 1000x magnification for each analysed sample. To determine the elemental composition, elemental maps and spectra were generated, providing both visual and semi-quantitative data on the selected elements and sample regions. At least one map or spectrum was obtained for each distinct type of inclusion or structure identified in the samples.
 
-b2 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = Al2O3, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_al2o3, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
-  theme_minimal() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank())
+### Portable X-Ray Fluorescence (pXRF)
 
-## SiO2
-count_data_sio2 <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, SiO2) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(SiO2)) |> 
-  summarise(n = n(), .groups = "drop") 
+X-ray Fluorescence (XRF) works by irradiating the specimen with X-rays, which causes electrons to attain an excited state. The specimen emits X-rays (fluorescence) when the atom returns to ground state; this energy is characteristic of the atoms present in the sample. As such, XRF spectra contain information about the chemical elements present in the analysed sample [@kirkbrideANALYTICALTECHNIQUESSpectroscopic2000].
 
-b3 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = SiO2, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  #geom_text(data = count_data_sio2, aes(x = `Formation/Type`, y = 70, label = n), size = 3) +
-  coord_cartesian(ylim = c(70, 100)) +
-  theme_minimal() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank())
+However, laboratory-based XRF has the limitation of being non-portable and requiring sample preparation, which is often incompatible with archaeological studies where assemblages cannot be transported or destroyed. In this context, portable XRF (pXRF) instruments offer a practical alternative. These devices are easily transportable, non-destructive, and have been successfully used in source discrimination studies, where they provide comparable results to their laboratory-based counterparts [@craigComparisonXRFPXRF2007].
 
-## P2O5
-count_data_p2o5 <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, P2O5) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(P2O5)) |> 
-  summarise(n = n(), .groups = "drop") 
+pXRF has been used to discriminate between sources of various lithic raw materials, such as obsidian [e.g., @craigComparisonXRFPXRF2007; @gemiciNewInsightsMesolithic2022; @nazaroffAssessingApplicabilityPortable2010], as well as other materials like volcanic and metamorphic rocks [@egelandGeochemicalPhysicalCharacterization2019; @graveNondestructivePXRFMafic2012].
 
-b4 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = P2O5, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_p2o5, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
-  coord_cartesian(ylim = c(0, 0.25)) +
-  theme_minimal() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank())
+Studies on chert archaeological assemblages in the Iberian Peninsula have also employed pXRF to distinguish between sources. When combined with other methods, pXRF has provided valuable insights [@costaLithicArrowheadsSiliceous2022; @gomezdesolerMultitechniqueApproachCharacterization2023; @pereiraRawMaterialProcurement2021; @pereiraLithicEconomyTerritory2016].
 
-## S
-count_data_s <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, S) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(S)) |> 
-  summarise(n = n(), .groups = "drop") 
+For this experiment, a Bruker portable XRF Titan S1 was used in a laboratory benchtop setup, powered by battery (with up to 25% battery charge before being replaced by a fully charged battery). The standard databases available in the equipment from Bruker were employed: Geochem application and the Dual Mining method. A detailed description of the preparation and analysis process and a description of the elements and compounds used in the statistical analysis are available in our online repository (Online resource 1 and 3, respectively).
 
-b5 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = S, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_s, aes(x = `Formation/Type`, y = -0.05, label = n), size = 3) +
-  coord_cartesian(ylim = c(-0.05, 0.3)) +
-  theme_minimal() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank())
+Chert samples from various sources and types, including both geological and archaeological specimens, were scanned (@tbl-samples). After scanning, the thickness and diameter of the scanned face were measured to ensure that each sample met the minimum required thickness and size [@newlanderEmpiricalStudyEffect2015; Online resource 2].
 
-## Cl
-count_data_cl <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, Cl) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(Cl)) |> 
-  summarise(n = n(), .groups = "drop") 
+For geological samples, fresh, flat surfaces were scanned, avoiding altered faces or cortex. When necessary, the samples were prepared by breaking the nodules. The samples selected represented all varieties of chert identified in the Algarve region, as well as in the archaeological record of Vale Boi. Additional samples were included from other regions, such as central Portugal and southern Spain, to facilitate comparisons and test hypotheses based on macroscopic and petrographic data. For archaeological samples, artefacts were chosen from previously identified types, prioritising larger, flatter morphologies with minimal surface alterations.
 
-b6 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = Cl, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_cl, aes(x = `Formation/Type`, y = -0.05, label = n), size = 3) +
-  coord_cartesian(ylim = c(-0.05, 0.5)) +
-  theme_minimal()
-
-## K2O
-count_data_k2o <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, K2O) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(K2O)) |> 
-  summarise(n = n(), .groups = "drop") 
-
-b7 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = K2O, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_k2o, aes(x = `Formation/Type`, y = -0.05, label = n), size = 3) +
-  theme_minimal() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank())
-
-## CaO
-count_data_cao <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, CaO) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(CaO)) |> 
-  summarise(n = n(), .groups = "drop") 
-
-b8 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = CaO, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  #geom_text(data = count_data_cao, aes(x = `Formation/Type`, y = -0.3, label = n), size = 3) +
-  theme_minimal() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank())
-
-## TiO2
-count_data_tio2 <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, TiO2) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(TiO2)) |> 
-  summarise(n = n(), .groups = "drop") 
-
-b9 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = TiO2, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  #geom_text(data = count_data_tio2, aes(x = `Formation/Type`, y = -0.02, label = n), size = 3) +
-  theme_minimal() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank())
-
-## Fe2O3
-count_data_fe2o3 <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, Fe2O3) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(Fe2O3)) |> 
-  summarise(n = n(), .groups = "drop") 
-
-b10 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = Fe2O3, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  #geom_text(data = count_data_fe2o3, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
-  coord_cartesian(ylim = c(0, 0.75)) +
-  theme_minimal() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank())
-
-## Cu
-count_data_cu <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, Cu) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(Cu)) |> 
-  summarise(n = n(), .groups = "drop") 
-
-b11 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = Cu, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_cu, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
-  theme_minimal() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank())
-
-## Sr
-count_data_sr <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, Sr) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(Sr)) |> 
-  summarise(n = n(), .groups = "drop") 
-
-b12 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = Sr, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_sr, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
-  coord_cartesian(ylim = c(0, 0.02)) +
-  theme_minimal() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank())
-
-## Zr
-count_data_zr <- boxplots_pxrf |> # Count number of observations per group where Value > 0
-  select(`Formation/Type`, Zr) |> 
-  group_by(`Formation/Type`) |> 
-  filter(!is.na(Zr)) |> 
-  summarise(n = n(), .groups = "drop") 
-
-b13 <- boxplots_pxrf |> 
-  ggplot(aes(x = `Formation/Type`, y = Zr, colour = `Formation/Type`)) +
-  geom_boxplot() +
-  stat_summary(fun = mean, geom = "point", shape = 18) +
-  geom_text(data = count_data_zr, aes(x = `Formation/Type`, y = 0, label = n), size = 3) +
-  theme_minimal() +
-  theme(axis.title.x = element_blank(),
-        axis.text.x = element_blank())
-
-```
-
-```{r}
-#| label: fig-boxplots
-#| fig-cap: A group of boxplots.
-
-library(ggpubr)
-
-boxplots <- ggarrange(b3, b8, b10, b9, 
-          labels = c("a","b","c","d"),
-          ncol = 2,
-          nrow = 2,
-          common.legend = TRUE,
-          legend = "bottom")
-
-```
-
-```{r}
-#| label: PCA
-
-## a) PCA geological regional cherts
-pca_db_algarve <- pxrf_raw |> 
-  select(`Formation/Type`, P2O5, S, Cl, K2O, CaO, TiO2, Fe2O3) |>
-  filter(`Formation/Type` %in% c("LJW", "MJE", "UJE", "UJW", "TW"))
-# Convert "< LOD" values to NA
-pca_db_algarve[pca_db_algarve == "< LOD"] <- NA
-# Keep Group column separately before PCA
-pca_db_algarve$`Formation/Type` <- as.factor(pca_db_algarve$`Formation/Type`)  # Ensure it's a factor
-group_var_algarve <- pca_db_algarve$`Formation/Type`  
-# Convert numeric columns correctly
-df_numeric_alg <- pca_db_algarve %>%
-  select(-`Formation/Type`) %>%  # Remove Group for PCA
-  mutate(across(everything(), as.numeric))  # Convert all columns to numeric
-# Remove rows with NA (important: also filter group_var!)
-complete_cases_alg <- complete.cases(df_numeric_alg)  # Identify complete rows
-df_numeric_alg <- df_numeric_alg[complete_cases_alg, ]  # Remove NA rows
-group_var_algarve <- group_var_algarve[complete_cases_alg]  # Filter group_var accordingly
-# Scale values
-df_scaled_alg <- scale(df_numeric_alg)
-# Ensure row names are properly set
-rownames(df_scaled_alg) <- make.names(group_var_algarve, unique = TRUE)
-# Perform PCA
-pca_result_alg <- PCA(df_scaled_alg, graph = FALSE)
-# Summary of PCA
-summary(pca_result_alg)
-fviz_eig(pca_result_alg, addlabels = TRUE, ylim = c(0, 100))
-# PCA Biplot with Groups
-biplot_alg <- fviz_pca_biplot(pca_result_alg, 
-                label = "var", 
-                habillage = group_var_algarve,  # Use stored group column
-                addEllipses = TRUE, 
-                ellipse.level = 0.95) +
-  ggtitle(NULL)
-# Add Group column back for visualization
-df_pca_alg <- data.frame(pca_result_alg$ind$coord, Group = group_var_algarve)
-# PCA plot with groups
-scatter_alg <- ggplot(df_pca_alg, aes(x = Dim.1, y = Dim.2, color = Group, shape = Group)) +
-  geom_point(size = 3, alpha = 0.8) +
-  stat_ellipse(level = 0.95, aes(fill = Group), alpha = 0.2, geom = "polygon") +
-  theme_minimal() +
-  labs(title = "PCA of pXRF Data", x = "PC1", y = "PC2") +
-  theme(legend.position = "right")
-
-## b) PCA of geological cherts: local Lower Jurassic, Central Portugal and Cadiz
-pca_db_nl <- pxrf_raw |> 
-  select(`Formation/Type`, P2O5, K2O, TiO2, Fe2O3, Cu, S) |> # Removing CaO which is high NA in CPT
-  filter(`Formation/Type` %in% c("LJW", "CPT", "UCA"))
-# Convert "< LOD" values to NA
-pca_db_nl[pca_db_nl == "< LOD"] <- NA
-# Keep Group column separately before PCA
-pca_db_nl$`Formation/Type` <- as.factor(pca_db_nl$`Formation/Type`)  # Ensure it's a factor
-group_var_nl <- pca_db_nl$`Formation/Type`  
-# Convert numeric columns correctly
-df_numeric_nl <- pca_db_nl %>%
-  select(-`Formation/Type`) %>%  # Remove Group for PCA
-  mutate(across(everything(), as.numeric))  # Convert all columns to numeric
-# Remove rows with NA (important: also filter group_var!)
-complete_cases_nl <- complete.cases(df_numeric_nl)  # Identify complete rows
-df_numeric_nl <- df_numeric_nl[complete_cases_nl, ]  # Remove NA rows
-group_var_nl <- group_var_nl[complete_cases_nl]  # Filter group_var accordingly
-# Scale values
-df_scaled_nl <- scale(df_numeric_nl)
-# Ensure row names are properly set
-rownames(df_scaled_nl) <- make.names(group_var_nl, unique = TRUE)
-# Perform PCA
-pca_result_nl <- PCA(df_scaled_nl, graph = FALSE)
-# Summary of PCA
-summary(pca_result_nl)
-fviz_eig(pca_result_nl, addlabels = TRUE, ylim = c(0, 100))
-# PCA Biplot with Groups
-biplot_nl <- fviz_pca_biplot(pca_result_nl, 
-                label = "var", 
-                habillage = group_var_nl,  # Use stored group column
-                addEllipses = TRUE, 
-                ellipse.level = 0.95) +
-  ggtitle(NULL)
-# Add Group column back for visualization
-df_pca_nl <- data.frame(pca_result_nl$ind$coord, Group = group_var_nl)
-# PCA plot with groups
-scatter_nl <- ggplot(df_pca_nl, aes(x = Dim.1, y = Dim.2, color = Group, shape = Group)) +
-  geom_point(size = 3, alpha = 0.8) +
-  stat_ellipse(level = 0.95, aes(fill = Group), alpha = 0.2, geom = "polygon") +
-  theme_minimal() +
-  labs(title = "PCA of pXRF Data", x = "PC1", y = "PC2") +
-  theme(legend.position = "right")
-
-## c) PCA archaeological T6 compared to local Lower Jurassic and Central Portugal
-pca_db_comp <- pxrf_raw |> 
-  select(`Formation/Type`, P2O5, K2O, TiO2, Fe2O3, Cu, S) |> # Removing CaO which is high NA in CPT
-  mutate(`Formation/Type` = case_when(
-    `Formation/Type` == "TYPE 1" ~ "T1",
-    `Formation/Type` == "TYPE 2" | `Formation/Type` == "TYPE 2B" | `Formation/Type` == "TYPE 2R" ~ "T2",
-    `Formation/Type` == "TYPE 3" ~ "T3",
-    `Formation/Type` == "TYPE 4" ~ "T4",
-    `Formation/Type` == "TYPE 5" ~ "T5",
-    `Formation/Type` == "TYPE 6" | `Formation/Type` == "TYPE 6LLB" | `Formation/Type` == "TYPE 6E" ~ "T6",
-    `Formation/Type` == "TYPE 7" ~ "T7",
-    `Formation/Type` == "TYPE 8" ~ "T8",
-    `Formation/Type` == "TYPE 9" ~ "T9",
-    `Formation/Type` == "TYPE 10" ~ "T10",
-    `Formation/Type` == "TYPE 11" ~ "T11",
-    TRUE ~ `Formation/Type`
-  )) |> 
-  filter(`Formation/Type` %in% c("LJW","CPT", "T6"))
-# Convert "< LOD" values to NA
-pca_db_comp[pca_db_comp == "< LOD"] <- NA
-# Keep Group column separately before PCA
-pca_db_comp$`Formation/Type` <- as.factor(pca_db_comp$`Formation/Type`)  # Ensure it's a factor
-group_var_comp <- pca_db_comp$`Formation/Type`  
-# Convert numeric columns correctly
-df_numeric_comp <- pca_db_comp %>%
-  select(-`Formation/Type`) %>%  # Remove Group for PCA
-  mutate(across(everything(), as.numeric))  # Convert all columns to numeric
-# Remove rows with NA (important: also filter group_var!)
-complete_cases_comp <- complete.cases(df_numeric_comp)  # Identify complete rows
-df_numeric_comp <- df_numeric_comp[complete_cases_comp, ]  # Remove NA rows
-group_var_comp <- group_var_comp[complete_cases_comp]  # Filter group_var accordingly
-# Scale values
-df_scaled_comp <- scale(df_numeric_comp)
-# Ensure row names are properly set
-rownames(df_scaled_comp) <- make.names(group_var_comp, unique = TRUE)
-# Perform PCA
-pca_result_comp <- PCA(df_scaled_comp, graph = FALSE)
-# Summary of PCA
-summary(pca_result_comp)
-fviz_eig(pca_result_comp, addlabels = TRUE, ylim = c(0, 100))
-# PCA Biplot with Groups
-biplot_comp <- fviz_pca_biplot(pca_result_comp, 
-                label = "var", 
-                habillage = group_var_comp,  # Use stored group column
-                addEllipses = TRUE, 
-                ellipse.level = 0.80) +
-  ggtitle(NULL)
-# Add Group column back for visualization
-df_pca_comp <- data.frame(pca_result_comp$ind$coord, Group = group_var_comp)
-# PCA plot with groups
-scatter_comp <- ggplot(df_pca_comp, aes(x = Dim.1, y = Dim.2, color = Group, shape = Group)) +
-  geom_point(size = 3, alpha = 0.8) +
-  stat_ellipse(level = 0.95, aes(fill = Group), alpha = 0.2, geom = "polygon") +
-  theme_minimal() +
-  labs(title = "PCA of pXRF Data", x = "PC1", y = "PC2") +
-  theme(legend.position = "right")
-
-## d) PCA archaeological local cherts T2-5 and non-local T7 compared with local Lower Jurassic and UCA cherts
-pca_db_comp2 <- pxrf_raw |> 
-  select(`Formation/Type`, P2O5, TiO2, K2O,Fe2O3, Cu, S) |> # Removing CaO which is high NA in CPT
-  mutate(`Formation/Type` = case_when(
-    `Formation/Type` == "TYPE 1" ~ "T1",
-    `Formation/Type` == "TYPE 2" | `Formation/Type` == "TYPE 2B" | `Formation/Type` == "TYPE 2R" ~ "T2-5",
-    `Formation/Type` == "TYPE 3" ~ "T2-5",
-    `Formation/Type` == "TYPE 4" ~ "T2-5",
-    `Formation/Type` == "TYPE 5" ~ "T2-5",
-    `Formation/Type` == "TYPE 6" | `Formation/Type` == "TYPE 6LLB" | `Formation/Type` == "TYPE 6E" ~ "T6",
-    `Formation/Type` == "TYPE 7" ~ "T7",
-    `Formation/Type` == "TYPE 8" ~ "T8",
-    `Formation/Type` == "TYPE 9" ~ "T9",
-    `Formation/Type` == "TYPE 10" ~ "T10",
-    `Formation/Type` == "TYPE 11" ~ "T11",
-    TRUE ~ `Formation/Type`
-  )) |> 
-  filter(`Formation/Type` %in% c("LJW","UCA", "T7", "T2-5"))
-# Convert "< LOD" values to NA
-pca_db_comp2[pca_db_comp2 == "< LOD"] <- NA
-# Keep Group column separately before PCA
-pca_db_comp2$`Formation/Type` <- as.factor(pca_db_comp2$`Formation/Type`)  # Ensure it's a factor
-group_var_comp2 <- pca_db_comp2$`Formation/Type`  
-# Convert numeric columns correctly
-df_numeric_comp2 <- pca_db_comp2 %>%
-  select(-`Formation/Type`) %>%  # Remove Group for PCA
-  mutate(across(everything(), as.numeric))  # Convert all columns to numeric
-# Remove rows with NA (important: also filter group_var!)
-complete_cases_comp2 <- complete.cases(df_numeric_comp2)  # Identify complete rows
-df_numeric_comp2 <- df_numeric_comp2[complete_cases_comp2, ]  # Remove NA rows
-group_var_comp2 <- group_var_comp2[complete_cases_comp2]  # Filter group_var accordingly
-# Scale values
-df_scaled_comp2 <- scale(df_numeric_comp2)
-# Ensure row names are properly set
-rownames(df_scaled_comp2) <- make.names(group_var_comp2, unique = TRUE)
-# Perform PCA
-pca_result_comp2 <- PCA(df_scaled_comp2, graph = FALSE)
-# Summary of PCA
-summary(pca_result_comp2)
-fviz_eig(pca_result_comp2, addlabels = TRUE, ylim = c(0, 100))
-# PCA Biplot with Groups
-biplot_comp2 <- fviz_pca_biplot(pca_result_comp2, 
-                label = "var", 
-                habillage = group_var_comp2,  # Use stored group column
-                addEllipses = TRUE, 
-                ellipse.level = 0.80) +
-  ggtitle(NULL)
-# Add Group column back for visualization
-df_pca_comp2 <- data.frame(pca_result_comp2$ind$coord, Group = group_var_comp2)
-# PCA plot with groups
-scatter_comp2 <- ggplot(df_pca_comp2, aes(x = Dim.1, y = Dim.2, color = Group, shape = Group)) +
-  geom_point(size = 3, alpha = 0.8) +
-  stat_ellipse(level = 0.95, aes(fill = Group), alpha = 0.2, geom = "polygon") +
-  theme_minimal() +
-  labs(x = "PC1", y = "PC2") +
-  theme(legend.position = "right")
-
-```
-
-```{r}
-#| label: fig-pca
-#| fig-cap: Several pcas
-
-plot_grid(biplot_alg, biplot_nl, biplot_comp, biplot_comp2, labels = c("a", "b", "c", "d"))
-
-```
-
-## Methodology
-
-For this experiment, a Bruker portable XRF Titan S1 was used in a laboratory benchtop setup, using battery power (up to 25% battery charge then replaced by a fully charged battery). A validation run was applied on two standard samples provided by Bruker and using the standard calibration. Samples were scanned for 180 seconds each (90 seconds for the first phase for major elements and 90 seconds for the second phase for minor elements), at least once, with several scans applied to samples that showed macroscopic variability (e.g., areas with different colours or translucency). The standard database from Bruker was used, with the Geochem application and Dual Mining method. \*\* chert samples were scanned, from several sources and chert types, both geological and archaeological. After scanning, the scanned face was measured (thickness and diameter), to guarantee a minimum thickness and size was followed for each sample, since other studies have shown thickness and size may impact the homogeneity of data collection and results [@newlanderEmpiricalStudyEffect2015]. All samples, including their thickness and diameter, can be found in table X. For geological samples, fresh, flat surfaces were scanned, avoiding altered faces or cortex; whenever necessary, the samples were prepared by breaking the nodules. The samples were chosen to represent all varieties of chert identified in the Algarve region, in the archaeological record of Vale Boi, but also from other regions such as Central Portugal and South Spain, to allow their comparison and test hypotheses made from macroscopic and petrographic data. For archaeological samples, artefacts were chosen from previously identified types (REF?), focusing on larger and flatter morphologies, with the least degree of surface alterations possible.
-
-The analysis and result reporting protocol was established following previous studies, focusing on the accuracy of obtained data but also the transparency and reproducibility of the results [@newlanderEmpiricalStudyEffect2015; @johnsonBestPracticesPublishing2024]. For further reproducibility and replicability, and working towards the goal of open science [@johnsonBestPracticesPublishing2024; @marwickComputationalReproducibilityArchaeological2017], the obtained raw pXRF results can be found online on our online compendium (LINK).
+The analysis and reporting protocol were established based on previous studies, emphasising both the accuracy of the obtained data and the transparency and reproducibility of the results [@johnsonBestPracticesPublishing2024; @newlanderEmpiricalStudyEffect2015]. The analysis focused on descriptive statistics and the generation of ANOVAs to compare different groups.
 
 ## Results
 
+The results presented in this section focus on the main observed patterns of the analysis between outcrops, formations and chert types. The detailed analysis/graphs regarding individual samples for all methods can be found in our online repository (Online resource 4).
+
+The XRD results are homogeneous, showing little differences between samples (@tbl-xrd-results). The samples are predominantly composed of quartz. Dolomite and calcite were also identified in several samples (\>7), and in the samples processed by the Geociencias Barcelona-CSIC, moganite and gypsum were identified. Despite this homogeneity, the results show some patterns in the presence of dolomite and calcite.
+
 ```{r}
-#| label: sem-graphs
+#| label: tbl-xrd-results 
+#| tbl-cap: "Identified crystalline phases of chert geological samples from the Algarve. LJW: Lower Jurassic west (Carixian formation); MJE: Middle Jurassic west (Malm formation); TW: Triassic west; UPE: Upper Jurassic west (Malhão formation); UPW: Upper Jurassic West (Jordana formation). (*) refers to results obtained from samples analysed and interpreted at the Geociencias Barcelona-CSIC. Content percentages of samples analysed at the Hércules laboratory are represented by x: xxx refers to > 90%; xx to 90-30%; x to 10-1%; (x) to <1%."
 
-# Prepare the energy ranges
-energy_ranges <- list(
-  C = c(0.2, 0.3),
-  O = c(0.5, 0.6),
-  Al = c(1.48, 1.5),
-  Si = c(1.7, 1.8),
-  P = c(2, 2.1),
-  Ca = c(3.68, 3.7),
-  Ca_beta = c(4.01, 4.02),
-  Ti = c(4.5, 4.6),
-  Ti_beta = c(4.9, 5),
-  Ti_L = c("0.45", "0.47"),
-  Fe = c(6.38, 6.41),
-  Fe_beta = c(7.05, 7.07),
-  Fe_L = c(0.71, 0.73))
+#Read table 
+xrd_results_tbl <- read_csv(here::here('data/within-chert/xrd_results.csv')) # Turn NAs into empty strings 
+xrd_results_tbl <- xrd_results_tbl %>%
+  mutate(across(everything(), ~ replace(.x, is.na(.x), "")))
 
-# M18_8
-
-M18_8 <- read_csv('data/sem_data/M18_8.csv')
-filtered_M18_8 <- subset(M18_8, Energy >= 0.2 & Energy < 9)
-
-# Extract the exact peak energy and counts to place labels
-peaks_list_M18_8 <- list()
-for (element in names(energy_ranges)) {
-  range_M18_8 <- energy_ranges[[element]]
-  subset_M18_8 <- subset(filtered_M18_8, Energy >= range_M18_8[1] & Energy <= range_M18_8[2])
-  if (nrow(subset_M18_8) > 0) {
-    max_row_M18_8 <- subset_M18_8[which.max(subset_M18_8$Counts), ]
-    peaks_list_M18_8[[element]] <- data.frame(
-      Element = element,
-      Energy = max_row_M18_8$Energy,
-      Counts = max_row_M18_8$Counts
-    )
-  }
-}
-
-peaks_M18_8 <- do.call(rbind, peaks_list_M18_8)
-rownames(peaks_M18_8) <- NULL
-peaks_M18_8 <- peaks_M18_8 |> 
-  filter(Counts > 100)
-
-M18_8_graph <- filtered_M18_8 |> 
-  select(Energy, Counts) |>
-  ggplot(aes(x = Energy, y = Counts)) +
-  geom_area(fill = "snow3", alpha = 0.7) +
-  geom_line(linewidth = 0.5, alpha = 0.5, linetype = "solid", colour = "#8B8989") +
-  labs(x = "Energy (keV)", y = "Intensity (Counts)") +
-  theme_minimal() +
-  geom_point(data = peaks_M18_8, aes(x = Energy, y = Counts, colour = Element), size = 3, shape = 18) +
-  geom_label(data = peaks_M18_8, aes(x = Energy, y = Counts, label = Element, colour = Element), size = 3, fill = "white", label.size = 0.2, vjust = -0.5, show.legend = FALSE) +
-  theme(legend.position="none")
-
-# M18_7
-
-M18_7 <- read_csv('data/sem_data/M18_7.csv')
-filtered_M18_7 <- subset(M18_7, Energy >= 0.2 & Energy < 9)
-
-# Extract the exact peak energy and counts to place labels
-peaks_list_M18_7 <- list()
-for (element in names(energy_ranges)) {
-  range_M18_7 <- energy_ranges[[element]]
-  subset_M18_7 <- subset(filtered_M18_7, Energy >= range_M18_7[1] & Energy <= range_M18_7[2])
-  if (nrow(subset_M18_7) > 0) {
-    max_row_M18_7 <- subset_M18_7[which.max(subset_M18_7$Counts), ]
-    peaks_list_M18_7[[element]] <- data.frame(
-      Element = element,
-      Energy = max_row_M18_7$Energy,
-      Counts = max_row_M18_7$Counts
-    )
-  }
-}
-
-peaks_M18_7 <- do.call(rbind, peaks_list_M18_7)
-rownames(peaks_M18_7) <- NULL
-peaks_M18_7 <- peaks_M18_7 |> 
-  filter(Counts > 100)
-
-M18_7_graph <- filtered_M18_7 |> 
-  select(Energy, Counts) |>
-  ggplot(aes(x = Energy, y = Counts)) +
-  geom_area(fill = "snow3", alpha = 0.7) +
-  geom_line(linewidth = 0.5, alpha = 0.5, linetype = "solid", colour = "#8B8989") +
-  labs(x = "Energy (keV)", y = "Intensity (Counts)") +
-  theme_minimal() +
-  geom_point(data = peaks_M18_7, aes(x = Energy, y = Counts, colour = Element), size = 3, shape = 18) +
-  geom_label(data = peaks_M18_7, aes(x = Energy, y = Counts, label = Element, colour = Element), size = 3, fill = "white", label.size = 0.2, vjust = -0.5, show.legend = FALSE) +
-  theme(legend.position="none")
-
-# M4_3
-
-M4_3 <- read_csv('data/sem_data/M4_3.csv')
-filtered_M4_3 <- subset(M4_3, Energy >= 0.2 & Energy < 9)
-
-# Extract the exact peak energy and counts to place labels
-peaks_list_M4_3 <- list()
-for (element in names(energy_ranges)) {
-  range_M4_3 <- energy_ranges[[element]]
-  subset_M4_3 <- subset(filtered_M4_3, Energy >= range_M4_3[1] & Energy <= range_M4_3[2])
-  if (nrow(subset_M4_3) > 0) {
-    max_row_M4_3 <- subset_M4_3[which.max(subset_M4_3$Counts), ]
-    peaks_list_M4_3[[element]] <- data.frame(
-      Element = element,
-      Energy = max_row_M4_3$Energy,
-      Counts = max_row_M4_3$Counts
-    )
-  }
-}
-
-peaks_M4_3 <- do.call(rbind, peaks_list_M4_3)
-rownames(peaks_M4_3) <- NULL
-peaks_M4_3 <- peaks_M4_3 |> 
-  filter(Counts > 100)
-
-M4_3_graph <- filtered_M4_3 |> 
-  select(Energy, Counts) |>
-  ggplot(aes(x = Energy, y = Counts)) +
-  geom_area(fill = "snow3", alpha = 0.7) +
-  geom_line(linewidth = 0.5, alpha = 0.5, linetype = "solid", colour = "#8B8989") +
-  labs(x = "Energy (keV)", y = "Intensity (Counts)") +
-  theme_minimal() +
-  geom_point(data = peaks_M4_3, aes(x = Energy, y = Counts, colour = Element), size = 3, shape = 18) +
-  geom_label(data = peaks_M4_3, aes(x = Energy, y = Counts, label = Element, colour = Element), size = 3, fill = "white", label.size = 0.2, vjust = -0.5, show.legend = FALSE) +
-  theme(legend.position="none")
+knitr::kable(xrd_results_tbl) 
 
 ```
 
-In this section we present the summarised results, focusing on the main observed patterns and differences between formations and archaeological chert types. A detailed description of the SEM-EDS results for each formation and chert type and table of occurrences for identified elements and minerals can be found in the SOM (++).
+Dolomite was mainly identified in the samples from LJW and TW outcrops. Small dolomite peaks are present in more than \~60% of the LJW cherts and the single sample from the TW. In comparison, only 1 of the 11 samples from the Middle and Upper Jurassic outcrops showed the presence of dolomite.
 
-All analysed samples are mainly composed of quartz; in all samples, the atomic percentage of oxygen is approximately double of the atomic percentage of silica, showing a 2:1 ratio (table +).
+```{r}
+#| label: fig-xrd-15 
+#| fig-cap: "Plot of minerals identified through XRD in the LJW chert sample from the outcrop Praia do Belixe (SP15_PBX). The rhombus shape signifies the main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks. Quantifications presented in the supporting table were obtained using Rietveld refinement."
+#| fig-scap: "Plot of minerals identified through XRD in the LJW chert sample from the outcrop Praia do Belixe (SP15_PBX)."
+#| fig-align: center
 
-Similarly, the presence of skeletal remains, represented by peaks of calcium, phosphorus and frequently accompanied by small peaks of sulphur, shows no patterns and occurs in samples from all formations and chert types. Although frequently without a discernible shape, oval fossils (although currently unidentified) were observed in LJW geological samples and archaeological samples from local cherts (T2 and T4). This type of large, oval fossil, also composed of calcium, phosphorus and sulphur, seems to be limited to local cherts and to specific areas of nodules, characterised by high amounts of these skeletal remains.
+knitr::include_graphics(here::here('data/within-chert/xrd_15.png'))
+
+```
+
+In opposition, calcite was mainly identified in the Upper Jurassic samples and the TW samples. The primary and sub-primary cherts from the UJE and the UJW all show the presence of calcite peaks. In comparison, only 1 sample out of 12 of the LJW and 1 out of 5 of the MJE show the presence of calcite.
+
+```{r}
+#| label: fig-xrd-58-69
+#| fig-cap: "Plot of minerals identified through XRD in the a) UJE chert sample from the outcrop Jordana (SP58_JOR) and b) UJW chert sample from the outcrop Praia da Mareta (SP69_MAR). The rhombus shape signifies the main peaks key to identify each mineral. Labels represent the d spacing values of key mineral peaks. Quantifications presented in the supporting table were obtained using Rietveld refinement."
+#| fig-scap: "Plot of minerals identified through XRD in the a) UJE chert sample from the outcrop Jordana (SP58_JOR) and b) UJW chert sample from the outcrop Praia da Mareta (SP69_MAR)."
+#| fig-align: center
+
+knitr::include_graphics(here::here('data/within-chert/grid_plot.png'))
+
+```
+
+The SEM-EDS results show that all analysed samples are mainly composed of SiO~2~. A complete table with all identified elements per sample is available in our online repository (Online resource 5).
+
+Similarly, the presence of skeletal remains, represented by peaks of calcium, phosphorus and frequently accompanied by small peaks of sulphur, occurs in samples from all formations and chert types (@fig-skeletal). Although frequently without a discernible shape, oval fossils (although currently unidentified) were observed in LJW geological samples and archaeological samples from local cherts (T2 and T4).
+
+This type of large, oval fossil, also composed of calcium, phosphorus and sulphur, seems to be limited to local cherts and to specific areas of nodules, characterised by high amounts of these skeletal remains (@fig-oval-fossils).
 
 ```{r}
 #| label: fig-skeletal
-#| fig-cap: "Skeletal remain from sample SP16_BLX, from the Lower Jurassic ourcrops of western Algarve. A: Detail of a phosphatized skeletal remain composed by calcium (A1), phosphorus (A2) and a small peak of sulphur (A3). The skeletal remain seems to be oxidized, with small peaks of iron within (A4)."
+#| fig-cap: "A) general view of the sample (x250 magnification) showing a fracture and a skeletal remain. B) detail of skeletal remains (x1.3k magnification) composed of calcium (B1), phosphorus (B2) and a small peak of sulphur (B3). The skeletal remains seem to be oxidized, with small peaks of iron within (B4). Geological sample SP16_BLX from the LJW formation."
+#| fig-scap: "Geological sample SP16_BLX from the LJW formation."
 
-knitr::include_graphics(here::here("figures/within-chert/M3_3_map1.png"))
+knitr::include_graphics(here::here('data/within-chert/M3_3_map1.png'))
 
 ```
 
 ```{r}
 #| label: fig-oval-fossils
-#| fig-cap: "A-C: General view and details from an archaeological sample from local chert type (T4). A: general view of a concentration of oval fossils. B: general view of a concentration of oval fossils and other inclusions. C: detail of an irregular inclusion composed of titanium (C1) and an oval phosphatised skeletal remain composed mainly of calcium (C2), phosphorus (C3) and a small peak of sulphur."
+#| fig-cap: "A-B) general view of the sample (x190 and x250 magnification, respectively) showing multiple oval fossils and other inclusions. C) detail of an irregular inclusion (x1k magnification) composed of titanium (C1) and an oval skeletal remains composed mainly of calcium (C2), phosphorus (C3) and a small peak of sulphur. Archaeological sample from T4 (H20-4359)."
+#| fig-scap: "Archaeological sample from T4 (H20-4359)."
 
-knitr::include_graphics(here::here("figures/within-chert/M15_4.png"))
+knitr::include_graphics(here::here('data/within-chert/M15_4.png'))
 
 ```
 
-By observing the surfaces of samples and the presence of skeletal remains, some differences could be noted between local cherts and non-local archaeological samples. In comparison to the frequent to common skeletal remains in the Jurassic cherts from the Algarve, and archaeological cherts attributed to local sources (T2-5), cherts from non-local sources such as T6-8 show little porosity and rare presence of inclusions. Whenever present, skeletal remains are small and show small peaks (\<3 cpv/ev).
+By observing the surfaces of samples and the presence of skeletal remains, some differences could be noted between local cherts and non-local archaeological samples. In comparison to the frequent to common skeletal remains in the Jurassic cherts from the Algarve, and archaeological cherts attributed to local sources (T2-5), cherts from non-local sources such as T6-8 show little porosity and rare presence of inclusions (@fig-t6-general) . Whenever present, skeletal remains are small and show small peaks.
 
 ```{r}
 #| label: fig-t6-general
-#| fig-cap: "A-D: General view and details from an archaeological sample from non-local chert type (T6). A: general view of the sample with uncommon inclusions. B: detail of an inclusion seen in A,  composed mostly of iron and small peaks of calcium and phosphorus, making this inclusion a possible oxidised skeletal remains of a fossil. C: general view of the sample with no visible inclusions. D: detail of a small and irregular iron inclusion."
+#| fig-cap: "A) general view of the sample (x250 magnification). B) detail of an inclusion seen in A (x3.2k magnification), composed mostly of iron and small peaks of calcium and phosphorus, making this inclusion a possible oxidised skeletal remains of a fossil (1). Archaeological sample from T6 (H20-3890). C) general view of the sample (x250 magnification) with no visible inclusions. D) detail of the sample (x4.2k magnification) showing a small and irregular iron inclusion (2). Archaeological sample from T6 (I19-2846). Dot represents the location of the measured spectra plotted in graphs 1-2."
+#| fig-scap: "Archaeological sample from T6 (H20-3890 and I19-2846)"
 
-#knitr::include_graphics(here::here("figures/within-chert/M18_7_M18_8.png"))
-M18_7_M18_8_fig <- magick::image_read(here::here("figures/within-chert/M18_7_M18_8.png"))
-M18_7_M18_8_gg <- cowplot::ggdraw() + cowplot::draw_image(M18_7_M18_8_fig)
-
-M18_7_M18_8_plots <- plot_grid(M18_7_graph, M18_8_graph, labels = c(1, 2))
-
-plot_grid(M18_7_M18_8_gg, M18_7_M18_8_plots, ncol = 1, rel_heights = c(1, 1))
+knitr::include_graphics(here::here('data/within-chert/M18_7_M18_8_graphs.png'))
 
 ```
 
-The rarity of inclusions is not limited to skeletal remains, but to other inclusions such as oxides, which in T6-8 are small and rare. Despite this difference in abundance and size, oxides are mainly composed of iron, often associated with other elements, possibly suggesting the existence of iron oxide (Fe2O3), pyrite (FeS2) and ilmenite (FeTiO3). Iron oxides were found both as inclusions scattered in the samples, but also frequently associated with skeletal remains, which may be related to their oxidization. Pyrite was also identified in the shape of spherical pyrite framboids, as well as dispersed pyrite nanocrystals. These are characterised not only by large peaks of iron and associated sulphur, but also of round/angular small nanocrystals organised in spherical shapes, semi-spherical or simply dispersed crystals, frequently in association with spherical framboids. These were present mainly in geological samples from the Upper Jurassic (both west and eastern formations), but barely identified in archaeological samples.
+The rarity of inclusions is not limited to skeletal remains, but to other inclusions such as oxides, which in T6-8 are small and rare. Despite this difference in abundance and size, oxides are mainly composed of iron, often associated with other elements, possibly suggesting the existence of iron oxide (Fe~2~O~3~), pyrite (FeS~2~) and ilmenite (FeTiO~3~). Iron oxides were found both as inclusions scattered in the samples, but also frequently associated with skeletal remains, which may be related to their oxidisation.
+
+Pyrite was also identified in the shape of spherical pyrite framboids, as well as dispersed pyrite nanocrystals. These are characterised not only by large peaks of iron and associated sulphur, but also by round/angular small nanocrystals organised in spherical shapes, semi-spherical or simply dispersed crystals, frequently in association with spherical framboids (@fig-framboids). These were present mainly in geological samples from the Upper Jurassic (UJW and UJE), but barely identified in archaeological samples.
 
 ```{r}
 #| label: fig-framboids
-#| fig-cap: "A-B: Detail from the geological sample SP59_JOR from the Upper Jurassic outcrops (Jordana formation) of eastern Algarve. A: detailed view of a spherical pyrite framboid composed of iron (A1) and sulphur (A2). B: detailed view of an inclusion composed of iron (B1) and sulphur (B2)."
+#| fig-cap: "A) detail of the sample (x6.5k magnification) showing a possibly spherical pyrite framboid composed of iron (A1) and sulphur (A2). B) detailed view of an inclusion (x1k magnification) composed of iron (B1) and sulphur (B2). Geological sample SP59_JOR_002 from the UJE formation."
+#| fig-scap: "Geological sample SP59_JOR_002 from the UJE formation."
 
-knitr::include_graphics(here::here("figures/within-chert/M10_5_map1_map2.png"))
+knitr::include_graphics(here::here('data/within-chert/M10_5_map1_map2.png'))
 
 ```
 
-In a single sample from Lower Jurassic and samples from local T4 (both characterised by the previously mentioned oval fossils) inclusions composed of titanium (without associated iron) were identified, which may be related to the presence of rutile (TiO2). Small peaks of titanium (\<3 cpv/ev) were also identified in 3 out of 4 non-local T6 samples.
+In a single sample from LJW and samples from local T4 (both characterised by the previously mentioned oval fossils) inclusions composed of titanium (without associated iron) were identified, which may be related to the presence of rutile (TiO~2~). Small peaks of titanium were also identified in 3 out of 4 non-local T6 samples.
 
-Other elements were identified through EDS maps and spectra (e.g., chlorine, potassium or magnesium), although their distribution also showed no patterns between formations and chert types. The exception are calcium and aluminium.
+Other elements were identified through EDS maps and spectra (e.g., chlorine, potassium or magnesium), although their distribution also showed no patterns between formations and chert types. The exceptions are calcium and aluminium.
 
-Whenever isolated, calcium can be found in high peaks in cherts from Upper Jurassic formations and is probably related to the presence of calcite inclusions.
+Whenever isolated, calcium can be found in high peaks in cherts from Upper Jurassic formations (UJW and UJE) and is probably related to the presence of calcite inclusions (@fig-calcite).
 
 ```{r}
 #| label: fig-calcite
-#| fig-cap: "A-B: General view of calcite inclusions (black arrows) from the geological sample SP69_MAR from the Upper Jurassic outcrops of western Algarve."
+#| fig-cap: "General view of calcite inclusions (light grey) composed mainly of calcium and silica (1). Dot represents the location of the measured spectrum plotted in graph 1. Geological sample SP69_MAR from the UJW formation."
+#| fig-scap: "Geological sample SP69_MAR from the UJW formation."
 
-knitr::include_graphics(here::here("figures/within-chert/M4_3.png"))
+knitr::include_graphics(here::here('data/within-chert/M4_3_graphs.png'))
 
 ```
 
-Aluminium may be related to the speed of sedimentation; high peaks of aluminum may be related to fastest sedimentations speeds and may be a useful component to identify differences between cherts. Almost all chert samples show aluminum peaks, although mostly small (\< 3 cpv/ev). An exception are cherts from the Eastern basin of the Algarve (MJE and UJE), samples from non-local archaeological T7 and T8. The exception to the presence of aluminum is the chalcedony (both geological from TW and archaeological group T1) and all archaeological samples from the non-local group T6, with sources previously attributed to the Cretaceous cherts from Central Portugal.
+Aluminium may be related to the speed of sedimentation; low peaks of aluminium may be related to the fastest sedimentations speeds and may be a useful component to identify differences between cherts. Almost all chert samples show aluminium peaks, although mostly small. An exception is the cherts from the Eastern basin of the Algarve (MJE and UJE), samples from non-local archaeological T7 and T8 which show large peaks. The exception to the presence of aluminium is the chert of both geological samples from the Triassic formations and archaeological group T1 and all archaeological samples from the non-local group T6, with sources previously attributed to the CPT formation.
+
+The pXRF measured 44 major and minor elements, although, for a large majority, these were mostly composed of values below the detection level (\< LOD) or with values equal to 0. Only elements with more than 50% (n\>80) of successful values were maintained in the analysis to allow the successful interpretation of the data (@fig-pxrf-barplot). This list and a summarised description of the elements and their presence in sedimentary rocks/chert can be found in the supplementary materials (Online resource 3), as well as a table with means, counts and standard deviations of each of these elements and compounds per group (geological formation or archaeological chert type; Online resource 6).
+
+```{r}
+#| label: fig-pxrf-barplot
+#| fig-cap: "Comparison of success (values successfully measured by the pXRF, excluding values of 0 which were non-existent) and < LOD counts of the pXRF analysis by element. Only elements with Success counts above 50% are included."
+#| fig-scap: "Comparison of success and < LOD counts of the pXRF analysis by element."
+#| fig-align: center
+
+knitr::include_graphics(here::here('data/within-chert/succ_barplot.png'))
+
+```
+
+When focusing on the chosen elements, some patterns become clear; these can be seen as differences in the values between different types of chert, as well as similarities between geological and archaeological samples.
+
+In general, silica is the main component of all cherts. However, there is some variability and outliers in both silica and other elements. From these, LJW cherts seem to show higher variability and more outliers. This may be related to the higher dolomitization process occurring in LJW cherts. Similarly, the lower mean values of silica for UJW (Upper Jurassic West) samples may be related to high values of calcium oxide (@fig-pxrf-boxplots).
+
+```{r}
+#| label: fig-pxrf-boxplots
+#| fig-cap: "Boxplots of raw element percentages (a: SiO2, b: CaO, c: Fe2O3, d: TiO2) by geological formation or archaeological chert type. Only chert groups with n>5 were included in the boxplots. Diamond symbol represents mean values within each group."
+#| fig-scap: "Boxplots of raw element percentages by geological formation or archaeological chert type."
+#| fig-align: center
+
+knitr::include_graphics(here::here('data/within-chert/pxrf_boxplots.png'))
+
+```
+
+No clear patterns seem to occur between geological groups and archaeological groups, with the exception of the CPT samples and non-local archaeological types T6 and T7. This is more marked in Fe~2~O~3~ (@fig-pxrf-boxplots b) and, to a lesser degree, in TiO~2~ (@fig-pxrf-boxplots c), which show smaller means and values for these groups. The similarity between these groups can also be seen in the near absence of Sr; where other groups show smaller values but are well represented, the numbers of CPT, T6 and T8 samples are reduced to \<50%, meaning Sr (Online resource 6) presence is limited in these cherts. Similarly, CPT and T6 cherts also show less than 50% samples with Zr (Online resource 6), making this element also limited in these chert groups.
+
+Finally, archaeological types T9 to T11 seem to show the most differences in element percentages of all analysed samples; due to the small sample, instead of boxplots (with a minimum in the sample of 5), the results are shown in Online Resource 6. Albeit with some variation, T9 and T10 to show lower percentages of silica in comparison to other samples. As expected, other elements show much higher percentages, especially Fe~2~O~3~, TiO~2~, Al~2O~3 and K~2~O. T11 shows the lower percentages of silica (\~90%; Online resource 6), and, similarly to T9-10 high peaks of Fe~2~O~3~, TiO~2~, K~2~O. Compared to all the other samples analysed in this study, T11 shows the highest values for Cu and Zr. However, these are still small percentages within the total chemical composition (\<0.0006).
+
+Multicomponent statistical analysis was applied to the pXRF results, to understand the relation between the several elements and further identify patterns between the geological and archaeological types. Several PCAs were applied to the elements, however, only a few elements could consistently be used in this approach due to the high percentages of 0 or \< LOD. Similarly, small groups (e.g., Triassic and non-local chert types such as T9 and T10) were not included in the PCAs due to the small number of samples.
+
+@fig-pca shows the PCAs for several combinations of elements and comparisons between different groups to understand the various relations. The elements used for the PCAs were S, Cl, P~2~O~5~, Fe~2~O~3~, TiO~2~, K~2~O and CaO. In all PCAs the two most representative dimensions are explained by the increased and decreased presence of all elements (Dim1), which may be explained by the increased or decreased values of SiO~2~, and the increased presence of CaO, Cl, S and P~2~O~5~ in comparison to Fe~2~O~3~, TiO~2~ and K~2~O (Dim2).
+
+```{r}
+#| label: fig-pca
+#| fig-cap: "Visual representations of dimension 1 and 2 of PCAs showing the correlation between elements and different chert groups. a) PCA using the geological cherts of the regional southern Portugal formations: Lower Jurassic west (LJW), Triassic west (TW), Upper Jurassic west (UPW), Middle Jurassic east (MJE) and Upper Jurassic east (UJE); b) PCA using geological samples of local Lower Jurassic cherts (LJW) and non-local Cretaceous cherts (central Portugal; CPT) and Upper Jurassic cherts (Betic Systems; UCA); c) PCA using geological samples of local Lower Jurassic cherts (LJW), geological chert samples from Cretaceous central Portugal formations (CPT), and archaeological samples from Vale Boi attributed to CPT sources (T6); d) PCA using geological samples of local Lower Jurassic cherts (LJW), geological chert samples from Upper Jurassic southern Spain formations (UCA), and archaeological samples from Vale Boi attributed to local sources (T2-5) and non-local, southern Spain sources (T7)."
+#| fig-scap: "Visual representations of dimension 1 and 2 of PCAs showing the correlation between elements and different chert groups."
+#| fig-align: center
+
+knitr::include_graphics(here::here('data/within-chert/pca_plots.png'))
+
+```
+
+When comparing the regional Algarve cherts (@fig-pca a), we see that the two first dimensions explain a combined `r 34.6+26.3`% variability in the results, with dimension 1 explaining 34.6% and dimension 2 explaining 26.3%. By observing the scatterplots, it is noticeable that the LJW cherts are highly variable when compared to the other cherts, with samples which display higher positive values in dimension 1 (Dim1) and dimension 2 (Dim2). However, when focusing on the concentration of LJW results, they seem to fit within the range shown by MJE and UJE cherts. In comparison, UJW cherts show higher positive values in dimension 2, which is explained by the higher values of CaO.
+
+The differences between the LJW cherts and non-local cherts are more marked. @fig-pca b represents the correlation between elements and LJW, CPT and UCA cherts. Dimension 1 explains \~57% of the variability, while dimension 2 explains \~29%, with a combined percentage of `r 56.6+28.6`%. Once again, it is clear that Jurassic cherts, both from southwestern Portugal and southern Spain, show variability, although they are mostly located in the center/bottom of dimension 2 and center of dimension 1. When compared to these values, CPT cherts are located in the negative axis of dimension 1 and show little variability.
+
+A similar pattern emerges when applying a PCA using the same elements but comparing them to archaeological, non-local chert T6, previously attributed to central Portugal (@fig-pca c). In this PCA, dimension 1 explains \~52% of the variability and dimension 2 \~30%, with a combined percentage of `r 52.2+30.1`%. Similarly to geological Cretaceous samples from CPT, T6 samples are also concentrated in the negative side of dimension 1, with a clear overlap between the two.
+
+@fig-pca d shows a concentration of all groups in the centre/bottom of dimension 2 (28.7%) and centre of dimension 1 (58.7%), with the first two dimensions explaining a combined percentage of `r 58.7+28.7`% of the variability. The archaeological local cherts T2 to T5 and non-local type T7 (previously attributed to the Upper Jurassic cherts of southern Spain) are congruent with the corresponding geological sources, although with clear decreased variability.
+
+## Discussion
+
+The results from this study reveal several patterns in the mineral and chemical composition of the analysed chert samples. In general, they allowed us to answer and explore the several research questions presented above. More importantly, they allow further interpretations about human behaviours related to mobility and raw material procurement and selection. All methods used in this chapter allowed a more complete characterisation of the geological cherts from the Algarve region, complementing the petrographic analysis, showing key differences in their mineral and chemical compositions.
+
+For example, the presence of calcite in Upper Jurassic cherts (both eastern and western) seen both in XRD but also SEM-EDS and pXRF provided an added characterisation which may prove useful for future archaeological chert raw material studies. This is especially relevant for SEM and pXRF methods, which can be used with little to no impact on the archaeological materials and possibly help distinguish between the visually similarities present among regional cherts (with exception of the Jordana formation cherts in eastern Algarve).
+
+This is especially relevant for the overall goal of providing a detailed lithotheque, both physical and online. By expanding the previously used methods to characterise these geological cherts, we have provided a key reference collection of the Algarve region which can, from this point onwards, be consistently used in archaeological studies for prehistoric assemblages across Iberia.
+
+However, despite the added layers of mineral and chemical characterisation to these cherts, one of the main research questions for this paper and regional research, continues to be unanswered. As previously mentioned, one of the goals of this research was to test the potential of several methods to distinguish between the cherts from the LJW and MJE formations.
+
+Perhaps one of the main differences between the cherts from these two formations is related to the presence of dolomite. The nodules of LJW show small peaks of dolomite in the XRD results. This was expected since a process of dolomitization of the chert nodules, especially on the outer edges, has been identified in previous works [@belmiroCreatingFramesReference2023; @ribeiro_evolucao_2005], and is related to the formation and diagenesis processes of the geological layers and chert nodules [@ribeiro_evolucao_2005; @rochaNoticiaExplicativaFolha1979].
+
+As previously mentioned, however, dolomite is only present in around 60% of the analysed chert samples. This may be related to the size and portion of the nodule selected for powdering since it is expected that dolomite will be present at the edges of the nodule, closer to the cortex, and can be absent on the inside of a larger nodule. This also may be related to the previously identified heterogeneity in dolomite presence shown in petrographic results or its presence in small percentages within the thin sections [@belmiroCreatingFramesReference2023]. Similar results were identified in previous mineral and geochemical studies, which showed the presence of different degrees of silicification and dolomitization in nodules in the formations [@ribeiro_evolucao_2005].
+
+In comparison, the XRD results for MJE cherts show a single sample with small dolomite and calcite presence. This is probably related to the process of dolomitization occurring in the Carixian (LJW) formation not being present in the Malhão (MJE) formation. This is expected given that the chert nodules are found in limestone formations [@manuppellaNoticiaExplicativaFolha2007].
+
+Similarly, elements and compounds like chlorine or calcium oxide are found in higher percentages in LJW cherts (Online resource 6) but with high standard deviations, meaning that is the presence of outliers. Silica is, in all analysed groups, the main component of the cherts. However, the LJW group shows a low mean value and high standard deviation (92.4 and 14.7, respectively; Online resource 6), as well as the presence of several outliers (@fig-pxrf-boxplots a), possibly related to an incomplete process of chertification, as identified in previous geochemical works from LJW cherts (Ribeiro, 2005). In comparison MJE cherts shows a higher silica mean (96.4; Online resource 6) and less variability and outliers regarding other elements and compounds, also seen in the PCA results ( @fig-pca a).
+
+While this variability seems to be specific of LJW cherts, it is not a key element to distinguish between the cherts of the formations, since a great majority of LJW samples show similar values and characteristics to the UJE cherts. In other words, if dolomitized or chemically variable with high outliers, the cherts are probably from the Lower Jurassic Carixian formation of western Algarve, but if not exhibiting these characteristics they cannot be ascribed specifically to any of the two.
+
+This means that it is currently still impossible to clearly identify whether chert raw materials are being procured from the eastern Algarve outcrops, and the local LJW cherts are currently still the most probable chert sources being used at Vale Boi during the UP.
+
+Following this interpretation, it is however, possible to use the presence or absence of dolomite and the chemical variability of archaeological cherts to identify other behaviours related to procurement aside from distance and mobility. The dolomitization process impacts the knapping characteristics of the nodules. This means that there may be the potential for identifying selection behaviours from UP hunter-gatherers focusing on obtaining less dolomitized nodules.
+
+Although the XRD analysis was not applied to archaeological samples, the pXRF results may shed light on this subject. In comparison to the results from LJW cherts, the T2-5 cherts show less outliers and variability than their geological counterparts.
+
+This may be related to the process of nodule selection for knapping, choosing mostly less altered chert nodules, and avoiding the highly altered and dolomitized cherts found in the Lower Jurassic formations. This is also supported by macroscopic observations of the artefacts knapped in the UP assemblages.
+
+Given the previously referred lack of dolomite and lesser chemical variability from the Middle Jurassic Malhão formation cherts, located east of the site, it is also possible that the T2-5 not only reflects the selection of local cherts, but also the procurement of cherts outside of the local range. However, the lack of clear identifiers between the two geological sources and cherts, and following previous interpretations, it is more likely that the disparities between LJW and T2-5 cherts mostly reflect nodule selection during raw material procurement.
+
+The comparison between other archaeological chert types and the geological samples also provided key results to further explore and ascertain previous source attributions.
+
+Although previously explored, the fibrous quartz chert variety from Vale Boi (T1, known as chalcedony) and the cherts from the Triassic formation of the Algarve also showed clear similarities, especially through the SEM photos and EDS spectra.
+
+Similarly, other local types such as T4 were suggested as not having an exact macroscopic equivalent in the currently known local and regional formations, despite their petrographic similarities. However, the SEM-EDS results showed clear similarities in the visible skeletal remain morphologies between T4, T2 and samples from LJW, and the presence of inclusions composed of titanium in T4 and LJW, cementing the interpretation that despite the macroscopic variability, T4 are clearly local, possibly from a limited or currently not available outcrop.
+
+Compared to the similar characteristics of local cherts, both geological and archaeological, non-local types showed clearer differences. This allows us to further cement the interpretation that types T6-11 are not local or regional, although their exact sources cannot be pinpointed.
+
+For example, the pXRF results comparing the chemical composion of local cherts, LJW samples, T7 cherts (previously interpreted as coming from the Betic systems) and samples from the UCA lithotheque showed little differences. In this case, methods such as macroscopy, petrography [@belmiroChertProcurementPatterns2025] and SEM-EDS proved more adequate to show similarities between T7 and cherts of southern Spain.
+
+In comparison, cases like T11 showed clear differences in their chemical compositions, especially in the presence of copper and zirconium while macroscopically they show no visible fossils or inclusions. These black cherts have been identified in south Portugal, in the Alentejo region and central Spain [@araujoRegioesCentralSul2013; @oliveiraTracosGeraisEvolucao1991]. Further, studies have discussed the presence of copper mineralization present in cherts from the region [@oliveiraComplexoVulcanoSedimentarToca2013]. While further studies need to explore this, given the lack of a reference collection for cherts and jaspers from southeastern Portugal and central western Spain, or the inclusion of jasper in this study, we suggest that alike TL01 [@belmiroChertProcurementPatterns2025], T11 may have a source in the Zona Ossa Morena in central Iberia.
+
+The T6 cherts also showed clear differences from the local cherts. While the results obtained through SEM-EDS are like those surmised from petrographic analysis, T6 cherts show a clear absence of inclusions, fossils or porosity, as well as lower to near absent peaks of aluminium, hinting at different rates of sedimentation (and thus different formation environment) than LJW cherts. Unlike T7 cherts, T6 cherts when analysed through the PCA showed a clearer association with CPT geological samples (@fig-pca c).
+
+These results show that a multi-layered approach to raw material studies, specifically chert, seems to be key for sourcing studies. While XRD may not be an ideal technique for archaeological artefacts, given its destructive nature and the general homogeneity of chert, other methods provided their own contributions to source attribution.
+
+For example, coupled with petrography, SEM-EDS provides a good characterisation for cherts and preliminary chemical composition. The method showed that with little impact on archaeological artefacts, it was possible to further characterise them and establish parallels or differences between archaeological samples and geological. However, it is important to note that for SEM-EDS the only geological samples used were from the regional Jurassic and Triassic chert bearing formations of the Algarve. Similarly, this technique was not tested with unpolished samples, possibly placing a difficulty on the identification of some fossils or other inclusions.
+
+A future approach should include added geological samples from cherts of other regions of Iberia which can be directly compared to the archaeological samples and the use of non-polished samples.
+
+Similarly, pXRF provides a quick and non-destructive technique for the chemical characterisation of cherts, being ideal to complement other methods and results. However, our results showed some limitations of this methods. While the PCAs using pXRF results were able to discern between cherts of different ages (Cretaceous and Jurassic), it showed little differences between cherts of the same age but different formations (Jurassic from the Algarve basin and Jurassic from the Betic systems).
+
+As such, pXRF seems to be an ideal method for preliminary studies and characterisations, that can then be complemented with other geochemical techniques, such as LA-ICP-MS or REEs. In this case, a future approach for the geochemical study from Vale Boi would be to apply these methods and compare their potential to the current results.
+
+## Conclusion
+
+This study highlights the importance of applying a multi-method analytical framework to the characterisation of cherts from the Algarve region. By combining mineralogical and geochemical techniques like XRD, SEM-EDS and pXRF, we were able to refine the characterisation of geological and archaeological cherts and address key questions related to raw material procurement and human mobility during the Upper Palaeolithic at Vale Boi.
+
+Although some challenges remain—particularly the difficulty of consistently distinguishing between cherts from the Lower Jurassic West (LJW) and Middle Jurassic East (MJE) formations—the integration of mineralogical indicators, such as the presence of dolomite and chemical variability, has opened new avenues for understanding raw material selection strategies.
+
+The results suggest that prehistoric groups engaged in selective procurement behaviours, favouring cherts with better knapping qualities, such as those showing less dolomitization. Furthermore, the use of geochemical methods of both local and non-local cherts within the Vale Boi assemblages and their comparison to samples from other regions strengthens the previous source attributions. This is especially relevant for clearly defining central Portugal as a source for a portion of non-local cherts present in Vale Boi.
+
+The study also underscores the value and limitations of different analytical methods. Techniques such as SEM-EDS and pXRF proved highly effective for an (almost) non-destructive analysis. However, pXRF alone showed limited ability to distinguish between closely related chert formations, highlighting the need for complementary high-precision geochemical techniques in future research.
+
+Finally, this work has contributed to the development of a robust regional lithotheque for the Algarve, providing a critical reference point for future studies of prehistoric lithic assemblages in Iberia.
+
+Future research should expand the geological reference collections beyond the Algarve and incorporate higher-resolution geochemical analyses to further refine raw material sourcing. In doing so, it will be possible to deepen our understanding of human behavioural adaptations and regional interaction networks during the Upper Palaeolithic.
+
+## Acknowledgements
+
+I would like to thank Dr. José Mirão for the training in the XRD and SEM-EDS methods and aid in the interpretation of the results, and the HERCULES laboratory, for facilitating the equipment necessary—the analyses were developed at the HERCULES Laboratory of the University of Évora, funded by FCT through the projects UIDB/04449/2020 and UIDP/04449/2020. Still from the Hércules team, I thank the technician Sandra Velez for the training, help and bright mood during the preparation of SEM-EDS samples. Similarly, I thank Dr. Javier Sanchéz-Martinéz for the help in obtaining chips for analysis through meticulous knapping whenever necessary. The preparation of bulk samples for XRD would also not have been possible without the help of the CIMA laboratory and their equipment. Finally, I would like to thank ICArEHB for providing the necessary equipment, contacts and researchers that allowed me to complete this study and explore the different techniques employed here. In particular, I would like to thank Dr. Hussein Kanbar for the support during the analysis and key insights for interpretation and visual presentation of geochemical data; and technician Pedro Coxito and Dr. Vera Aldeias for the continuous support and advice.

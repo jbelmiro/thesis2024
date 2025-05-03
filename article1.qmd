@@ -54,7 +54,7 @@ The Algarve is the southernmost region of Portugal, framed north by the Alentejo
 #| label: fig-frames-geomap
 #| fig-cap: "Geological map of the Algarve region. The map represents the several geological layers and formations, as well geomorphic sub-regions. The geological data was obtained through the vectorization of the geological raster maps (Carta Geológica de Portugal, 1:500 000 scale) made available by LNEG (Laboratório Nacional de Energia e Geologia) in https://geoportal.lneg.pt/pt/dados_abertos/cartografia_geologica/cgp500k/folhasul/. The inset map was created from a 30×30‐m pixel Digital Elevation Model (DEM) obtained from the Shuttle Radar Topography Mission (https://www2.jpl.nasa.gov/srtm/dataprod.htm)."
 
-knitr::include_graphics(here::here("figures/creating-frames/map_layout.png"))
+knitr::include_graphics(here::here("data/creating-frames/map_layout.png"))
 
 ```
 
@@ -72,7 +72,7 @@ To locate and characterize chert formations and corresponding outcrops in southe
 #| label: fig-frames-fieldphoto
 #| fig-cap: "Recovered geological chert samples and general outcrop photos from chert-bearing formations, collected during fieldwork (2021-2022).(a) Detail of a chert nodule (SP32_FZF). (b) Chert outcrop Foz dos Fornos (FZF) (Lower Jurassic, Carixian formation) associated with sample SP32_FZF. (c) Detail of a chert nodule (SP69_MAR). (d) Chert outcrop of Praia da Mareta (MAR) (Upper Jurassic, Kimmeridgian formation) associated with sample SP69_MAR. (e) Detail of recovered chert samples (SP65_MALH) and nodules. (f) General photo of the Malhão outcrop (MALH) (Middle Jurassic, Malhão formation) associated with sample SP65_MALH. (g) Detail of recovered chert samples (SP58_JOR). (h) General photo of the Jordana outcrop (JOR) (Upper Jurassic, Jordana formation) associated with sample SP58_JOR."
 
-knitr::include_graphics(here::here("figures/creating-frames/fieldwork.png"))
+knitr::include_graphics(here::here("data/creating-frames/fieldwork.png"))
 
 ```
 
@@ -82,7 +82,7 @@ A two-step approach was applied to characterize the geological samples. These in
 #| label: tbl-frames-petrolist
 #| tbl-cap: "List of geological samples chosen for the petrographical study. UB – Servei de Làmina Prima, University of Barcelona (Barcelona, Spain); TSL - Thin Section Lab (Toul, France)."
 
-petrolist <- read_csv(here::here("data/raw_data_frames/petro_sample.csv"))
+petrolist <- read_csv(here::here("data/creating-frames/petro_sample.csv"))
 knitr::kable(petrolist) |> 
   kable_styling(latex_options = c("striped", "scale_down", "repeat_header"))
 
@@ -99,7 +99,7 @@ Eighteen outcrops (primary and secondary) were revisited or newly identified in 
 #| label: fig-frames-sourcesmap
 #| fig-cap: "Map of southern Portugal (Algarve), with geological samples recovered during this study’s fieldwork. Colors represent the chert-bearing formations in the Algarve. Numbers represent the recovered samples during fieldwork organized by formation, outcrop, and location. Lower Jurassic (Carixian) formation: 1-8: Cabo de S. Vicente(CSV); 9-10: Aspa (ASP); 11-14: Foz dos fornos (FZF); 15-18: Ponta dos Altos (PdA); 19-27: Praia de Belixe (PBX); 28-30: Belixe Sul (BLS); 32-33: Ferrel (FER). Upper Jurassic (Kimmeridgian) formation: 35: Ponta da Atalaia (PtA); 36: Praia da Mareta (MAR); 37: Praia da Andorinha (AND). Malhão formation: 38-42: Casal da colina (CdC); 43: Guilhim (GUI); 45: Caliços (CAL); 51-53: Oliveiras (OLV); 54-55: Malhão (MALH). Jordana formation: 46-49: Jordana (JOR); 50: Peral (PER). Isolated finds: 31: Belixe Norte (BLN); 34: Ponta da Atalaia (PtA); 44: Guilhim (GUI); 56: Descampado (DESCAM); 57: Pedreira (PEDR). The geological layers were obtained through vectorization of the geological raster maps (Carta Geológica de Portugal, 1:500 000 scale) made available by LNEG (Laboratório Nacional de Energia e Geologia) in https://geoportal.lneg.pt/mapa/. The base maps were created from a 30×30‐m pixel Digital Elevation Model (DEM) obtained from the Shuttle Radar Topography Mission (https://www2.jpl.nasa.gov/srtm/dataprod.htm)."
 
-knitr::include_graphics(here::here("figures/creating-frames/sources_map.png"))
+knitr::include_graphics(here::here("data/creating-frames/sources_map.png"))
 
 ```
 
@@ -107,7 +107,7 @@ knitr::include_graphics(here::here("figures/creating-frames/sources_map.png"))
 #| label: tbl-frames-outcropdata
 #| tbl-cap: "Outcrop and nodule information for all recovered samples. The age was defined based on the location of the outcrops, taking into consideration previous research work and geological maps. Samples which were isolated or in untrackable secondary deposition settings do not have a defined geological age."
 
-outcrop_db <- read_csv(here::here("data/raw_data_frames/outcrop_short.csv"))
+outcrop_db <- read_csv(here::here("data/creating-frames/outcrop_short.csv"))
 
 knitr::kable(outcrop_db)
 
@@ -121,7 +121,7 @@ On the westernmost areas of the Algarve, there are mainly cherts from two differ
 #| label: fig-frames-ljmacro
 #| fig-cap: "View of the macroscopic variability of the Lower Jurassic Carixian cherts (several outcrops) from western Algarve. (a) Sample SP34_PdA. (b) Sample SP14_PBX. (c) Sample SP16_PBX. (d) Sample SP30_FZF. (e) SP9_PdA. (f) Sample SP34_PdA."
 
-knitr::include_graphics(here::here("figures/creating-frames/macro_lowerJ_west.png"))
+knitr::include_graphics(here::here("data/creating-frames/macro_lowerJ_west.png"))
 
 ```
 
@@ -131,7 +131,7 @@ Petrographically, the Lower Jurassic cherts of western Algarve are composed main
 #| label: fig-frames-ljwest
 #| fig-cap: " Macroscopic and microscopic view of chert samples from the Lower Jurassic cherts from western Algarve. (a) Sample SP7_CSV. Macroscopic view with a stereomicroscope. (b-c) Sample SP7_CSV. Microscopic view of thin section, XPL (b) and PPL (c). An Echinoid spine, replaced by quartz but preserving the fossil’s original structure is present in the center of the images. (d) Sample SP34_PdA. Macroscopic view with a stereomicroscope. (e-f) Sample SP34_PdA. Microscopic view of thin section, XPL I and PPL (f). Detail of a bivalve shell replaced by at least two generations of quartz: microcrystalline quartz at the edges and macrocrystalline quartz inside of the shell."
 
-knitr::include_graphics(here::here("figures/creating-frames/lowerJ_west.png"))
+knitr::include_graphics(here::here("data/creating-frames/lowerJ_west.png"))
 
 ```
 
@@ -143,7 +143,7 @@ Contrasting with the diversity and quantity of the Lower Jurassic outcrops, ther
 #| label: fig-frames-ujwest
 #| fig-cap: "Macroscopic and microscopic view of chert samples from the Upper Jurassic cherts from western Algarve. (a) Sample SP36_PtA. Macroscopic view with a stereomicroscope. (b-c) Sample SP36_PtA. Microscopic view of thin section, XPL (b) and PPL (c). Several unidentifiable fossils can be seen in the photo, along with calcispheres. (d) Sample SP39_AND. Macroscopic view with a stereomicroscope. (e-f) Sample SP39_AND. Microscopic view of thin section, XPL I and PPL (f). A small amount of calcispheres is present in the image, along with few unidentifiable fossils replaced by quartz/chalcedony."
 
-knitr::include_graphics(here::here("figures/creating-frames/upperJ_west.png"))
+knitr::include_graphics(here::here("data/creating-frames/upperJ_west.png"))
 
 ```
 
@@ -157,7 +157,7 @@ On the eastern part of the Algarve, chert-bearing known formations are from the 
 #| label: fig-frames-mjplate
 #| fig-cap: "Macroscopic and microscopic views of Middle Jurassic chert samples from the Malhão formation. (a) Sample SP50_CdC, macroscopic view with a stereomicroscope. (b) Sample SP62_OLV, macroscopic view with a stereomicroscope. (c-d) Microscopic view of SP50_CdC, XPL (c) and PPL (d). Detail of a fossil (possibly an Ostracod), replaced by two generations of chalcedony (1st generation in the outer edges and 2nd generation replacing the inside). (e-f) Microscopic view of SP54_GUI, XPL (e) and PPL (f). General view of the thin section. Several fossil ghosts can be seen. Despite the poor preservation, it may be possible to identify a few fossils based on the size and morphology: 1) calcispheres or recrystallized radiolarians; 2) monaxon spicules pointed at one end."
 
-knitr::include_graphics(here::here("figures/creating-frames/middleJ_east.png"))
+knitr::include_graphics(here::here("data/creating-frames/middleJ_east.png"))
 
 ```
 
@@ -167,7 +167,7 @@ The Jordana formation chert (Upper Jurassic) was identified in one area in the A
 #| label: fig-frames-ujplate
 #| fig-cap: "Macroscopic and microscopic views of the Upper Jurassic chert samples from the Jordana formation. (a) Sample SP58_JOR, macroscopic view with a stereomicroscope. (b) Sample SP59_JOR, macroscopic view with a stereomicroscope. (c-d) Microscopic view of SP56_JOR, XPL (c) and PPL (d). General view of calcispheres in an area of the chert characterized by a large concentration of oxide patina and opaques. (e-f) Microscopic view of SP58_JOR, XPL (e) and PPL (f). General view of the thin section. A large bivalve shell fragment is visible at the top."
 
-knitr::include_graphics(here::here("figures/creating-frames/upperJ_east.png"))
+knitr::include_graphics(here::here("data/creating-frames/upperJ_east.png"))
 
 ```
 
@@ -183,7 +183,7 @@ The survey work and analyses of the collected geological samples show that the s
 #| label: fig-frames-macrocomparison
 #| fig-cap: "Comparison between the cherts of different formations in the Algarve, organized by geological age and formation. (a-b) Lower Jurassic (Carixian formation) chert samples under the stereomicroscope. (c-d) Middle Jurassic (Malhão formation) chert samples under the stereomicroscope. (e-f) Upper Jurassic (Jordana formation) chert samples under the stereomicroscope."
 
-knitr::include_graphics(here::here("figures/creating-frames/macro_comparison.png"))
+knitr::include_graphics(here::here("data/creating-frames/macro_comparison.png"))
 
 ```
 
