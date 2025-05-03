@@ -21,16 +21,15 @@ book:
 bibliography: references.bib
 
 format:
+  html:
+    theme: cosmos
   pdf:
-    documentclass: scrreprt
     number-sections: true
     toc: true
     toc-title: "Table of contents"
     lof: true
     lot: true
-    keep-tex: true
     indent: true
-    papersize: a4
-    linestretch: 2
+  docx: default
 
 editor: visual
