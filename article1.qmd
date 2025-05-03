@@ -83,7 +83,9 @@ A two-step approach was applied to characterize the geological samples. These in
 #| tbl-cap: "List of geological samples chosen for the petrographical study. UB – Servei de Làmina Prima, University of Barcelona (Barcelona, Spain); TSL - Thin Section Lab (Toul, France)."
 
 petrolist <- read_csv(here::here("data/raw_data_frames/petro_sample.csv"))
-knitr::kable(petrolist)
+knitr::kable(petrolist) |> 
+  kable_styling(latex_options = c("striped", "scale_down", "repeat_header"))
+
 
 ```
 
