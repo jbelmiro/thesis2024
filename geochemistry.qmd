@@ -8,7 +8,7 @@ execute:
   fig-dpi: 600
 ---
 
-# Within chert: a multi-technique mineral and geochemical approach to the study of chert of southwestern Iberia
+# Within chert: a multi-technique mineral and geochemical approach to the study of chert of southwestern Iberia {#sec-chapter4}
 
 ```{r}
 #| label: libraries

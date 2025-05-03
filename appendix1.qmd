@@ -4,10 +4,86 @@ execute:
   warning: false
   message: false
   comment: "#>"
-  fig-path: "../figures/"
-  fig-dpi: 600
 ---
 
-# Supplementary materials 1
+# Repositories and Supplementary online materials
 
-## 
+All chapters (excluding Introduction and Discussion) have associated online repositories. The materials that would be presented in the dissertation's Appendix section can instead be freely accessed and downloaded through the repositories.
+
+The entirety of the R code used for the analysis, datasets, and visual representations contained in the chapters can be found in their individual repositories. The files include the complete set of raw data used in the analysis, along with the code required to generate all tables and figures, as well as all supplementary materials.
+
+A repository for the full dissertation is also available at <https://doi.org/10.17605/OSF.IO/4NYUV>. All article and chapter repositories are compiled here for easier and more centralised access. All communications and posters presented in the context of this research can also be found there. Finally, the dissertation is also hosted in this repository in the **Files** section.
+
+In the following sections I present for each chapter its repository DOI (hosted at osf.io). I also present all supplementary materials and a small description, according to their organisation within the original main folder **Files**.
+
+## Creating frames of reference for chert exploitation during the Late Pleistocene in Southwesternmost Iberia
+
+See [@sec-chapter2]
+
+**Online repository**: <https://doi.org/10.17605/OSF.IO/FP7TA>
+
+**Files**:
+
+**../Sample analysis PDFs**: Individual analysis documents (outcrop description, macroscopic and petrographic characterisation, stereomicroscope and thin-section images) for all samples included in the study. Adapted from analysis document from Spanish National Research Council - Institute Milá y Fontanals of research on Humanities (CSIC).
+
+**../SOM/**
+
+**S1**: Field sample/outcrop dataset. Table with recorded data on the outcrops and cherts, during fieldwork and prospections during 2021 and 2022.
+
+**S2**: Macroscopic analysis dataset. Table with the data collected from the macroscopic analyses of all chert samples collected from the fieldwork and prospections during 2021 and 2022.
+
+**S3**: Data dictionaries for macroscopic and petrographic analyses. Description of the used variables (including allowed variables and references) for the macroscopic and petrographic analyses used in the present study.
+
+## Within and beyond: chert procurement patterns during the Upper Palaeolithic in Southwesternmost Iberia
+
+See [@sec-chapter3]
+
+**Online repository**: <https://doi.org/10.17605/OSF.IO/DBFT2>
+
+**Files**:
+
+**../SOM/**
+
+**../Petrographic analysis files**: Individual analysis documents (macroscopic and petrographic characterisation, stereomicroscope and thin-section images) for all samples included in the study. Adapted from analysis document from Spanish National Research Council - Institute Milá y Fontanals of research on Humanities (CSIC).
+
+**../Supplementary Information (SI)/**
+
+**Online Resource 1**: Data dictionaries for macroscopic (group and individual) and petrographic analyses.
+
+**Online Resource 2**: Terrace and shelter lithotypes complete macroscopic and petrographic description.
+
+**Online resource 3**: Summarised type macroscopic and petrographic features and epoch/stage identification.
+
+## Within chert: a multi-technique mineral and geochemical approach to the study of chert of southwestern Iberia
+
+See [@sec-chapter4]
+
+**Online repository**: <https://doi.org/10.17605/OSF.IO/W78V6>
+
+**Files**:
+
+**../Supplementary Online Materials/**
+
+**Online resource 1:** Sample preparation and detailed method description.
+
+**Online resource 2:** pXRF sample measurements (thickness and min. diameter).
+
+**Online resource 3:** Chemical elements/compounds and geological implications.
+
+**Online resource 4:** Supplementary graphs and detailed description of XRD and SEM-EDS results.
+
+**Online resource 5:** SEM-EDS results by sample. Presence of chemical elements (EDS) and inclusions/fossils (SEM).
+
+**Online resource 6:** pXRF descriptive statistics table.
+
+## From Stone to Tool: How Raw Materials Influenced Upper Paleolithic Technology in Southwestern Iberia (Vale Boi)
+
+See [@sec-chapter5]
+
+**Online repository**: <https://doi.org/10.17605/OSF.IO/UWMPK>
+
+**Files**:
+
+**../SI/**
+
+**Online Resource 1:** Supplementary results and tables, supporting information for the results presented in the main paper. Includes detailed assemblage technological descriptions by chert type, tool-to-debitage and blank-to-core ratios tables, descriptive statistics tables for measurements (mean and standard deviation) and results of the Mann-Whitney U statistical analysis.

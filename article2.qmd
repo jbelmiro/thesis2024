@@ -8,7 +8,7 @@ execute:
   fig-dpi: 600
 ---
 
-```{r packages}
+```{r}
 #| label: callpackages
 
 # Call packages
@@ -26,7 +26,7 @@ library(gtsummary)
 
 ```
 
-```{r dbsetup}
+```{r}
 #| label: db-setup
 
 # Terrace DB preparation
@@ -133,7 +133,7 @@ S_dataset <- S_dataset %>%
 
 ```
 
-# Within and beyond: chert procurement patterns during the Upper Palaeolithic in Southwesternmost Iberia
+# Within and beyond: chert procurement patterns during the Upper Palaeolithic in Southwesternmost Iberia {#sec-chapter3}
 
 **Authors**: Joana Belmiro^1^, Xavier Terradas^2^, Salvador Dominguez-Bella^3^, João Cascalheira^1^
 
@@ -809,11 +809,3 @@ In southern Portugal, this interconnection among UP hunter-gatherers from divers
 The outcomes of this research pave the way for continued exploration of these assemblages through diverse methodologies. Future directions include employing a geochemical approach to both the studied assemblages and the geological reference collection, aiming to enrich discussions on mobility throughout the UP at Vale Boi. This approach is anticipated to provide diagnostic elements to distinguish between cherts from Lower and Middle Jurassic units, thereby offering a comprehensive view of regional resource utilization and mobility patterns.
 
 Additionally, experimental replication and the creation of a reference collection modified through heat treatment could enhance the identification of raw material types and currently indistinguishable samples, as noted in prior research [@pereira_territory_2016-1]. Lastly, we intend to integrate technological data from current and ongoing datasets to delve deeper into the usage and management of raw materials (both local and non-local) over time, their association with different site uses, and to contextualize these practices within the broader framework of human adaptations to changing environmental conditions throughout the UP.
-
-## Supplementary Information {.unnumbered}
-
-**Online Resource 1**: Data dictionaries for macroscopic (group and individual) and petrographic analyses.
-
-**Online Resource 2**: Terrace and shelter lithotypes complete macroscopic and petrographic description.
-
-**Online resource 3**: Summarised type macroscopic and petrographic features and epoch/stage identification.

@@ -8,7 +8,7 @@ execute:
   fig-dpi: 600
 ---
 
-# From Stone to Tool: How Raw Materials Influenced Upper Paleolithic Technology in Southwestern Iberia (Vale Boi)
+# From Stone to Tool: How Raw Materials Influenced Upper Paleolithic Technology in Southwestern Iberia (Vale Boi) {#sec-chapter5}
 
 **Authors**: Joana Belmiro, Nuno Bicho, Xavier Terradas, João Cascalheira
 
