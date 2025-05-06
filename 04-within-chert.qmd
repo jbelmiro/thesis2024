@@ -64,7 +64,7 @@ Given the particularities of each analytical technique used in this study, avail
 
 @tbl-samples shows the samples used for each method. These included chert geological samples from different regions of Iberia, with a focus on the Algarve region. The Algarve materials include geological samples from western and eastern Algarve basin collected from 2021 and 2022 prospection works [@belmiroCreatingFramesReference2023]. The western groups include the Triassic formation cherts (fibrous chalcedony), also identified as chalcedony (Triassic west, hereon TW), the Lower Jurassic (Carixian) formation (Lower Jurassic west, hereon LJW) and Upper Jurassic (Malm) formations (Upper Jurassic west, hereon UJW) [@rochaNoticiaExplicativaFolha1979; @terrinhaBaciaAlgarveEstratigrafia2006; @ribeiro_evolucao_2005].
 
-```{r} 
+```{r}
 #| label: tbl-samples
 #| tbl-cap: "Number of samples (chips) used for the SEM-EDS study, by a) geological formation for the geological samples, and by b) type for the archaeological samples."
 

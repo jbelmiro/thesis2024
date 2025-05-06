@@ -7,16 +7,17 @@ book:
   date: "12/25/2024"
   chapters:
     - index.qmd
-    - summary.qmd
-    - intro.qmd
-    - article1.qmd
-    - article2.qmd
-    - geochemistry.qmd
-    - article3.qmd
-    - discussion.qmd
-    - references.qmd
+    - 00-abstract.qmd
+    - 01-intro.qmd
+    - 02-creating-frames.qmd
+    - 03-within-and-beyond.qmd
+    - 04-within-chert.qmd
+    - 05-stone-to-tool.qmd
+    - 06-discussion.qmd
+    - 07-conclusion
+    - 08-references.qmd
   appendices:
-    - appendix1.qmd
+    - 09-som.qmd
 
 bibliography: references.bib
 
