@@ -1,4 +1,4 @@
-# Introduction
+# Introduction {#sec-chapter1}
 
 This research aims to deepen our understanding of the technological, cultural, and social adaptations of hunter-gatherer groups during the Upper Palaeolithic (UP) in southwestern Europe. By examining patterns of resilience and innovation in raw material procurement and use, alongside hunter-gatherer mobility, this study investigates how these behaviours correlate with environmental changes and the evolving dynamics of social territories. The focus is on the Iberian Peninsula, particularly southwestern Iberia. Ultimately, this project will contribute to a broader understanding of how past human groups lived and adapted throughout the Upper Palaeolithic.
 
@@ -28,7 +28,7 @@ Consequently, Vale Boi presents an exceptional opportunity to advance understand
 
 Focusing on the lithic assemblages from Vale Boi, this research aims to investigate chert procurement, use, and mobility patterns throughout the UP of southwestern Iberia, as well as their relationship with the techno-cultural dynamics of each technocomplex and climatic changes.
 
-To achieve this, I will address the following research questions:
+To achieve this, we address the following research questions:
 
 -   What types of chert were exploited by hunter-gatherer groups in southwestern Portugal, and how were these materials introduced to the site?
 
@@ -40,17 +40,21 @@ To achieve this, I will address the following research questions:
 
 To address these questions, this research employs a multi-method approach, integrating geological surveys with macroscopic, petrographic, mineralogical, and geochemical analyses, alongside technological studies of chert lithic artefacts.
 
-The research is structured into three peer-reviewed articles (Chapters 2, 3, and 5) and one additional chapter, each addressing different aspects of chert procurement and usage. A concluding discussion integrates the findings and examines their broader implications for understanding human behaviour and adaptation over time.
+The research includes three main papers and a chapter, each focusing on a specific topic necessary to answer our research questions. As a result, this dissertation is structured as follows:
 
--   Chapter 2, titled "Creating Frames of Reference for Chert Exploitation during the Late Pleistocene in Southwesternmost Iberia" [@belmiroCreatingFramesReference2023] offers a geological characterisation of chert sources in the Algarve region, employing macroscopic and petrographic (thin section analysis) methods. It presents a reference collection and database of local and regional chert resources, which is crucial for distinguishing between local and non-local cherts when analysing an archaeological assemblage.
+-   [@sec-chapter2], titled "Creating Frames of Reference for Chert Exploitation during the Late Pleistocene in Southwesternmost Iberia" [@belmiroCreatingFramesReference2023] offers a geological characterisation of chert sources in the Algarve region, employing macroscopic and petrographic (thin section analysis) methods. The paper presents a reference collection and database of local and regional chert resources, which is crucial for distinguishing between local and non-local cherts when analysing an archaeological assemblage.
 
--   Chapter 3, titled "Within and Beyond: Chert Procurement Patterns During the Upper Palaeolithic in Southwesternmost Iberia" [@belmiroChertProcurementPatterns2025] focuses on the analysis of chert artefacts from the UP sequence at the archaeological site of Vale Boi, using both macroscopic and petrographic (thin section analysis) methods. These artefacts are compared with geological reference collections. The chapter offers new insights into the presence of local and non-local cherts across the various UP occupations, identifies the probable sources of non-local cherts, and explores changes in the distribution of chert types over time.
+-   [@sec-chapter3], titled "Within and Beyond: Chert Procurement Patterns During the Upper Palaeolithic in Southwesternmost Iberia" [@belmiroChertProcurementPatterns2025] focuses on the analysis of chert artefacts from the UP sequence at the archaeological site of Vale Boi, using both macroscopic and petrographic (thin section analysis) methods. These artefacts are compared with geological reference collections. The paper offers new insights into the presence of local and non-local cherts across the various UP occupations, identifies the probable sources of non-local cherts, and explores changes in the distribution of chert types over time.
 
--   Chapter 4, titled "Within Chert: A Multi-Technique Mineral and Geochemical Approach to the Study of Chert in Southwestern Iberia," builds on the previous chapters by applying various techniques to analyse geological and archaeological chert samples. It provides data on the mineral and chemical composition of cherts through X-Ray Diffraction (XRD), Scanning Electron Microscopy and Energy Dispersive X-Ray Spectroscopy (SEM-EDS), and portable X-Ray Fluorescence (pXRF). These methods allow for a more comprehensive characterisation of the samples and enable the use of chemical composition to refine the source attributions of archaeological cherts.
+-   [@sec-chapter4], titled "Within Chert: A Multi-Technique Mineral and Geochemical Approach to the Study of Chert in Southwestern Iberia," builds on the previous chapters by applying various techniques to analyse geological and archaeological chert samples. The chapter provides data on the mineral and chemical composition of cherts through X-Ray Diffraction (XRD), Scanning Electron Microscopy and Energy Dispersive X-Ray Spectroscopy (SEM-EDS), and portable X-Ray Fluorescence (pXRF). These methods allow for a more comprehensive characterisation of the samples and enable the use of chemical composition to refine the source attributions of archaeological cherts.
 
--   Chapter 5, titled "From Stone to Tool: How Raw Materials Influenced Upper Palaeolithic Technology at Vale Boi, Southwestern Iberia," combines the previously obtained data on chert types (particularly regarding the distinction between local and non-local cherts) with technological data. It explores various patterns of chert use and management.
+-   [@sec-chapter5], titled "From Stone to Tool: How Raw Materials Influenced Upper Palaeolithic Technology at Vale Boi, Southwestern Iberia," combines the previously obtained data on chert types (particularly regarding the distinction between local and non-local cherts) with technological data. The paper explores various patterns of chert use and management.
 
--   Chapter 6 synthesises the results and contributions of the previous chapters and discusses the broader implications of these patterns for understanding human behaviour.
+-   [@sec-chapter6] synthesises the results and contributions of the previous chapters and discusses the broader implications of these patterns for understanding human behaviour.
+
+-   [@sec-chapter7] presents a small conclusion, discusses the remaining gaps and opens avenues for future research.
+
+-   [@sec-chapter9] includes the repository links and lists of supplementary materials belonging to the articles and chapter.
 
 Together, these papers and chapters present the first comprehensive study of chert raw materials associated with technology from UP occupations in southwestern Iberia and contribute to the ongoing discussion on past human adaptations.
 
