@@ -4,144 +4,33 @@ execute:
   warning: false
   message: false
   comment: "#>"
-  fig-path: "../figures/"
   fig-dpi: 600
 ---
 
 ```{r}
-#| label: callpackages
+#| label: within-beyond-library
 
-# Call packages
-# This includes all necessary packages to run the code
 library(readr)
 library(dplyr)
 library(stringr)
 library(tidyr)
-library(ggplot2)
-library(scales)
-library(janitor)
-library(ggpubr)
+library(tibble)
 library(knitr)
 library(gtsummary)
 
 ```
 
-```{r}
-#| label: db-setup
-
-# Terrace DB preparation
-# Read DBs
-T_RM_data <- read_csv(here::here('data/raw_data_withinandbeyond/MACRO_IND_TERRACE.csv')) # Terrace RM analysis
-context <- read_csv(here::here('data/raw_data_withinandbeyond/VB_Terrace_context.csv')) # Terrace Field DB - lithic artefact info
-xyz <- read_csv(here::here('data/raw_data_withinandbeyond/VB_Terrace_xyz.csv')) # Terrace Field DB - just coordinates
-
-# Df cleaning and uniformizing
-cols_to_concat <- c("UNIT", "ID") # Vector to concatenate Unit and ID in one single variable (e.g. A6-100) - to use with both Field databases
-context$ID <- str_squish(context$ID) # Remove empty spaces from ID field
-xyz$ID <- str_squish(xyz$ID) # Remove empty spaces from UNIT field
-
-# Concatenate UNIT and ID variables in one single variable (e.g. A6-100)
-context <- context %>%
-  dplyr::rename("UNIT" = "Unit") %>% # Renaming first column from Unit to UNIT to use cols_to_concat
-  unite(col='ID', cols_to_concat, sep="-", remove=FALSE) %>% # Unite UNIT with ID using cols_to_concat
-  select(ID, Level, Spit, Code) %>% # Selecting important variables: ID refers to artifact ID; Level refers to archaeologycal layer; Spit refers to artificial levels within an archaeological layer; Code refers to type of artifact (e.g., LITHIC or BONE)
-  distinct(ID, .keep_all = TRUE)
-
-xyz <- xyz %>%
-  unite(col='ID', cols_to_concat, sep="-", remove=FALSE) %>% # Unite UNIT with ID using cols_to_concat
-  filter(Suffix == 0) %>% # To avoid several entries related to several points of the same artefact
-  select(ID, X, Y, Z) %>% # Selecting important variables
-  distinct(ID, .keep_all = TRUE)
-
-field_data <- full_join(xyz, context, by = "ID") # Join field tables
-T_dataset <- left_join(T_RM_data, field_data, by = "ID") # Join field and RM type tables
-
-T_dataset <- T_dataset %>% 
-  filter(!Level %in% c("2", "3")) %>% # Filtering out Upper levels
-  drop_na(Level) %>% # Dropping artifacts without level
-  mutate(Level = case_when(Level == "7C" ~ "7",
-                           Level == 8 ~ "7", # Collapsing samples from Level 7C and Level 8 into 7, since 8 disappears in field_data
-                           Level == "4B" ~ "4", # collapsing samples from 4B to 4 due to small number
-                           TRUE ~ Level)) %>% 
-  mutate(RMTYPE = case_when(RMTYPE == "Chalcedony" ~ "TYPE 1", # Altering first group names to final group names. Subtypes are maintained as before.
-                            RMTYPE == "TYPE 15" ~ "TYPE 3",
-                            RMTYPE == "TYPE 7" ~ "TYPE 4",
-                            RMTYPE == "TYPE 12" ~ "TYPE 5",
-                            RMTYPE == "TYPE 11" ~ "TYPE 6",
-                            RMTYPE == "TYPE 13" ~ "TYPE 7",
-                            RMTYPE == "TYPE 11F" ~ "TYPE 8",
-                            RMTYPE == "TYPE 13B" ~ "TYPE 9",
-                            RMTYPE == "Oolitic" ~ "TYPE 10",
-                            RMTYPE == "GB" ~ "TYPE 11",
-                            TRUE ~ RMTYPE))
-
-# Mutate level 5 to add phases: top of 5 (4E/5) and bottom of 5 (5), following Belmiro et al. (2020).
-phase_dataset <- T_dataset %>% 
-  mutate(Level = case_when(
-    Level == 5 & Z > 24.1 ~ "4E/5",
-    Level == 5 & Z < 24.1 ~ "5",
-    TRUE ~ Level)) %>% 
-  mutate(Technocomplex = case_when(
-    Level == 4 | Level == "4C" | Level == "4D" ~ "Solutrean",
-    Level == "4E" | Level == "4E/5" | Level == 5 ~ "Proto-Solutrean",
-    Level == 6 | Level == 7 ~ "Gravettian"))
-
-# Shelter DB preparation
-S_RM_data <- read_csv(here::here('data/raw_data_withinandbeyond/MACRO_IND_SHELTER.csv')) # Shelter RM analysis
-S_field_data <- read_csv(here::here('data/raw_data_withinandbeyond/VB_Shelter_xyz_codes.csv')) # Shelter coordinates
-S_layerdata <- read_csv(here::here('data/raw_data_withinandbeyond/shelter_layers_JC.csv')) # Shelter layers
-
-S_RM_data <- S_RM_data %>%
-  mutate_at("ID", str_replace, "VB", "") %>% # Remove "VB" from ID
-  mutate(RMTYPE = case_when(
-    RMTYPE == "Type 2" ~ "TYPE 2",
-    RMTYPE == "Chalcedony" ~ "TYPE 1", # Altering first group names to final group names. Subtypes are maintained as before.
-    RMTYPE == "TYPE 15" ~ "TYPE 3",
-    RMTYPE == "TYPE 7" ~ "TYPE 4",
-    RMTYPE == "TYPE 12" ~ "TYPE 5",
-    RMTYPE == "TYPE 11" ~ "TYPE 6",
-    RMTYPE == "TYPE 13" ~ "TYPE 7",
-    RMTYPE == "TYPE 11F" ~ "TYPE 8",
-    RMTYPE == "TYPE 13B" ~ "TYPE 9",
-    RMTYPE == "Oolitic" ~ "TYPE 10",
-    RMTYPE == "TYPE GB" ~ "TYPE 11",
-    .default = RMTYPE)) 
-
-cols_to_concat_shelter <- c("YEAR", "ID") # Concatenate YEAR and ID variables in one single variable (e.g. 05-500)
-
-S_layerdata <- S_layerdata %>% 
-  mutate_at("Date", str_replace, "20", "") %>%
-  dplyr::rename("YEAR" = "Date") %>% 
-  unite(col='ID', cols_to_concat_shelter, sep="-", remove=FALSE) %>% 
-  select(ID, Layer) %>% 
-  distinct(ID, .keep_all = TRUE) %>%
-  filter(!Layer %in% c("D", "Z"))
-
-S_field_data <- S_field_data %>%
-  mutate_at("YEAR", str_replace, "20", "") %>%
-  unite(col='ID', cols_to_concat_shelter, sep="-", remove=FALSE) %>% # Unite YEAR with Id s«using cols_to_concat
-  select(ID, X, Y, Z, CODE) %>%
-  filter(CODE == "L") %>% # Selecting important variables
-  distinct(ID, .keep_all = TRUE)
-  
-shelter_field_data <- left_join(S_field_data, S_layerdata, by = "ID")
-S_dataset <- left_join(S_RM_data, shelter_field_data, by = "ID")
-S_dataset <- S_dataset %>% 
-  mutate_at(vars(Layer), ~replace_na(., "ND")) %>% 
-  filter(!Layer == "ND")
-
-
-```
+\newpage
 
 # Within and beyond: chert procurement patterns during the Upper Palaeolithic in Southwesternmost Iberia {#sec-chapter3}
 
 **Authors**: Joana Belmiro^1^, Xavier Terradas^2^, Salvador Dominguez-Bella^3^, João Cascalheira^1^
 
-\pagebreak
+^1^ Interdisciplinary Center for Archaeology and the Evolution of Human Behaviour (ICArEHB), University of Algarve; ^2^ Spanish National Research Council - Institute Milá y Fontanals of research on Humanities, Barcelona, Spain; ^3^ UGEA-PHAM, Departamento de Ciencias de la Tierra, Facultad de Ciencias, Universidad de Cádiz. Puerto Real, Cádiz, Spain
 
-^1^ Interdisciplinary Center for Archaeology and the Evolution of Human Behaviour (ICArEHB), University of Algarve; ^2^ CSIC; ^3^ UCA
+**Reference**: Belmiro, Joana, Xavier Terradas, Salvador Dominguez-Bella, and João Cascalheira. 2025. "Within and Beyond: Chert Procurement Patterns During The Upper Palaeolithic in Southwesternmost Iberia". Journal of Paleolithic Archaeology 8 (1): 8. https://doi.org/10.1007/s41982-025-00209-2.
 
-**Reference**: xxx
+\newpage
 
 ## Abstract {.unnumbered}
 
@@ -189,7 +78,8 @@ Both these areas have been previously interpreted as seasonal residential camps,
 #| label: fig-map
 #| fig-cap: Iberian Peninsula map with locations and geological formations mentioned throughout the paper. a) Detail of the central Portugal region where the Cenomanian formations with chert nodules are located. b) Detail of southwestern Portugal, with chert and chalcedony bearing formations, outcrops, and location of Vale Boi. c) Detail of eastern Algarve with chert-bearing formations. The figure was produced using ArcGIS Pro 3.2.
 
-knitr::include_graphics(here::here("figures/within-and-beyond/map_layout.png"))
+knitr::include_graphics(here::here("data/03-within-and-beyond/map_layout.png"))
+
 ```
 
 ### Regional geological background
@@ -218,107 +108,7 @@ Although systematic raw material research has not been conducted on these materi
 #| label: fig-rm-comparison
 #| fig-cap: "Comparison of chert, chalcedony, and other raw materials piece plotted in the Terrace (a) and Shelter (b) areas of Vale Boi."
 
-# Terrace rm comparison
-## Data preparation
-context_comp <- field_data %>% # Using the field data to obtain lithic info beyond the analysed chert/chalcedony
-  mutate(Level = case_when(Level == "4B" ~ "4", # Collapsing samples from level 4B into 4
-                           Level == "7C" ~ "7",
-                           Level == 8 ~ "7", # Collapsing samples from Level 7C and Level 8 into 7
-                           TRUE ~ Level)) %>% 
-  mutate(Level = case_when( # Dividing 5 as previous
-    Level == 5 & Z > 24.1 ~ "4E/5",
-    Level == 5 & Z < 24.1 ~ "5",
-    TRUE ~ Level)) %>% 
-  filter(!Level %in% c("3B", "5B", "5C")) %>% 
-  dplyr::filter(Code %in% c("LITHIC", "POINT")) # Field data includes ALL artifacts; filtering only lithics
-
-dataset_comp <- phase_dataset %>% # Using the analysed DB to get chert/chalcedony data
-  select(ID, RMTYPE) # Selecting only ID (to join dbs and RMTYPE to know whether chert or chalcedont)
-T_comp <- full_join(context_comp, dataset_comp, by = "ID") # Joining by ID. the RMTYPE column has the RM type from the analysis and NA for those which were not analysed, and correspond to non-chert artifacts
-T_comp["RMTYPE"][is.na(T_comp["RMTYPE"])] <- "Other" # All NA's (other RMs) turned into "Other"
-
-T_comp <- T_comp %>% 
- mutate(Rawmaterial = case_when(
-    RMTYPE == "Other" ~ "Other", # Keeping Other as Other
-    RMTYPE == "TYPE 1" ~ "Chalcedony", # Naming Chalcedony
-    RMTYPE != "Other" | RMTYPE != "TYPE 1" ~ "Chert")) %>% # Collapsing all cherts into one single category (All but Other and TYPE1)
-  dplyr::filter(Level %in% c("4", "4C", "4D", "4E", "4E/5","5", "6", "7")) # Choosing only UP levels (excluding 3)
-
-## Barplot
-T_comp_bar <- T_comp %>%
-  dplyr::group_by(Level, Rawmaterial) %>% 
-  dplyr::summarise(n = n()) %>%
-  mutate(percent = n/sum(n)) %>% 
-  ggplot(aes(x=Level, y = percent, fill = Rawmaterial)) +
-  geom_bar(stat = "identity", width = 0.5) +
-  scale_y_continuous(labels = scales::percent_format()) +
-  theme_minimal() + #type of theme
-  labs(x = "Terrace levels", y = "Count %") +# change labels +# change labels
-  guides(fill=guide_legend(title=NULL)) + # remove legend title
-  geom_text(aes(label=ifelse(percent >= 0.07, paste0(sprintf("%.1f", percent*100),"%"),"")),
-                position=position_stack(vjust=0.5), colour="white", size=3) +
-  theme(axis.title.x = element_text(size = 10, vjust = -1))+
-  scale_fill_manual(values = c("#C74B50", "#D49B54", "#845460", "#EAD3CB", "#BDC7C9",
-                              "#2B4F60", "#BDD2B6", "#798777", "#FCF0C8"))
-
-# Shelter rm comparison
-## Data preparation
-S_field_comp <- S_field_data
-S_data_comp <- S_dataset %>% 
-  dplyr::select(ID, RMTYPE)
-S_comp <- full_join(S_field_comp, S_data_comp, by = "ID")
-S_layerdata <- S_layerdata %>% 
-  distinct() # Keeping only individual IDs to avoid repetitions
-S_comp <- left_join(S_comp, S_layerdata, by = "ID")
-S_comp["RMTYPE"][is.na(S_comp["RMTYPE"])] <- "Other" # All NA's (other RMs) turned into "Other"
-S_comp["Layer"][is.na(S_comp["Layer"])] <- "No info" # Unknown Shelter levels turned into "No info" to avoid NA
-
-S_comp <- S_comp %>% 
- mutate(Rawmaterial = case_when(
-    RMTYPE == "Other" ~ "Other",
-    RMTYPE == "TYPE 1" ~ "Chalcedony",
-    RMTYPE != "Other" | RMTYPE != "TYPE 1" ~ "Chert")) %>% # Collapsing all cherts into one single category
-  dplyr::mutate(Layer = case_when(
-    Layer == "c" ~ "C",
-    TRUE ~ Layer)) %>% 
-  filter(Layer %in% c("A", "B", "C")) # Choosing only Solutrean occupation layers (A, B and C)
-
-## Barplot
-S_comp_bar <- S_comp %>%
-  dplyr::group_by(Layer, Rawmaterial) %>% 
-  dplyr::summarise(n = n()) %>%
-  mutate(percent = n/sum(n)) %>% 
-  ggplot(aes(x=Layer, y = percent, fill = Rawmaterial)) +
-  geom_bar(stat = "identity", width = 0.5) +
-  scale_y_continuous(labels = scales::percent_format()) +
-  theme_minimal() + #type of theme
-  labs(x = "Shelter levels", y = "Count %") +# change labels
-  guides(fill=guide_legend(title=NULL)) + # remove legend title
-  geom_text(aes(label=ifelse(percent >= 0.07, paste0(sprintf("%.1f", percent*100),"%"),"")),
-                position=position_stack(vjust=0.5), colour="white", size=3) +
-  theme(axis.title.x = element_text(size = 10, vjust = -1)) +
-  scale_fill_manual(values = c("#C74B50", "#D49B54", "#845460", "#EAD3CB", "#BDC7C9",
-                              "#2B4F60", "#BDD2B6", "#798777", "#FCF0C8"))
-
-## Unused barplot: here to understand how the chert ratio changes when A, B and C are collapsed since "No info" has most of the other rms.
-#S_comp %>% 
-#  dplyr::group_by(Rawmaterial) %>% 
-#  dplyr::summarise(n = n()) %>%
-#  mutate(percent = n/sum(n)) %>% 
-#  ggplot(aes(x=Rawmaterial, y = percent, fill = Rawmaterial)) +
-#  geom_bar(stat = "identity", width = 0.5) +
-#  scale_y_continuous(labels = scales::percent_format()) +
-#  theme_minimal() + #type of theme
-#  labs(x = "Shelter levels", y = "Count %") +# change labels
-#  guides(fill=guide_legend(title=NULL)) + # remove legend title
-#  geom_text(aes(label=ifelse(percent >= 0.07, paste0(sprintf("%.1f", percent*100),"%"),"")),
-#                position=position_stack(vjust=0.5), colour="white", size=3) +
-#  theme(axis.title.x = element_text(size = 10, vjust = -1)) +
-#  scale_fill_manual(values = c("#C74B50", "#D49B54", "#845460", "#EAD3CB", "#BDC7C9",
-#                              "#2B4F60", "#BDD2B6", "#798777", "#FCF0C8"))
-
-## Terrace and shelter barplots
-ggarrange(T_comp_bar, S_comp_bar, labels = c("a", "b"), nrow = 2, common.legend = TRUE, legend = "bottom")
+knitr::include_graphics(here::here("data/03-within-and-beyond/rm_comparison.png"))
 
 ```
 
@@ -340,7 +130,7 @@ As seen in @tbl-indet-freq, level 4 shows the highest percentages of indetermina
 #| label: fig-terrace-alterations
 #| fig-cap: Samples with extensive alterations which prevented the identification of chert type. a) artefact with cracks, white patina and reddening covering 100% of the surface; b) artefact with surface alterations, displaying a portion with patina (brown) and a portion without patina (grey), cleaned with Hydrochloric acid.
 
-knitr::include_graphics(here::here("figures/within-and-beyond/terrace_alterations.png"))
+knitr::include_graphics(here::here("data/03-within-and-beyond/terrace_alterations.png"))
 
 ```
 
@@ -348,27 +138,9 @@ knitr::include_graphics(here::here("figures/within-and-beyond/terrace_alteration
 #| label: tbl-indet-freq
 #| tbl-cap: Number and percentage of grouped and indeterminate (INDET) artefacts by level in the Terrace (levels 4 to 7) and Shelter (A to C) areas.
 
-terrace_indet_table <- phase_dataset %>% 
-  mutate(Group = if_else(RMTYPE=="INDET", "Indeterminate", "Grouped")) %>%
-  tabyl(Group,Level) %>% 
-  adorn_totals("row") %>%
-  adorn_percentages("col") %>%
-  adorn_pct_formatting(2) %>%
-  adorn_ns("front")
+indet_tab <- read_csv(here::here('data/03-within-and-beyond/indet_tbl.csv'))
 
-shelter_indet_table <- S_dataset %>% 
-  mutate(Group = if_else(RMTYPE=="INDET", "Indeterminate", "Grouped")) %>% 
-  mutate_at(vars(Layer), ~replace_na(., "ND")) %>% 
-  filter(!Layer %in% c("D", "ND")) %>% 
-  tabyl(Group,Layer) %>% 
-  adorn_totals("row") %>%
-  adorn_percentages("col") %>%
-  adorn_pct_formatting(2) %>%
-  adorn_ns("front")
-
-indet_table <- full_join(terrace_indet_table, shelter_indet_table, by = "Group")
-
-kable(head(indet_table))
+kable(indet_tab)
 
 ```
 
@@ -378,7 +150,7 @@ As previously mentioned, the macroscopic study was followed by a petrographic ap
 #| label: tbl-TS-list
 #| tbl-cap: List of archaeological thin sections, with the summarised description of observed macroscopic variability and sub-types.
 
-TS_list <- read_csv(here::here('data/raw_data_withinandbeyond/TS_short_list.csv'))
+TS_list <- read_csv(here::here('data/03-within-and-beyond/TS_short_list.csv'))
 
 kable(TS_list)
 
@@ -389,22 +161,6 @@ The complete petrographic analysis for all thin sections studied in this paper (
 The entirety of the R code used for the analysis, datasets, and visual representations contained in this paper can be accessed through our online research compendium. We used the rrtools package by Marwick et al. [-@marwickPackagingDataAnalytical2018] to create a research compendium and write a reproducible journal article. The provided files include the complete set of raw data used in the analysis, along with a custom R project [@wickhamPackagesOrganizeTest2015] containing the code required to generate all tables and figures. To enable maximum reuse, the code is made available under the MIT license, data under CC‐0, and figures under CC‐BY [additional details can be found in @marwickComputationalReproducibilityArchaeological2017].
 
 ## Results
-
-```{r}
-#| label: t-table
-
-T_table <- phase_dataset %>%
-  filter(RMTYPE !="INDET") %>% 
-  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1","TYPE 2", "TYPE 3", "TYPE 4",
-                                        "TYPE 5", "TYPE 6","TYPE 7", 
-                                        "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11", "TL"))) %>%
-  tabyl(RMTYPE, Level) %>%
-  adorn_totals(c("row", "col")) %>%
-  adorn_percentages("col") %>%
-  adorn_pct_formatting(2) %>%
-  adorn_ns("front")
-
-```
 
 ### Characterization and source attribution
 
@@ -442,39 +198,9 @@ The cherts are massive micro-cryptocrystalline quartz from a marine environment 
 #| label: tbl-cortex_tab
 #| tbl-cap: Frequency of cortex type and thickness by raw material from the Terrace area, characterized during the individual analysis of the lithic assemblage.
 
-# Cortex table
-## Preparing cortex db Terrace
-cortex_tab <- phase_dataset %>% 
-  select(RMTYPE, CORTEX, CORTEXAPPEARANCE, CORTEXTHICKNESS) %>%
-  filter(CORTEX == "YES") %>% # filtering only samples with cortex
-  filter(RMTYPE != "INDET") %>% 
-  filter(RMTYPE != "TYPE 11") %>% # removing Type 11 since it barely has samples
-  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1","TYPE 2", "TYPE 3", "TYPE 4",
-                                        "TYPE 5", "TYPE 6","TYPE 7", 
-                                        "TYPE 8", "TYPE 9", "TYPE 10", "TL"))) 
+cortex_tab <- read_csv(here::here('data/03-within-and-beyond/cortex_tbl.csv'))
 
-cortex_tab <- cortex_tab %>% # dropping the caps and organizing value order
-  mutate(CORTEXAPPEARANCE = case_when(
-    CORTEXAPPEARANCE == "ROUNDED" ~ "Rounded",
-    CORTEXAPPEARANCE == "PEBBLE" ~ "Pebble",
-    CORTEXAPPEARANCE == "OUTCROP" | CORTEXAPPEARANCE == "Outcrop" ~ "Irregular",
-    CORTEXAPPEARANCE == "OTHER" | CORTEXAPPEARANCE == "Other" | CORTEXAPPEARANCE == "INDETERMINATE" ~ "Indeterminate",
-    TRUE ~ CORTEXAPPEARANCE)) %>%
-  dplyr::mutate(CORTEXTHICKNESS = case_when(
-    CORTEXTHICKNESS == "MEDIUM" ~ "Medium",
-    CORTEXTHICKNESS == "THICK" ~ "Thick",
-    CORTEXTHICKNESS == "THIN" ~ "Thin",
-    TRUE ~ CORTEXTHICKNESS)) %>% 
-  mutate(CORTEXAPPEARANCE = factor(CORTEXAPPEARANCE, levels = c("Irregular", "Rounded", "Pebble", "Indeterminate"))) %>%
-  mutate(CORTEXTHICKNESS = factor(CORTEXTHICKNESS, levels = c("Thin", "Medium", "Thick"))) %>% 
-  drop_na() # removing missing values that may be cortex=NO instead passed as YES
-  
-## gt summary table
-cortex_tab %>%
-  select(RMTYPE, CORTEXAPPEARANCE, CORTEXTHICKNESS) %>% 
-  tbl_summary(by=RMTYPE, label = list(CORTEXAPPEARANCE ~ "Cortex type", CORTEXTHICKNESS ~ "Thickness")) %>% 
-  modify_header(label ~ "**Variable**") %>% 
-  bold_labels()
+kable(cortex_tab)
 
 ```
 
@@ -484,7 +210,7 @@ Based on the previously described macroscopic and petrographic characteristics o
 #| label: fig-local-types
 #| fig-cap: "Variability of local chert types and main petrographic characteristics. a) Type 1 macroscopic and microscopic views: a1) macroscopic view with a stereomicroscope of white patina and fractures; a2) microscopic view of thin section (XPL), with visible fibrous chalcedony composition and without allochems. b) Type 3 macroscopic and microscopic views: b1) macroscopic view with a stereomicroscope of iron oxides and unidentifiable fossils; b2) microscopic view of thin section (XPL), with visible unidentifiable fossils and iron oxides. c-d) Type 2 macroscopic and microscopic views of multicoloured (c) and single-colour (d) varieties. c1) macroscopic view with a stereomicroscope of the multicoloured bands with iron oxides and unidentifiable fossils; d1) macroscopic view with a stereomicroscope of iron oxides and unidentifiable fossils; c2) microscopic view of thin section (PPL), with visible unidentifiable fossils, sponge spicules and iron oxides; d2) microscopic view of thin section (XPL), with visible unidentifiable fossils and iron oxides. e-f) Type 4 macroscopic and microscopic views: e) macroscopic view with a stereomicroscope of unidentifiable fossils and white splotches; f1) macroscopic view with a stereomicroscope of iron oxides and unidentifiable fossils within white and yellow splotches; f2) microscopic view of thin section (XPL), with visible unidentifiable fossils and iron oxides; f3) microscopic view of thin section (PPL) with a concentration of fossils (possibly sponge spicules) and a fracture. g-h) Type 5 macroscopic and microscopic views: g) macroscopic view with a stereomicroscope; h1) macroscopic view with a stereomicroscope with visible unidentifiable fossils; h2) microscopic view of thin section (PPL), with visible unidentifiable fossils, sponge spicules and iron oxides; h3) microscopic view of thin section (XPL) with small unidentifiable fossils, iron oxides and a possible ostracod replaced by fibrous chalcedony and macrocrystalline quartz."
 
-knitr::include_graphics(here::here("figures/within-and-beyond/local_grid.png"))
+knitr::include_graphics(here::here("data/03-within-and-beyond/local_grid.png"))
 
 ```
 
@@ -496,7 +222,7 @@ We identified six chert types with macroscopic and petrographic characteristics 
 #| label: fig-distance-types
 #| fig-cap: "Variability of non-local types and main petrographic characteristics. a-b) Type 6 macroscopic and microscopic views: a1) macroscopic view with a stereomicroscope with a small degree of white patina and no visible fossils; b1) macroscopic view with a stereomicroscope of a thick alteration rind but translucent interior where some unidentifiable fossils are visible; a2) microscopic view of thin section (PPL) with a mudstone texture; b2) microscopic of thin section (XPL) with small unidentifiable fossils and a laminar microstructure. c-d) Type 7 macroscopic and microscopic views of the peloidal facies (c) and oolitic facies (d): c1) macroscopic view with a stereomicroscope of peloids and sponge spicules; d1) macroscopic view with a stereomicroscope of poorly preserved ooids; c2) microscopic view of thin section (PPL) with packstone texture composed mainly of peloids; d2) microscopic view of thin section (PPL) with packstone texture composed mainly of ooids. e-f) Type 8 macroscopic and microscopic views, with foraminifera represented by the white and black arrows: e) macroscopic view with a stereomicroscope with abundant unidentifiable fossils and foraminifera; f1) macroscopic view with a stereomicroscope with abundant unidentifiable fossils but no visible foraminifera; f2) microscopic view of thin section (PPL) with packstone texture composed of unidentifiable fossils and foraminifera which are not visible macroscopically; f3) microscopic view of thin section (PPL) with packstone texture composed of unidentifiable fossils and foraminifera which not are visible macroscopically. g) Type 9 macroscopic and microscopic views: g1) macroscopic view with a stereomicroscope of unidentifiable fossils and two different fabrics; g2) microscopic view of thin section (XPL) with packstone texture composed of concentrations of unidentifiable fossils and opaques which create a banded microstructure. h) Type 10 macroscopic and microscopic views: h1) macroscopic view with a stereomicroscope of ooids and fractures filled with chalcedony; h2) microscopic view of thin section (PPL) with packstone texture composed of ooids with different levels of preservation."
 
-knitr::include_graphics(here::here("figures/within-and-beyond/nonlocal_grid.png"))
+knitr::include_graphics(here::here("data/03-within-and-beyond/nonlocal_grid.png"))
 
 ```
 
@@ -524,7 +250,7 @@ Type 11 (@fig-small-types) is a banded/laminated mudstone, characterized by the 
 #| label: fig-small-types
 #| fig-cap: "Macroscopic view with a stereomicroscope of non-local Type 11 and TL cherts. Type 11 – detail of banded patterns composed of parallel different fabrics; TL01 – detail of the jasper and fractures filled with chalcedony; TL02 – detail of the chalcedony with unidentified orange inclusions; TL03 – detail of two round inclusions, possibly iron oxides; TL04 - detail of massive chert with fractures filled with chalcedony; TL05 – detail of the banded pattern within the grey mudstone texture; TL06 - detail of the small, finely sorted ooids; TL07 – detail of the dendritic laminations, possibly composed of iron oxides; TL08 – detail of the mudstone structure, without the presence of allochems; TL09a/b – detail of the mossy, orange and red inclusions within the chalcedony; TL10 – detail of the speckling and laminated patterns within the mudstone structure; TL11 – detail of the banding within the mudstone structure; TL12 – detail of the poorly preserved ooids, only visible under the stereomicroscope; TL13 – detail of the bands and laminations within the mudstone texture fabric; TL14 – detail of an unidentified benthic foraminifera; TL15 – detail of the interface between the massive brown fabric and splotches; TL16 - detail of the of the massive structure with unidentifiable inclusions."
 
-knitr::include_graphics(here::here("figures/within-and-beyond/small_grid.png"))
+knitr::include_graphics(here::here("data/03-within-and-beyond/small_grid.png"))
 
 ```
 
@@ -549,92 +275,8 @@ In the Gravettian occupations (levels 6 and 7) and at the start of the Proto-Sol
 ```{r}
 #| label: fig-type-per-level
 #| fig-cap: Terrace area chalcedony and chert type frequency (a) and weight sum (b) per level, without unidentifiable samples. Only percentages superior to the 5% threshold are shown in the figure. Type 1 to 5 (yellow and red colours) represent local chalcedony and cherts. Type 6, 7 and 9 represent non-local cherts with identified probable provenience (brown colours). Type 8, 10 and 11 represent non-local cherts with non-identified provenience (blue and green colours).
-#| fig-width: 10
 
-count_table <- phase_dataset %>%
-  filter(RMTYPE != "INDET") %>% 
-  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1","TYPE 2", "TYPE 3", "TYPE 4",
-                                        "TYPE 5", "TYPE 6","TYPE 7", 
-                                        "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11", "TL"))) %>%
-  dplyr::group_by(Level, RMTYPE) %>% 
-  dplyr::summarise(n = n()) %>%
-  mutate(percent = n/sum(n)) %>% 
-  mutate(Technocomplex = case_when(
-    Level == 4 | Level == "4C" | Level == "4D" ~ "Solutrean",
-    Level == "4E" | Level == "4E/5" | Level == 5 ~ "Proto-Solutrean",
-    Level == 6 | Level == 7 ~ "Gravettian")) %>% 
-  mutate(Technocomplex = factor(Technocomplex, levels = c("Solutrean", "Proto-Solutrean", "Gravettian")))
-
-count_plot <- ggplot(count_table, aes(x=Level,y=percent, fill = RMTYPE)) +
-  geom_bar(stat = "identity", width = 0.5) +
-  facet_grid(.~Technocomplex, scales = "free_x") +
-  scale_y_continuous(labels = scales::percent_format()) +
-  #theme_minimal() + #type of theme
-  labs(y = "Count %") +# change labels
-  guides(fill=guide_legend(title=NULL)) + # remove legend title
-  geom_text(aes(label=ifelse(percent >= 0.05, paste0(sprintf("%.1f", percent*100),"%"),"")),
-                position=position_stack(vjust=0.5), colour="white", size=3) +
-  theme(axis.title.x = element_blank()) +
-  scale_fill_manual(values = c("#C74B50", "#D49B54", "#911F27", "#630A10",
-                              "#FACE7F", "#8B6969", "#CDAF95", "#2B4F60",
-                              "#996666", "#BDD2B6", "#798777", "#BDC7C9"))
-
-
-weight_table <- phase_dataset %>%
-  filter(RMTYPE != "INDET" & WEIGHT != "0") %>% 
-  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1","TYPE 2", "TYPE 3", "TYPE 4",
-                                        "TYPE 5", "TYPE 6","TYPE 7", 
-                                        "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11", "TL"))) %>%
-  dplyr::group_by(Level, RMTYPE) %>% 
-  dplyr::summarise(wsum = sum(WEIGHT)) %>% 
-  mutate(percent = wsum/sum(wsum)) %>% 
-  mutate(Technocomplex = case_when(
-    Level == 4 | Level == "4C" | Level == "4D" ~ "Solutrean",
-    Level == "4E" | Level == "4E/5" | Level == 5 ~ "Proto-Solutrean",
-    Level == 6 | Level == 7 ~ "Gravettian")) %>% 
-  mutate(Technocomplex = factor(Technocomplex, levels = c("Solutrean", "Proto-Solutrean", "Gravettian")))
-
-
-  weight_plot <- ggplot(weight_table, aes(x = Level, y = percent, fill = RMTYPE)) +
-  geom_bar(stat = "identity", width = 0.5) +
-  facet_grid(.~Technocomplex, scales = "free_x") +
-  scale_y_continuous(labels = scales::percent_format()) +
-  #theme_minimal() + #type of theme
-  labs(x = "Level", y = "Weight %") +# change labels
-  guides(fill=guide_legend(title=NULL)) + # remove legend title
-  geom_text(aes(label=ifelse(percent >= 0.05, paste0(sprintf("%.1f", percent*100),"%"),"")),
-                position=position_stack(vjust=0.5), colour="white", size=3) +
-  theme(axis.title.x = element_blank()) + 
-  scale_fill_manual(values = c("#C74B50", "#D49B54", "#911F27", "#630A10",
-                              "#FACE7F", "#8B6969", "#CDAF95", "#2B4F60",
-                              "#996666", "#BDD2B6", "#798777", "#BDC7C9"))
-
-ggarrange(count_plot, weight_plot, labels = c("a", "b"), nrow = 2, common.legend = TRUE, legend = "bottom")
-
-```
-
-```{r}
-#| label: rm-tables
-#| include:  false
-
-# Tables f Terrace and Shelter with n(%) of chert types both overall by area and by level. Perhaps going to SOM (?)
-terrace_table <- phase_dataset %>%
-  filter(RMTYPE != "INDET") %>% 
-  select(RMTYPE, Level) %>% 
-  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1", "TYPE 2", "TYPE 3", "TYPE 4", "TYPE 5", "TYPE 6",
-                                            "TYPE 7", "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11","TL"))) %>%
-  tbl_summary(include = c(RMTYPE), by = Level) %>% 
-  add_overall()
-
-S_dataset["Layer"][is.na(S_dataset["Layer"])] <- "No info"
-shelter_table <- S_dataset %>% 
-  filter(RMTYPE != "INDET") %>%
-  filter(Layer != "D") %>% 
-  select(RMTYPE, Layer) %>% 
-  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1", "TYPE 2", "TYPE 3", "TYPE 4", "TYPE 5", "TYPE 6",
-                                            "TYPE 7", "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11","TL"))) %>%
-  tbl_summary(include = c(RMTYPE), by = Layer) %>% 
-  add_overall()
+knitr::include_graphics(here::here("data/03-within-and-beyond/rm_prop.png"))
 
 ```
 
@@ -643,26 +285,8 @@ When plotting the weight, it is apparent that most of the samples are located un
 ```{r}
 #| label: fig-weight
 #| fig-cap: "Terrace boxplots of chert type weight (gr) per level. Diamond shape within the boxplots represents weight mean. Type 1 to 5 (yellow and red colours) represent local chalcedony and cherts. Type 6, 7 and 9 represent non-local cherts with identified probable provenience (brown colours). Type 8, 10 and 11 represent non-local cherts with non-identified provenience (blue and green colours)."
-#| #| fig-width: 10
 
-# Weight boxplots terrace
-phase_dataset %>%
-  filter(WEIGHT !="0" & !RMTYPE %in% c("INDET","GB","TL")) %>%
-  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1","TYPE 2", "TYPE 3", "TYPE 4",
-                                        "TYPE 5", "TYPE 6","TYPE 7", 
-                                        "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11", "TL"))) %>%
-  mutate(Technocomplex = factor(Technocomplex, levels = c("Solutrean", "Proto-Solutrean", "Gravettian"))) %>%
-  ggplot(aes(RMTYPE, WEIGHT, fill = RMTYPE)) +
-  geom_boxplot(aes(fill=factor(RMTYPE)), outlier.shape=21) +
-  facet_wrap(~Technocomplex + Level) +
-  stat_summary(fun.y=mean, geom="point", shape=23) +
-  labs(y="Weight (gr)") +
-  coord_cartesian(ylim =  c(0, 40)) +
-  scale_fill_manual(values = c("#C74B50", "#D49B54", "#911F27", "#630A10",
-                              "#FACE7F", "#8B6969", "#CDAF95", "#2B4F60",
-                              "#996666", "#BDD2B6", "#798777", "#BDC7C9")) +
-  theme(axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(), axis.title.x = element_blank())
+knitr::include_graphics(here::here("data/03-within-and-beyond/boxplots.png"))
   
 ```
 
@@ -673,74 +297,8 @@ The same raw materials found in the Terrace area are also found in the Solutrean
 ```{r}
 #| label: fig-analysis_shelter
 #| fig-cap: "a-b) Shelter area chalcedony and chert type frequency (a) and weight sum (b) per level, without unidentifiable samples. Only percentages superior to the 5% threshold are shown in the figure. c): Shelter boxplots of chert type weight (gr) per level. Type 1 to 5 (yellow and red colours) represent local chalcedony and cherts. Type 6, 7 and 9 represent non-local cherts with identified probable provenience (brown colours). Type 8, 10 and 11 represent non-local cherts with non-identified provenience (blue and green colours)."
-#| #| fig-width: 10
 
-# Type per level plots fr Shelter
-## Preparing db for the barplots
-s_data_plots <- S_dataset %>% # sorting missing values and filtering non-solutrean layers
-  filter(RMTYPE != "INDET" & WEIGHT != "0") %>% 
-  mutate_at(vars(Layer), ~replace_na(., "ND")) %>% 
-  filter(CODE != "B" & Layer != "D" & Layer != "ND" & Layer != "No info") %>% #removing buckets (B)
-  mutate(RMTYPE = factor(RMTYPE, levels = c("TYPE 1","TYPE 2", "TYPE 3", "TYPE 4",
-                                        "TYPE 5", "TYPE 6","TYPE 7", 
-                                        "TYPE 8", "TYPE 9", "TYPE 10", "TYPE 11", "TL")))
-
-## Count barplot
-shelter_count <- s_data_plots %>%
-  dplyr::group_by(Layer, RMTYPE) %>% 
-  dplyr::summarise(n = n()) %>%
-  mutate(percent = n/sum(n)) %>% 
-  ggplot(aes(x = Layer, y = percent, fill = RMTYPE)) +
-  geom_bar(stat = "identity", width = 0.5) +
-  scale_y_continuous(labels = scales::percent_format()) +
-  #theme_minimal() + #type of theme
-  labs(y = "Count %") +# change labels
-  guides(fill=guide_legend(title=NULL)) + # remove legend title
-  geom_text(aes(label=ifelse(percent >= 0.05, paste0(sprintf("%.1f", percent*100),"%"),"")),
-                position=position_stack(vjust=0.5), colour="white", size=3) +
-  theme(axis.title.x = element_blank()) + 
-  scale_fill_manual(values = c("#C74B50", "#D49B54", "#911F27", "#630A10",
-                              "#FACE7F", "#8B6969", "#CDAF95", "#2B4F60",
-                              "#996666", "#BDD2B6", "#798777", "#BDC7C9"))
-## Weight barplot
-shelter_weight <- s_data_plots %>%
-  dplyr::group_by(Layer, RMTYPE) %>% 
-  dplyr::summarise(wsum = sum(WEIGHT)) %>% 
-  mutate(percent = wsum/sum(wsum)) %>% 
-  ggplot(aes(x = Layer, y = percent, fill = RMTYPE)) +
-  geom_bar(stat = "identity", width = 0.5) +
-  scale_y_continuous(labels = scales::percent_format()) +
-  #theme_minimal() + #type of theme
-  labs(y = "Weight %") +# change labels
-  guides(fill=guide_legend(title=NULL)) + # remove legend title
-  geom_text(aes(label=ifelse(percent >= 0.05, paste0(sprintf("%.1f", percent*100),"%"),"")),
-                position=position_stack(vjust=0.5), colour="white", size=3) +
-  theme(axis.title.x = element_blank()) + 
-  scale_fill_manual(values = c("#C74B50", "#D49B54", "#911F27", "#630A10",
-                              "#FACE7F", "#8B6969", "#CDAF95", "#2B4F60",
-                              "#996666", "#BDD2B6", "#798777", "#BDC7C9"))
-
-#ggplot(aes(RMTYPE, WEIGHT, fill = RMTYPE)) +
-  #geom_boxplot(aes(fill=factor(RMTYPE)), outlier.shape=21) +
-## Weight boxplot
-shelter_box <- s_data_plots %>% 
-  filter(WEIGHT !="0" & !RMTYPE %in% c("INDET","TL") & Layer != "ND") %>%
-  ggplot(aes(RMTYPE, WEIGHT, fill = RMTYPE)) +
-  geom_boxplot(aes(fill=factor(RMTYPE)), outlier.shape=21) +
-  facet_wrap(.~Layer, ncol = 1) +
-  stat_summary(fun.y=mean, geom="point", shape=23) +
-  labs(y = "Weight (gr)") +
-  #geom_jitter(shape=16, position=position_jitter(0.2)) +
-  coord_cartesian(ylim =  c(0, 35)) +
-  scale_fill_manual(values = c("#C74B50", "#D49B54", "#911F27", "#630A10",
-                              "#FACE7F", "#8B6969", "#CDAF95", "#2B4F60",
-                              "#996666", "#BDD2B6", "#798777", "#BDC7C9")) +
-  theme(axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(), legend.position = "none", axis.title.x = element_blank())
-
-## Arrange plots in a single figure
-gg1 <- ggarrange(shelter_count, shelter_weight, labels = c("a", "b"), nrow = 2, common.legend = TRUE, legend="bottom")
-ggarrange(gg1, shelter_box, labels = c(" ", "c", ncol = 2, common.legend = TRUE, legend = "bottom"))
+knitr::include_graphics(here::here("data/03-within-and-beyond/shelter_graphs.png"))
   
 ```
 
@@ -809,3 +367,7 @@ In southern Portugal, this interconnection among UP hunter-gatherers from divers
 The outcomes of this research pave the way for continued exploration of these assemblages through diverse methodologies. Future directions include employing a geochemical approach to both the studied assemblages and the geological reference collection, aiming to enrich discussions on mobility throughout the UP at Vale Boi. This approach is anticipated to provide diagnostic elements to distinguish between cherts from Lower and Middle Jurassic units, thereby offering a comprehensive view of regional resource utilization and mobility patterns.
 
 Additionally, experimental replication and the creation of a reference collection modified through heat treatment could enhance the identification of raw material types and currently indistinguishable samples, as noted in prior research [@pereira_territory_2016-1]. Lastly, we intend to integrate technological data from current and ongoing datasets to delve deeper into the usage and management of raw materials (both local and non-local) over time, their association with different site uses, and to contextualize these practices within the broader framework of human adaptations to changing environmental conditions throughout the UP.
+
+## Acknowledgments {.unnumbered}
+
+We would like to thank the Fundacão para a Ciência e Tecnologia for the funding essential for our research, and ICArEHB for funding and providing access to the archaeological materials. We would also like to thank Dr. David Ortega for the provided insight and expertise that greatly assisted the research and Dr. Célia Gonçalves for the invaluable assistance with the maps and imagery created for this paper. Finally, we would like to thank the reviewers who provided key insights, constructive criticism and attention to detail, which greatly aided in improving our initial submission.

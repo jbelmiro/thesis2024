@@ -4,23 +4,8 @@ execute:
   warning: false
   message: false
   comment: "#>"
-  fig-path: "../figures/"
   fig-dpi: 600
 ---
-
-# From Stone to Tool: How Raw Materials Influenced Upper Paleolithic Technology in Southwestern Iberia (Vale Boi) {#sec-chapter5}
-
-**Authors**: Joana Belmiro, Nuno Bicho, Xavier Terradas, João Cascalheira
-
-\newpage
-
-## Abstract
-
-The Upper Palaeolithic (UP) of westernmost Europe was marked by technological and cultural transformations and abrupt climatic shifts. The Iberian Peninsula, particularly southwestern Iberia, served as a refugia and key eco-cultural niche, making it a key region for UP studies. Vale Boi, the only site in southwestern Iberia with a nearly complete UP sequence, provides critical insights into technological, economical and mobility patterns over time. This study examines lithic raw material procurement and technological organisation at Vale Boi, focusing on the differences between local and non-local cherts. We analysed chert assemblages from Gravettian, Proto-Solutrean, and Solutrean levels, integrating previously published techno-typological and raw material macroscopic and petrographic data. Our results indicate that non-local cherts were intensively reduced. The presence of varied techno-typological classes suggests that non-local cherts were not exclusively transported as finished tools, instead highlighting their role as versatile, transportable raw material volumes. Gravettian occupations exhibited greater reliance on non-local cherts, suggesting short-term occupations and higher mobility, while Proto-Solutrean and Solutrean occupations showed increased dependence on local materials, suggesting long-term occupations. These findings expand our understanding of UP technological adaptations in southwestern Iberia, emphasizing the complex role of lithic resources in mobility, settlement, and social networks.
-
-**Keywords:** Upper Palaeolithic; Lithic technology; Hunter-gatherer mobility; Chert procurement; Iberian Peninsula
-
-\newpage
 
 ```{r}
 #| label: library
@@ -29,34 +14,48 @@ The Upper Palaeolithic (UP) of westernmost Europe was marked by technological an
 library(readr)
 library(dplyr)
 library(tidyr)
-library(stringr)
-library(ggplot2)
-library(janitor)
-library(ggpubr)
 library(knitr)
 library(tibble)
 
 ```
 
+\newpage
+
+# From Stone to Tool: How Raw Materials Influenced Upper Paleolithic Technology in Southwestern Iberia (Vale Boi) {#sec-chapter5}
+
+**Authors**: Joana Belmiro^1^, Nuno Bicho^1^, Xavier Terradas^2^, João Cascalheira^1^
+
+^1^ Interdisciplinary Center for Archaeology and the Evolution of Human Behaviour, University of Algarve, Portugal; ^2^ Spanish National Research Council - Institute Milá y Fontanals of research on Humanities, Barcelona, Spain
+
+**Pre-print reference**: Belmiro, Joana, Nuno Bicho, Xavier Terradas, and João Cascalheira. 2025. “From Stone to Tool: How Raw Materials Influenced Upper Paleolithic Technology in Southwestern Iberia (vale Boi).” OSF Preprints. https://doi.org/10.31219/osf.io/wk8jm_v1.
+
+\newpage
+
+## Abstract {.unnumbered}
+
+The Upper Palaeolithic (UP) of westernmost Europe was marked by technological and cultural transformations and abrupt climatic shifts. The Iberian Peninsula, particularly southwestern Iberia, served as a refugia and key eco-cultural niche, making it a key region for UP studies. Vale Boi, the only site in southwestern Iberia with a nearly complete UP sequence, provides critical insights into technological, economical and mobility patterns over time. This study examines lithic raw material procurement and technological organisation at Vale Boi, focusing on the differences between local and non-local cherts. We analysed chert assemblages from Gravettian, Proto-Solutrean, and Solutrean levels, integrating previously published techno-typological and raw material macroscopic and petrographic data. Our results indicate that non-local cherts were intensively reduced. The presence of varied techno-typological classes suggests that non-local cherts were not exclusively transported as finished tools, instead highlighting their role as versatile, transportable raw material volumes. Gravettian occupations exhibited greater reliance on non-local cherts, suggesting short-term occupations and higher mobility, while Proto-Solutrean and Solutrean occupations showed increased dependence on local materials, suggesting long-term occupations. These findings expand our understanding of UP technological adaptations in southwestern Iberia, emphasizing the complex role of lithic resources in mobility, settlement, and social networks.
+
+**Keywords:** Upper Palaeolithic; Lithic technology; Hunter-gatherer mobility; Chert procurement; Iberian Peninsula
+
 ## Introduction
 
 The Upper Palaeolithic (UP) in Europe, dating to approximately 40,000–10,000 years ago, was marked by significant technological innovations, shifts in subsistence strategies, and the emergence of diverse regional traditions [@gamble2004; @straus1995].
 
-In westernmost Europe, five main technocomplexes have been identified within the UP - Aurignacian, Gravettian, Proto-Solutrean, Solutrean, and Magdalenian - each contributing new evidence on resilient behaviours and cultural continuity. These technocomplexes are distinguished by regional adaptations as well as technological and subsistence innovations [@baker2024; @bicho2017; @bicho2011; @bicho2008; @cascalheira2017; @straus1991; @straus1993; @zilhão1997].
+In westernmost Europe, five main technocomplexes have been identified within the UP - Aurignacian, Gravettian, Proto-Solutrean, Solutrean, and Magdalenian - each contributing new evidence on resilient behaviours and cultural continuity. These technocomplexes are distinguished by regional adaptations as well as technological and subsistence innovations [@bakerEvidencePersonalOrnaments2024; @bicho2017; @bichoHunterGathererAdaptations2011; @bicho_at_2008; @cascalheira_2017; @straus1991; @strausUpperPaleolithicHunting1993; @zilhaoPaleoliticoSuperiorEstremadura1997].
 
-These innovations are believed to have resulted from human adaptations and resilience to the shifting conditions of the Late Pleistocene, which was marked by abrupt climatic events such as the Heinrich events and the Last Glacial Maximum (LGM) [@sanchezgoñi2010]. These climatic shifts had a profound impact on flora and fauna, with exception of spatially limited refugia, likely disrupting settlement patterns and the organisation of hunter-gatherer groups, ultimately leading to a process of cultural reorganisation [@bradtmöller2012; @morin2008; @schmidt2012], which has frequently been a focus of UP research.
+These innovations are believed to have resulted from human adaptations and resilience to the shifting conditions of the Late Pleistocene, which was marked by abrupt climatic events such as the Heinrich events and the Last Glacial Maximum (LGM) [@sanchezgoñi2010]. These climatic shifts had a profound impact on flora and fauna, with exception of spatially limited refugia, likely disrupting settlement patterns and the organisation of hunter-gatherer groups, ultimately leading to a process of cultural reorganisation [@bradtmoller_repeated_2012-1; @morin2008; @schmidtRapidClimateChange2012], which has frequently been a focus of UP research.
 
-In particular, the Iberian Peninsula has been recognized as a key region for studying UP adaptations and cultural transitions [e.g., @aubry2016; @aubry2022; @bicho2011; @bicho2017a; @bradtmöller2012; @cascalheira2017; @cascalheira2021; @cascalheira2013; @finlayson2006; @gamble2004; @jennings2011; @jiménez-espejo2007; @linscott2023; @rasilla2020; @schmidt2012; @zilhão1997; @zilhão2021; @zilhão2017]. This significance is largely due to its location in southwestern Europe, which enabled it to maintain a relatively temperate climate even during the coldest periods, such as the LGM. As a result, the Iberian Peninsula served as one of Europe’s most important glacial refugia [@gómez2007; @gonzález-sampériz2010; @hewitt2000; @jennings2011; @schmidt2012].
+In particular, the Iberian Peninsula has been recognized as a key region for studying UP adaptations and cultural transitions [e.g., @aubryUpperPalaeolithicLithic2016; @aubryFarFlintInferring2022; @bichoHunterGathererAdaptations2011; @bicho2017; @bradtmoller_repeated_2012-1; @cascalheira_2017; @cascalheiraPaleoenvironmentsHumanAdaptations2021; @cascalheiraHunterGathererEcodynamics2013; @finlayson_late_2006; @gamble2004; @jennings_southern_2011; @jimenez-espejo_climate_2007; @linscottReconstructingMiddleUpper2023; @rasillaEnvironmentSubsistenceStrategies2020; @schmidtRapidClimateChange2012; @zilhaoPaleoliticoSuperiorEstremadura1997; @zilhaoLatePersistenceMiddle2021; @zilhao_precise_2017]. This significance is largely due to its location in southwestern Europe, which enabled it to maintain a relatively temperate climate even during the coldest periods, such as the LGM. As a result, the Iberian Peninsula served as one of Europe’s most important glacial refugia [@gomezRefugiaRefugiaPatterns2007; @gonzalez-samperiz_steppes_2010-1; @hewitt_genetic_2000; @jennings_southern_2011; @schmidtRapidClimateChange2012].
 
-These refugia provided stable environments that were continuously occupied by hunter-gatherers, leading to the formation of eco-cultural niches - stable socio-ecological systems where human settlements were recurrent, and cultural adaptations were shaped by ecological constraints and opportunities [@cascalheira2017]. These eco-cultural niches present a unique opportunity to examine long-term dynamics in resource exploitation, offering valuable insights into human adaptive strategies in response to cultural and social transformations.
+These refugia provided stable environments that were continuously occupied by hunter-gatherers, leading to the formation of eco-cultural niches - stable socio-ecological systems where human settlements were recurrent, and cultural adaptations were shaped by ecological constraints and opportunities [@cascalheira_2017]. These eco-cultural niches present a unique opportunity to examine long-term dynamics in resource exploitation, offering valuable insights into human adaptive strategies in response to cultural and social transformations.
 
-More specifically, southwesternmost Iberia has been identified as a key eco-cultural niche for studying cultural transitions and the role of this peripheral coastal region within hunter-gatherer social networks. This is mainly due to the archaeological site of Vale Boi, the only site in southwestern Iberia with a nearly complete UP sequence, making it a crucial reference for examining long-term technological and mobility patterns in the region [@cascalheira2017]. Its well-preserved stratigraphic continuity allows for a detailed analysis of cultural and technological trends across different phases of the UP.
+More specifically, southwesternmost Iberia has been identified as a key eco-cultural niche for studying cultural transitions and the role of this peripheral coastal region within hunter-gatherer social networks. This is mainly due to the archaeological site of Vale Boi, the only site in southwestern Iberia with a nearly complete UP sequence, making it a crucial reference for examining long-term technological and mobility patterns in the region [@cascalheira_2017]. Its well-preserved stratigraphic continuity allows for a detailed analysis of cultural and technological trends across different phases of the UP.
 
-Building on this significance, research at Vale Boi has provided valuable insights into hunter-gatherer subsistence strategies and technological organisation [@belmiro2021; @bicho2013; @bicho2017a; @cascalheira2019; @horta2019; @manne2012; @marreiros2015; @pereira2016], and lithic technology studies from this site have highlighted the region’s shifting and complex role within the broader territorial landscape.
+Building on this significance, research at Vale Boi has provided valuable insights into hunter-gatherer subsistence strategies and technological organisation [@belmiro_gravettian-solutrean_2021; @bicho_ecodynamics_2013; @bicho_rapid_2017-1; @cascalheiraTerritorialityOrganizationTechnology2019; @horta_role_2019; @manneIntensiveSubsistencePractices2012; @marreirosLithicTechnologyGravettian2015; @pereira_territory_2016-1], and lithic technology studies from this site have highlighted the region’s shifting and complex role within the broader territorial landscape.
 
-In this context, comparisons between Vale Boi and the Gravettian occupations in central Portugal and southern Spain revealed marked regional differences, suggesting more limited movement of people and information in southwestern Iberia. These differences were suggested to be related to Vale Boi’s peripheral location and the distinct ecological characteristics of westernmost Algarve [@marreiros2013]. In contrast, Proto-Solutrean evidence from the site indicates technological similarities and strong connections with central Portugal [@belmiro2021], while the Solutrean period stands out as a highly dynamic phase at Vale Boi, during which the site functioned as a key connection point between central Portugal and southern Spain, facilitating social networks and cultural exchanges [@bicho2017a; @cascalheira2013c].
+In this context, comparisons between Vale Boi and the Gravettian occupations in central Portugal and southern Spain revealed marked regional differences, suggesting more limited movement of people and information in southwestern Iberia. These differences were suggested to be related to Vale Boi’s peripheral location and the distinct ecological characteristics of westernmost Algarve [@marreirosLithicTechnologyVariability2013]. In contrast, Proto-Solutrean evidence from the site indicates technological similarities and strong connections with central Portugal [@belmiro_gravettian-solutrean_2021], while the Solutrean period stands out as a highly dynamic phase at Vale Boi, during which the site functioned as a key connection point between central Portugal and southern Spain, facilitating social networks and cultural exchanges [@bicho_rapid_2017-1; @cascalheiraINFLUENCIAMEDITERRANICANAS].
 
-Expanding on these findings, recent research has further refined our understanding of mobility and social networks through lithic raw material studies at the site. Our team’s recent work identified non-local cherts originating from central Portugal and southern Spain in the UP lithic assemblages of Vale Boi [@belmiro2025]. The proportions of these materials varied throughout the UP with earlier occupations (Gravettian) showing high frequencies of non-local chert, while later phases (Proto-Solutrean and Solutrean) exhibited a marked decline. These findings suggest the establishment and maintenance of extensive social networks connecting southwestern Portugal to southern Spain and central Portugal as early as the beginning of the UP.
+Expanding on these findings, recent research has further refined our understanding of mobility and social networks through lithic raw material studies at the site. Our team’s recent work identified non-local cherts originating from central Portugal and southern Spain in the UP lithic assemblages of Vale Boi [@belmiroChertProcurementPatterns2025]. The proportions of these materials varied throughout the UP with earlier occupations (Gravettian) showing high frequencies of non-local chert, while later phases (Proto-Solutrean and Solutrean) exhibited a marked decline. These findings suggest the establishment and maintenance of extensive social networks connecting southwestern Portugal to southern Spain and central Portugal as early as the beginning of the UP.
 
 These results, particularly those related to the Gravettian, were interpreted as outcomes of residential mobility rather than direct social network influences, though further investigation is required.
 
@@ -66,27 +65,27 @@ This paper presents a combined analysis of lithic technology and raw material so
 
 ### Theoretical framework and objectives
 
-Lithic technological organisation has long been a central focus in archaeology, offering critical insights into past human behaviour and adaptive strategies. It encompasses all stages of stone tool production and use, from raw material acquisition to discard. Nelson [-@nelson1991] defines it as the selection and integration of strategies for tool production, use, transport, and maintenance, while Kelly [-@kelly1988] emphasizes its spatial and temporal dimensions within cultural systems. These perspectives highlight the interrelationship between raw material sourcing, mobility, and settlement organisation—key factors in understanding hunter-gatherer adaptations.
+Lithic technological organisation has long been a central focus in archaeology, offering critical insights into past human behaviour and adaptive strategies. It encompasses all stages of stone tool production and use, from raw material acquisition to discard. Nelson [-@nelsonStudyTechnologicalOrganization1991] defines it as the selection and integration of strategies for tool production, use, transport, and maintenance, while Kelly [-@kellyThreeSidesBiface1988] emphasizes its spatial and temporal dimensions within cultural systems. These perspectives highlight the interrelationship between raw material sourcing, mobility, and settlement organisation—key factors in understanding hunter-gatherer adaptations.
 
-Raw material procurement is a fundamental aspect of lithic technological organisation, as it played a crucial role in the lives of past hunter-gatherer groups by determining the possibilities for tool production and use [@bamforth1997]. Approaches focused on the study of raw materials provide key knowledge on several topics of hunter-gatherer organisation such as procurement and mobility strategies [@ambrose1990; @binford1979; @binford1985; @gould1985; @kuhn1991; @mccall2007; @gramly1980], occupation types and their duration [@torrence1983; @grove2023; @kuhn2004; @surovell2009], and social networks and exchanges [@gamble1999; @whallon2006]. However, raw material studies often focus on the characterisation of geological and archaeological raw materials to identify local and non-local raw materials within an assemblage, their possible sources, and examine their proportions within a site over different occupations and periods.
+Raw material procurement is a fundamental aspect of lithic technological organisation, as it played a crucial role in the lives of past hunter-gatherer groups by determining the possibilities for tool production and use [@bamforth_technology_1997]. Approaches focused on the study of raw materials provide key knowledge on several topics of hunter-gatherer organisation such as procurement and mobility strategies [@ambroseSocialEcologicalModels1990; @binfordOrganizationFormationProcesses1979; @binford_righteous_1985; @gouldEmpiricistStrikesBack1985; @kuhnUnpackingReductionLithic1991; @mccallBehavioralEcologicalModels2007; @gramlyRawMaterialsSource1980], occupation types and their duration [@torrenceTimeBudgetingHuntergatherer1983; @groveMovingFarMoving2023a @kuhnUpperPaleolithicRaw2004; @surovellBehavioralEcologyLithic2009], and social networks and exchanges [@gamblePalaeolithicSocietiesEurope1999; @whallonSocialNetworksInformation2006]. However, raw material studies often focus on the characterisation of geological and archaeological raw materials to identify local and non-local raw materials within an assemblage, their possible sources, and examine their proportions within a site over different occupations and periods.
 
 While distance to source and raw material proportions offer valuable insights, they represent only one aspect of raw material procurement and management. A raw material-focused approach alone is insufficient for comprehensively understanding mobility patterns and technological organisation. Numerous studies and models from both ethnographic and archaeological perspectives have demonstrated the complex interplay between lithic technological variability, raw material provisioning, and mobility.
 
-For example, technological variability within a lithic assemblage may be explained by the abundance and quality of raw materials [@andrefsky1994; @brown1999; @oestmo2017]. Whenever raw materials in proximity to a residential site are abundant and of good quality, a high percentage of formal tools are produced [@andrefsky1994; @perlès1992], and artefacts show less reduction intensity and decreased conservation through retouching [@thacker2002]. Whenever local raw materials are scarce or of low quality, non-local resources are procured to produce mostly formal tools [@andrefsky1994; @perlès1992]. Similarly, when groups move to areas where raw material is scarcer or of poorer quality, more effort is placed into the preparation of transportable cores and the production of tools [@kelly1988].
+For example, technological variability within a lithic assemblage may be explained by the abundance and quality of raw materials [@andrefskyRawMaterialAvailabilityOrganization1994; @brown_raw_1999; @oestmoFormalModelingApproach2017]. Whenever raw materials in proximity to a residential site are abundant and of good quality, a high percentage of formal tools are produced [@andrefskyRawMaterialAvailabilityOrganization1994; @perlesSearchLithicStrategies1992], and artefacts show less reduction intensity and decreased conservation through retouching [@thacker_magnetic_2002]. Whenever local raw materials are scarce or of low quality, non-local resources are procured to produce mostly formal tools [@andrefskyRawMaterialAvailabilityOrganization1994; @perlesSearchLithicStrategies1992]. Similarly, when groups move to areas where raw material is scarcer or of poorer quality, more effort is placed into the preparation of transportable cores and the production of tools [@kellyThreeSidesBiface1988].
 
-However, the different patterns between local and non-local raw material proportion and use in lithic assemblages may be less obvious whenever prehistoric groups have easy access to non-local raw materials due to high mobility or exchanges between groups [@akerman2002; @contexts1982; @torrence1986; @brown1999; @oestmo2017]. Furthermore, Roth and Dibble [-@roth1998] demonstrate that even in areas where good quality raw material is abundant, non-local raw materials were still transported to the site, often in the form of large blanks or trimmed cores, and both local and non-local raw materials were retouched into tools.
+However, the different patterns between local and non-local raw material proportion and use in lithic assemblages may be less obvious whenever prehistoric groups have easy access to non-local raw materials due to high mobility or exchanges between groups [@akermanWeaponsWunanProduction2002; @ericsonContextsPrehistoricExchange1982; @torrenceProductionExchangeStone1986; @brown_raw_1999; @oestmoFormalModelingApproach2017]. Furthermore, Roth and Dibble [-@rothProductionTransportBlanks1998] demonstrate that even in areas where good quality raw material is abundant, non-local raw materials were still transported to the site, often in the form of large blanks or trimmed cores, and both local and non-local raw materials were retouched into tools.
 
-Tools, flakes and cores often functioned as portable sources of raw material within mobile toolkits or during non-local raw material procurement, enabling stone knapping during periods of limited time or in environments with scarce or unsuitable materials [@gould1971; @kelly1988; @kuhn1994; @morrow1996; @perlès1992; @shott1986]. In this context, the transport of formal cores (e.g., blade cores) and bifaces used as cores have been interpreted as lightweight and reconfigurable raw material storage strategies [@clark1987; @kelly1988].
+Tools, flakes and cores often functioned as portable sources of raw material within mobile toolkits or during non-local raw material procurement, enabling stone knapping during periods of limited time or in environments with scarce or unsuitable materials [@gouldLithicAssemblageWestern1971; @kellyThreeSidesBiface1988; @kuhnFormalApproachDesign1994; @morrowBiggerBetterComments1996; @perlesSearchLithicStrategies1992; @shottTechnologicalOrganizationSettlement1986]. In this context, the transport of formal cores (e.g., blade cores) and bifaces used as cores have been interpreted as lightweight and reconfigurable raw material storage strategies [@clarkPoliticsPrismaticBlades1987; @kellyThreeSidesBiface1988].
 
-Formal tools and the degree of tool maintenance have also been associated with planned preparation, efficient use, and transportability, reflecting their connection to mobile settlement strategies, short-term site occupations [@torrence1983] and the regional distribution of raw materials [@bamforth1986]. In some cases, non-local raw materials, transported as part of personal toolkits (frequently associated with residential mobility), would primarily arrive at sites as retouched pieces [@kuhn2004]. These artefacts would show higher degrees of reduction and reworking [@kuhn2004] and a higher percentage of non-cortical flakes [@roth1998], as they would have been in use for an extended period before being discarded. When knapped on-site, non-local materials also tended to exhibit higher proportions of retouched tools compared to local materials.
+Formal tools and the degree of tool maintenance have also been associated with planned preparation, efficient use, and transportability, reflecting their connection to mobile settlement strategies, short-term site occupations [@torrenceTimeBudgetingHuntergatherer1983] and the regional distribution of raw materials [@bamforthTechnologicalEfficiencyTool1986]. In some cases, non-local raw materials, transported as part of personal toolkits (frequently associated with residential mobility), would primarily arrive at sites as retouched pieces [@kuhnUpperPaleolithicRaw2004]. These artefacts would show higher degrees of reduction and reworking [@kuhnUpperPaleolithicRaw2004] and a higher percentage of non-cortical flakes [@rothProductionTransportBlanks1998], as they would have been in use for an extended period before being discarded. When knapped on-site, non-local materials also tended to exhibit higher proportions of retouched tools compared to local materials.
 
-Tool variability and size are also impacted by mobility and uncertainty regarding raw material availability: increased group mobility may create a pattern of limited tool variability, and tools may become less specialised and easily reconfigurable, such as retouched blanks [@odell1981; @shott1986; @siegel1984]. Increased mobility also often results in smaller tools [@shott1986], although other authors have noted that large tools may be well-suited to a mobile lifestyle due to their extended use-life, allowing them to remain functional in areas where raw materials are scarce or unsuitable for knapping [@morrow1996].
+Tool variability and size are also impacted by mobility and uncertainty regarding raw material availability: increased group mobility may create a pattern of limited tool variability, and tools may become less specialised and easily reconfigurable, such as retouched blanks [@odellMorphologicalExpressFunction1981; @shottTechnologicalOrganizationSettlement1986; @siegelFunctionalVariabilityAssemblage1984]. Increased mobility also often results in smaller tools [@shottTechnologicalOrganizationSettlement1986], although other authors have noted that large tools may be well-suited to a mobile lifestyle due to their extended use-life, allowing them to remain functional in areas where raw materials are scarce or unsuitable for knapping [@morrowBiggerBetterComments1996].
 
-The proportions of local vs non-local raw materials discussed thus far have focused greatly on group mobility, which is linked with residential mobility and occupation duration. Residential mobility (e.g., foraging range size and frequency of residential moves) is a defining characteristic of hunter-gatherer societies and plays a central role in their lifeways [@kelly1995]. It is a key factor driving changes in lithic assemblages [@brown1999; @oestmo2017; @roth1998] as it significantly impacts the cost and use of artefacts and raw materials since they affect the relation between the distance of raw material sources to sites [@kuhn2004]. As such, different raw material and technological patterns have been observed between short-term and long-term occupations.
+The proportions of local vs non-local raw materials discussed thus far have focused greatly on group mobility, which is linked with residential mobility and occupation duration. Residential mobility (e.g., foraging range size and frequency of residential moves) is a defining characteristic of hunter-gatherer societies and plays a central role in their lifeways [@kellyForagingSpectrumDiversity1995]. It is a key factor driving changes in lithic assemblages [@brown_raw_1999; @oestmoFormalModelingApproach2017; @rothProductionTransportBlanks1998] as it significantly impacts the cost and use of artefacts and raw materials since they affect the relation between the distance of raw material sources to sites [@kuhnUpperPaleolithicRaw2004]. As such, different raw material and technological patterns have been observed between short-term and long-term occupations.
 
-Short-term occupations typically rely on transported (non-local) toolkits [@torrence1983] and raw materials [@surovell2009], show higher reduction intensity, and an increased tools-to-debitage ratio in the assemblages [@grove2023]. Long-term occupations typically rely on provisioning sites with locally available and suitable raw materials, while non-local materials are gradually used and discarded [@grove2023; @surovell2009]. Non-local raw material cores are highly reduced and extensively exploited [@kuhn2004; @roth1998] and exhibit higher blank-to-core ratios [@roth1998].
+Short-term occupations typically rely on transported (non-local) toolkits [@torrenceTimeBudgetingHuntergatherer1983] and raw materials [@surovellBehavioralEcologyLithic2009], show higher reduction intensity, and an increased tools-to-debitage ratio in the assemblages [@groveMovingFarMoving2023a]. Long-term occupations typically rely on provisioning sites with locally available and suitable raw materials, while non-local materials are gradually used and discarded [@groveMovingFarMoving2023a; @surovellBehavioralEcologyLithic2009]. Non-local raw material cores are highly reduced and extensively exploited [@kuhnUpperPaleolithicRaw2004; @rothProductionTransportBlanks1998] and exhibit higher blank-to-core ratios [@rothProductionTransportBlanks1998].
 
-Altogether, different studies highlight significant variability in lithic assemblages and raw material proportions, reflecting different facets of hunter-gatherer technological organisation. This variability appears between behaviourally and ethnically similar sites [@bamforth1986], across distinct chrono-cultural periods, and even within a single site among various raw materials. To fully understand past hunter-gatherer behaviours, organisation, and lifeways, it is crucial to examine all stages of lithic production— procurement, distribution, use, maintenance, and discard—through interconnected approaches that combine lithic technology and raw material analyses.
+Altogether, different studies highlight significant variability in lithic assemblages and raw material proportions, reflecting different facets of hunter-gatherer technological organisation. This variability appears between behaviourally and ethnically similar sites [@bamforthTechnologicalEfficiencyTool1986], across distinct chrono-cultural periods, and even within a single site among various raw materials. To fully understand past hunter-gatherer behaviours, organisation, and lifeways, it is crucial to examine all stages of lithic production— procurement, distribution, use, maintenance, and discard—through interconnected approaches that combine lithic technology and raw material analyses.
 
 This study aims to refine our understanding of lithic resource provisioning, use, and management strategies among the UP hunter-gatherer groups settled at Vale Boi. To examine the role of chert procurement and reduction strategies at Vale Boi we test several expectations derived from the previously mentioned studies and models about raw material use and lithic technology organisation, focusing mainly on the different management of local and non-local raw materials, associated with mobility and occupation length, which are summarised in @tbl-expectations. These expectations are tested through the comparison of local and non-local chert technological and metric characteristics.
 
@@ -94,7 +93,7 @@ This study aims to refine our understanding of lithic resource provisioning, use
 #| label: tbl-expectations
 #| tbl-cap: "Expected results of the technological and metric comparison between local and non-local cherts."
 
-hypotheses <- readr::read_csv(here::here('data/raw_data_from-stone-to-tool/hypotheses_short.csv'))
+hypotheses <- readr::read_csv(here::here('data/05-stone-to-tool/hypotheses_short.csv'))
 
 knitr::kable(hypotheses)
 
@@ -104,62 +103,62 @@ knitr::kable(hypotheses)
 
 ### Site description
 
-Vale Boi is located on the western coast of the Algarve region, southern Portugal, at a latitude of N 37º5'24.1" and longitude of W 8º48'32.4" [@gibajaFUNCIONINSTRUMENTOSLITICOS2006, the original site coordinates were converted from Degree/Minute to Degree/Minute/Second], within a small valley extending \~2 km southward to the Atlantic Ocean ([@fig-map] a). The site is nestled among limestone outcrops that create west- and southwest-facing rock shelters ([@fig-map] b). Covering more than 10,000 square meters along the valley slope, Vale Boi includes three main excavated areas, Slope, Terrace, and Shelter ([@fig-map] c), which were excavated between 2000 and 2019 [@bicho2007; @bicho2012; @bicho2013; @cascalheira2017; @cascalheira2013; @manne2012]. Based on the available raw material and technological evidence, particularly the macroscopic and petrographic data [@belmiro2025], the Terrace and Shelter areas were selected for the current study.
+Vale Boi is located on the western coast of the Algarve region, southern Portugal, at a latitude of N 37º5'24.1" and longitude of W 8º48'32.4" [@gibajaFUNCIONINSTRUMENTOSLITICOS2006, the original site coordinates were converted from Degree/Minute to Degree/Minute/Second], within a small valley extending \~2 km southward to the Atlantic Ocean ([@fig-map] a). The site is nestled among limestone outcrops that create west- and southwest-facing rock shelters ([@fig-map] b). Covering more than 10,000 square meters along the valley slope, Vale Boi includes three main excavated areas, Slope, Terrace, and Shelter ([@fig-map] c), which were excavated between 2000 and 2019 [@bichoRockshelterStudiesSouthwestern2007; @bichoEdgeCaseVale2012; @bicho_ecodynamics_2013; @cascalheira_2017; @cascalheiraHunterGathererEcodynamics2013; @manneIntensiveSubsistencePractices2012]. Based on the available raw material and technological evidence, particularly the macroscopic and petrographic data [@belmiroChertProcurementPatterns2025], the Terrace and Shelter areas were selected for the current study.
 
 ```{r}
 #| label: fig-map
 #| fig-cap: "a) Location of the archaeological site of Vale Boi (orange box) within the Iberian Peninsula; b) Photo of the limestone hill with terrace and shelter locations; c) Schematic of the site area. Figures b-c) were adapted from Cascalheira et al., 2017. Figure a) was produced with resource to the open-source software QGIS (https://qgis.org/)"
 
-knitr::include_graphics(here::here("figures/from-stone-to-tool/VB_map.png"))
+knitr::include_graphics(here::here("data/05-stone-to-tool/VB_map.png"))
 
 ```
 
-The Terrace area preserves occupations ranging from the UP to the Early Neolithic. While excavations started in 2000, an additional 8-square-meter trench was opened in 2012 to refine the stratigraphic sequence and assess the presence of earlier UP deposits. Between 2012 and 2016, eight primary litho-stratigraphic units were identified. The UP sequence includes multiple occupations, spanning \~10,000 years: Gravettian (levels 8 to 6) dated between approximately c. 32 and 27 ka cal BP, Proto-Solutrean (levels 5 to 4E) between approximately c. 26 and 24 ka cal BP, and Solutrean (levels 4D, 4C, 4, and Lower 3) between approximately c. 24 and 20 ka cal BP [@belmiro2021; @cascalheira2017; @cascalheira2013b].
+The Terrace area preserves occupations ranging from the UP to the Early Neolithic. While excavations started in 2000, an additional 8-square-meter trench was opened in 2012 to refine the stratigraphic sequence and assess the presence of earlier UP deposits. Between 2012 and 2016, eight primary litho-stratigraphic units were identified. The UP sequence includes multiple occupations, spanning \~10,000 years: Gravettian (levels 8 to 6) dated between approximately c. 32 and 27 ka cal BP, Proto-Solutrean (levels 5 to 4E) between approximately c. 26 and 24 ka cal BP, and Solutrean (levels 4D, 4C, 4, and Lower 3) between approximately c. 24 and 20 ka cal BP [@belmiro_gravettian-solutrean_2021; @cascalheira_2017; @cascalheiraValeBoiAlgarve2013].
 
-The Shelter area contains four main lithostratigraphic units, with occupations from the Magdalenian, Solutrean, and Gravettian periods. The Magdalenian and Gravettian levels (Z and D, respectively) were partially eroded, while the Solutrean levels represent the most intensive occupation, with three well-preserved archaeological horizons (layers A to C), dated to approximately c. 24-22 ka cal BP. These occupation levels were found beneath blocks of limestone that likely collapsed from the rock shelter ceiling, probably shortly after the LGM [@cascalheira2010; @cascalheira2017].
+The Shelter area contains four main lithostratigraphic units, with occupations from the Magdalenian, Solutrean, and Gravettian periods. The Magdalenian and Gravettian levels (Z and D, respectively) were partially eroded, while the Solutrean levels represent the most intensive occupation, with three well-preserved archaeological horizons (layers A to C), dated to approximately c. 24-22 ka cal BP. These occupation levels were found beneath blocks of limestone that likely collapsed from the rock shelter ceiling, probably shortly after the LGM [@cascalheiraTecnologiaLiticaSolutrense2010; @cascalheira_2017].
 
-The site’s lithic assemblages represent all stages of stone tool production, with raw material use varying by occupation. Technological analyses of these assemblages have provided insights into the adaptive strategies of UP hunter-gatherers at Vale Boi, revealing technological shifts across different cultural phases. Given the chosen sample for this study (see Section Datasets and analysis), we summarise here the results for the technological analysis of the Solutrean assemblages (levels A-C) of the Shelter [@cascalheira2010; @cascalheira2013a] and the Proto-Solutrean assemblages (levels 4E-5) of the Terrace [@belmiro2020; @belmiro2021]. The Gravettian occupations (levels 6-8) of the Terrace have been recently studied, but the results remain unpublished.
+The site’s lithic assemblages represent all stages of stone tool production, with raw material use varying by occupation. Technological analyses of these assemblages have provided insights into the adaptive strategies of UP hunter-gatherers at Vale Boi, revealing technological shifts across different cultural phases. Given the chosen sample for this study (see Section Datasets and analysis), we summarise here the results for the technological analysis of the Solutrean assemblages (levels A-C) of the Shelter [@cascalheiraTecnologiaLiticaSolutrense2010; @cascalheiraValeBoiAlgarve2013] and the Proto-Solutrean assemblages (levels 4E-5) of the Terrace [@belmiroProtoSolutreanLithicTechnology2020; @belmiro_gravettian-solutrean_2021]. The Gravettian occupations (levels 6-8) of the Terrace have been recently studied, but the results remain unpublished.
 
-The lithic analysis of the Solutrean levels from the Shelter (levels A-C) shows a high number of lithic artifacts, with over 22,000 artifacts analysed (including chips which correspond to \~60% of the assemblage and shatter \~17-19%). The volumes introduced into the site were mostly cortical, given the high frequencies of cortex in blanks and retouched tools. The knapping strategies are dominated by unidirectional and bidirectional prismatic cores, with frequent core maintenance products. Flakes dominate the debitage assemblage, and endscrapers, notches, splintered pieces and retouched blanks are the most common retouched tools. Stemmed and winged points, laurel leaves, and shouldered points were also identified [@cascalheira2013a].
+The lithic analysis of the Solutrean levels from the Shelter (levels A-C) shows a high number of lithic artifacts, with over 22,000 artifacts analysed (including chips which correspond to \~60% of the assemblage and shatter \~17-19%). The volumes introduced into the site were mostly cortical, given the high frequencies of cortex in blanks and retouched tools. The knapping strategies are dominated by unidirectional and bidirectional prismatic cores, with frequent core maintenance products. Flakes dominate the debitage assemblage, and endscrapers, notches, splintered pieces and retouched blanks are the most common retouched tools. Stemmed and winged points, laurel leaves, and shouldered points were also identified [@cascalheiraValeBoiAlgarve2013].
 
-The Proto-Solutrean horizons yielded more than 26,500 artifacts (including chips which correspond to \~65-70% of the assemblage and shatter \~20%), \~11,000 attributed to the bottom of Terrace’s level 5, and \~15,600 attributed to the top of level 5 and level 4E. Both horizons are characterised by knapping strategies dominated by unidirectional prismatic cores, with little platform preparation, focused on the obtention of bladelets (in bottom level 5) and flakes. Retouched tools are dominated by splintered pieces, endscrapers and retouched blanks, with Vale Comprido points (the Proto-Solutrean fossil director) being barely inexistent in chert and mostly produced in dolerite [@belmiro2021].
+The Proto-Solutrean horizons yielded more than 26,500 artifacts (including chips which correspond to \~65-70% of the assemblage and shatter \~20%), \~11,000 attributed to the bottom of Terrace’s level 5, and \~15,600 attributed to the top of level 5 and level 4E. Both horizons are characterised by knapping strategies dominated by unidirectional prismatic cores, with little platform preparation, focused on the obtention of bladelets (in bottom level 5) and flakes. Retouched tools are dominated by splintered pieces, endscrapers and retouched blanks, with Vale Comprido points (the Proto-Solutrean fossil director) being barely inexistent in chert and mostly produced in dolerite [@belmiro_gravettian-solutrean_2021].
 
-Previous studies showed that the main raw materials used at the site are chert, quartz, greywacke and smaller amounts of chalcedony, with the percentages of these changing across occupations. Notably, the lower Proto-Solutrean levels show high frequencies of quartz [@belmiro2021], whereas chert becomes the dominant raw material in the Solutrean occupations of the Shelter [@cascalheira2010]. Likewise, different raw materials appear to have been used for specific purposes, with chert being particularly associated with the production of high percentage of blanks and retouched tools, and greywacke being extensively used for anvils [@horta2019].
+Previous studies showed that the main raw materials used at the site are chert, quartz, greywacke and smaller amounts of chalcedony, with the percentages of these changing across occupations. Notably, the lower Proto-Solutrean levels show high frequencies of quartz [@belmiro_gravettian-solutrean_2021], whereas chert becomes the dominant raw material in the Solutrean occupations of the Shelter [@cascalheiraTecnologiaLiticaSolutrense2010]. Likewise, different raw materials appear to have been used for specific purposes, with chert being particularly associated with the production of high percentage of blanks and retouched tools, and greywacke being extensively used for anvils [@horta_role_2019].
 
-Quartz and greywacke are locally available from streambeds near the site, whereas regional chert and chalcedony sources lie further afield, within a \~20 km radius [@pereira2016]. Our previous studies showed, as expected, the existence of local cherts in the assemblages ([@fig-cherts] a), originating from the Lower Jurassic (cherts) and Triassic (chalcedony) outcrops in proximity to the site [@belmiro2025]. Despite petrographic differences between cherts and chalcedony, for this study any chert varieties (e.g., chalcedony or jasper) are referred to as chert [@luedtke1978]. A significant portion of non-local cherts was also identified (@fig-cherts b-c), with some identified sources, such as the Cretaceous outcrops of central Portugal (Lisbon and Rio Maior areas) and the Upper Jurassic oolitic/peloidal cherts of the Betic Systems in southern Spain. This indicates varying degrees of contact or long-range mobility throughout the UP, likely influenced by shifts in settlement patterns and the duration of site occupation.
+Quartz and greywacke are locally available from streambeds near the site, whereas regional chert and chalcedony sources lie further afield, within a \~20 km radius [@pereira_territory_2016-1]. Our previous studies showed, as expected, the existence of local cherts in the assemblages ([@fig-cherts] a), originating from the Lower Jurassic (cherts) and Triassic (chalcedony) outcrops in proximity to the site [@belmiroChertProcurementPatterns2025]. Despite petrographic differences between cherts and chalcedony, for this study any chert varieties (e.g., chalcedony or jasper) are referred to as chert [@luedtkeChertSourcesTraceElement1978]. A significant portion of non-local cherts was also identified (@fig-cherts b-c), with some identified sources, such as the Cretaceous outcrops of central Portugal (Lisbon and Rio Maior areas) and the Upper Jurassic oolitic/peloidal cherts of the Betic Systems in southern Spain. This indicates varying degrees of contact or long-range mobility throughout the UP, likely influenced by shifts in settlement patterns and the duration of site occupation.
 
 ```{r}
 #| label: fig-cherts
 #| fig-cap: "Simplified scheme of chert types identified in the UP sequence of the Terrace and Shelter areas of Vale Boi: a) local chert macroscopic variability (T1 to T5), including chalcedony (T1; top left); b) non-local chert types present in all occupations except for T11 which is only present in the Solutrean; c) TL09 (left) and TL06 (right) varieties within the trace lithologies group (TL) composed of non-local cherts with 1-3 samples per TL type and limited to specific archaeological levels and areas. Summarised from Belmiro et al., (2025)"
 #| out-width: "500"
 
-knitr::include_graphics(here::here("figures/from-stone-to-tool/types_short.png"))
+knitr::include_graphics(here::here("data/05-stone-to-tool/types_short.png"))
 
 ```
 
-Previous research suggests that both the Terrace and Shelter functioned as seasonal residential camps, repeatedly occupied for extended periods. This interpretation is based on high-density lithic assemblages, evidence of tool manufacture, heat-cracked rocks associated with grease rendering, diverse faunal remains (marine and terrestrial), and personal ornaments and portable art [@manne2012]. This is true for most of the UP occupations, although with some exceptions.
+Previous research suggests that both the Terrace and Shelter functioned as seasonal residential camps, repeatedly occupied for extended periods. This interpretation is based on high-density lithic assemblages, evidence of tool manufacture, heat-cracked rocks associated with grease rendering, diverse faunal remains (marine and terrestrial), and personal ornaments and portable art [@manneIntensiveSubsistencePractices2012]. This is true for most of the UP occupations, although with some exceptions.
 
-Cascalheira et al. (2017) applied the Whole Assemblage Behavioural Index (WABI) [@riel-salvatore2004; @riel-salvatore2010] to reconstruct and compare mobility strategies at Vale Boi. By analysing lithic volumetric density and retouched tool frequencies from the Shelter’s Solutrean [@cascalheira2010; @cascalheira2013a] and Magdalenian [@mendonça2009] levels, as well as the Terrace’s Gravettian levels [@marreiros2015], the authors confirmed that most occupations corresponded to long-term residential base camps, composed of high-density assemblages with low degree of retouch, except for the Early Gravettian and Magdalenian occupations. Regarding the Terrace area, however, the results were based on previous excavations (\<2012), and the identification of new layers and reorganisation of the occupations is yet to be tested through the use of lithic techno-typological methods.
+Cascalheira et al. (2017) applied the Whole Assemblage Behavioural Index (WABI) [@riel-salvatoreLatePleistoceneTechnology2004; @riel-salvatoreNicheConstructionPerspective2010] to reconstruct and compare mobility strategies at Vale Boi. By analysing lithic volumetric density and retouched tool frequencies from the Shelter’s Solutrean [@cascalheiraTecnologiaLiticaSolutrense2010; @cascalheiraValeBoiAlgarve2013] and Magdalenian [@mendoncaTecnologiaLiticaNo2009] levels, as well as the Terrace’s Gravettian levels [@marreirosLithicTechnologyGravettian2015], the authors confirmed that most occupations corresponded to long-term residential base camps, composed of high-density assemblages with low degree of retouch, except for the Early Gravettian and Magdalenian occupations. Regarding the Terrace area, however, the results were based on previous excavations (\<2012), and the identification of new layers and reorganisation of the occupations is yet to be tested through the use of lithic techno-typological methods.
 
-A similar conclusion was suggested based on the interpretation of the chert sourcing and proportions in the several UP occupations of the Terrace and Shelter of Vale Boi and following other models relating local/non-local raw materials with mobility [@grove2023; @surovell2009]. The high proportions of non-local chert (\~50%) in the Gravettian occupations (levels 6 and 7), and gradual reduction in the following occupations, were interpreted as a possible result of settlement changes, where the Gravettian occupations corresponded to short-term occupations, and the other occupations corresponded to residential, long-term occupations with more infrequent moves [@belmiro2025].
+A similar conclusion was suggested based on the interpretation of the chert sourcing and proportions in the several UP occupations of the Terrace and Shelter of Vale Boi and following other models relating local/non-local raw materials with mobility [@groveMovingFarMoving2023a; @surovellBehavioralEcologyLithic2009]. The high proportions of non-local chert (\~50%) in the Gravettian occupations (levels 6 and 7), and gradual reduction in the following occupations, were interpreted as a possible result of settlement changes, where the Gravettian occupations corresponded to short-term occupations, and the other occupations corresponded to residential, long-term occupations with more infrequent moves [@belmiroChertProcurementPatterns2025].
 
 ### Datasets and analysis
 
 The current study focuses on the correlation between the techno-typological analysis and the geoarchaeological study of the chert lithic assemblages of the UP of Vale Boi. It integrates previously collected datasets, which have been published or are openly accessible in online repositories, allowing for transparency and reproducibility.
 
-The macroscopic and petrographic data of cherts was previously collected and published by our team [@belmiro2025] and can also be found in an online repository (<https://www.doi.org/10.17605/OSF.IO/DBFT2>). This study focused on the UP chert assemblages of Vale Boi, especially the Gravettian (levels 6 and 7), Proto-Solutrean (levels 4E and 5) and Solutrean (levels 4 to 4D) from the Terrace area and the Solutrean (levels A to C) from the Shelter area. The methodology used in the study, dataset and supporting documents can be found in the article and the online repository.
+The macroscopic and petrographic data of cherts was previously collected and published by our team [@belmiroChertProcurementPatterns2025] and can also be found in an online repository (<https://www.doi.org/10.17605/OSF.IO/DBFT2>). This study focused on the UP chert assemblages of Vale Boi, especially the Gravettian (levels 6 and 7), Proto-Solutrean (levels 4E and 5) and Solutrean (levels 4 to 4D) from the Terrace area and the Solutrean (levels A to C) from the Shelter area. The methodology used in the study, dataset and supporting documents can be found in the article and the online repository.
 
-The Solutrean assemblage technological analysis was published by Cascalheira [-@cascalheira2009] as part of a Master’s thesis and following publications [e.g., @cascalheira2010; @cascalheira2013a], with the study of levels A to C of the Shelter area. The dataset used for this study was not originally published but can be consulted in our online repository (<http://www.doi.org/10.17605/OSF.IO/UWMPK>).
+The Solutrean assemblage technological analysis was published by Cascalheira [-@cascalheiraTecnologiaLiticaAbrigo2009] as part of a Master’s thesis and following publications [e.g., @cascalheiraTecnologiaLiticaSolutrense2010; @cascalheiraValeBoiAlgarve2013], with the study of levels A to C of the Shelter area. The dataset used for this study was not originally published but can be consulted in our online repository (<http://www.doi.org/10.17605/OSF.IO/UWMPK>).
 
-The Solutrean analysis in this study is limited to the Shelter area due to the inexistence of technological studies for the better preserved Solutrean levels of the Terrace (e.g., level 4). However, and as seen in [@belmiro2025], the raw material patterns seem to show little differences between the Solutrean in both areas; coupled with the similar radiocarbon dates between the areas (c. 24-22 and 24-20 ka cal BP), we assume that they are representative of similar, long-term, residential occupations which aptly characterise the Solutrean groups of Vale Boi.
+The Solutrean analysis in this study is limited to the Shelter area due to the inexistence of technological studies for the better preserved Solutrean levels of the Terrace (e.g., level 4). However, and as seen in [@belmiroChertProcurementPatterns2025], the raw material patterns seem to show little differences between the Solutrean in both areas; coupled with the similar radiocarbon dates between the areas (c. 24-22 and 24-20 ka cal BP), we assume that they are representative of similar, long-term, residential occupations which aptly characterise the Solutrean groups of Vale Boi.
 
-The Proto-Solutrean technological analysis was the result of a Master’s thesis [@belmiro2020] and following publication [@belmiro2021], with the study of levels 4E and 5 of the Terrace area. The dataset and analysis can be consulted in the original online repository (<http://www.doi.org/10.17605/OSF.IO/456EG>).
+The Proto-Solutrean technological analysis was the result of a Master’s thesis [@belmiroProtoSolutreanLithicTechnology2020] and following publication [@belmiro_gravettian-solutrean_2021], with the study of levels 4E and 5 of the Terrace area. The dataset and analysis can be consulted in the original online repository (<http://www.doi.org/10.17605/OSF.IO/456EG>).
 
 Finally, the Gravettian technological analysis was the result of a recent and unpublished study, focusing on the chert lithic artefacts from levels 6 and 7 of the Terrace area (\> 2012 excavations). This dataset and preliminary technological analysis results can be found in our online repository (<http://www.doi.org/10.17605/OSF.IO/UWMPK>) and in Online Resource 1.
 
-One challenge of integrating datasets collected by different researchers is variability in methodologies and recorded variables. However, this study minimizes such inconsistencies by ensuring methodological alignment across datasets, as all data collection followed standardised attribute-based lithic analysis protocols. The lithic analysis datasets used in this study adopted an attribute-based methodology, which aims to describe morphological and metrical attributes of technological classes. The attributes analysed followed those present in specialised literature, such as Brézillon [-@brézillon1968], and [@tixier1980], paired with other Palaeolithic lithic attribute analyses [e.g., @bicho1992; @zilhão1997; @cascalheira2019; @tostevin2012].
+One challenge of integrating datasets collected by different researchers is variability in methodologies and recorded variables. However, this study minimizes such inconsistencies by ensuring methodological alignment across datasets, as all data collection followed standardised attribute-based lithic analysis protocols. The lithic analysis datasets used in this study adopted an attribute-based methodology, which aims to describe morphological and metrical attributes of technological classes. The attributes analysed followed those present in specialised literature, such as Brézillon [-@brezillonDenominationObjetsPierre1968], and [@tixierPrehistoirePierreTaillee1980], paired with other Palaeolithic lithic attribute analyses [e.g., @bichoTechnologicalChangeFinal1992; @zilhaoPaleoliticoSuperiorEstremadura1997; @cascalheiraTerritorialityOrganizationTechnology2019; @tostevinSeeingLithicsMiddlerange2012].
 
-After data collection, the databases were imported into R Programming Environment, where the information was processed through the creation of descriptive statistical analysis and writing of this article. Some differences in the collection process, especially between the study by Cascalheira [-@cascalheira2010] and the following studies, required homogenisation. For example, where in Cascalheira (2010) retouch was an independent variable (e.g., Class as flake, Retouch as Yes), in Belmiro et al. [-@belmiro2021], retouch was identified as Class variable. In this situation, the Solutrean dataset was modified, so that all artifacts with retouch were identified in the Class variable, instead of the original classification. All changes applied to the original data made for homogenisation between datasets can be consulted in the R Studio scripts in our online repository (<http://www.doi.org/10.17605/OSF.IO/UWMPK>).
+After data collection, the databases were imported into R Programming Environment, where the information was processed through the creation of descriptive statistical analysis and writing of this article. Some differences in the collection process, especially between the study by Cascalheira [-@cascalheiraTecnologiaLiticaSolutrense2010] and the following studies, required homogenisation. For example, where in Cascalheira (2010) retouch was an independent variable (e.g., Class as flake, Retouch as Yes), in Belmiro et al. [-@belmiro_gravettian-solutrean_2021], retouch was identified as Class variable. In this situation, the Solutrean dataset was modified, so that all artifacts with retouch were identified in the Class variable, instead of the original classification. All changes applied to the original data made for homogenisation between datasets can be consulted in the R Studio scripts in our online repository (<http://www.doi.org/10.17605/OSF.IO/UWMPK>).
 
 To integrate technological and raw material data, we merged multiple datasets using the artifact identifier (“ID”), which corresponds to total station plot records. This identifier links artifacts to either precise excavation coordinates (for individually plotted pieces) or generalised spatial data (for sieved assemblages).
 
@@ -203,654 +202,32 @@ knitr::kable(table_parameters)
 
 ```
 
-The entirety of the R code used for the analysis, datasets, and visual representations contained in this paper can be accessed through our online repository (<http://www.doi.org/10.17605/OSF.IO/UWMPK>). We used the rrtools package by Marwick et al. [-@marwick2018] to create a research compendium and write a reproducible journal article. The provided files include the complete set of raw data used in the analysis, along with a custom R project [@wickham2015] containing the code required to generate all tables and figures. To enable maximum reuse, the code is made available under the MIT license, data under CC‐0, and figures under CC‐BY [additional details can be found in @Marwick2017].
+The entirety of the R code used for the analysis, datasets, and visual representations contained in this paper can be accessed through our online repository (<http://www.doi.org/10.17605/OSF.IO/UWMPK>). We used the rrtools package by Marwick et al. [-@marwickPackagingDataAnalytical2018] to create a research compendium and write a reproducible journal article. The provided files include the complete set of raw data used in the analysis, along with a custom R project [@wickhamPackagesOrganizeTest2015] containing the code required to generate all tables and figures. To enable maximum reuse, the code is made available under the MIT license, data under CC‐0, and figures under CC‐BY [additional details can be found in @marwickComputationalReproducibilityArchaeological2017].
 
 ## Results
 
-```{r}
-#| label: get-data
-
-# Reading the datasets
-## Technological data
-gravettian_tech <- read_csv(here::here('data/raw_data_from-stone-to-tool/VBT_6_7_JB.csv'))
-proto_tech <- read_csv(here::here('data/raw_data_from-stone-to-tool/VBT_4E_5_JB.csv'))
-solutrean_JC <- read_csv(here::here('data/raw_data_from-stone-to-tool/VBR_ABC_JC.csv'))
-solutrean_points <- read_csv(here::here('data/raw_data_from-stone-to-tool/shelter_points_JC.csv'))
-
-## RM data
-shelter_RM <- read_csv(here::here('data/raw_data_withinandbeyond/MACRO_IND_SHELTER.csv')) # Shelter RM analysis
-terrace_RM <- read_csv(here::here('data/raw_data_withinandbeyond/MACRO_IND_TERRACE.csv')) # Terrace RM analysis
-
-## Context data
-context <- read_csv(here::here('data/raw_data_withinandbeyond/VB_Terrace_context.csv')) # Terrace Field DB - lithic artefact info
-xyz <- read_csv(here::here('data/raw_data_withinandbeyond/VB_Terrace_xyz.csv')) # Terrace Field DB - just coordinates
-
-```
-
-```{r}
-#| label: terrace-databases-setup
-
-# Setting up the Terrace dataset
-cols_to_concat_terrace <- c("UNIT", "ID") # Vector to join UNIT and ID into a single variable
-context$ID <- str_squish(context$ID) # Remove empty spaces from ID field
-xyz$ID <- str_squish(xyz$ID) # Remove empty spaces from UNIT field
-
-# Cleaning up DS and uniformising variable names
-proto_tech_WIP <- proto_tech |>
-  tidyr::unite(col='ID', all_of(cols_to_concat_terrace), sep="-", remove=TRUE) |> 
-  rename(CLASS = Class, COREPREPPROD = CorePreparProd, PIECECOMPLETENESS = PieceCompleteness, CORTEX = Cortex, CORTEXLOCATION = CortexLocation, PLATFORMTYPE = PlatformType, PLATFORMCORTEX = PlatformCortex, SCARCOUNT = ScarCount, THICKNESS = Thickness,
-        MAXWIDTH = MaxWidth, LENGTH = Length, COREPLATFORM = CorePlatform, MAINFACECORTEX = MainFaceCortex, 
-        MAINFACESCARCOUNT = MainFaceScarCount, COREABANDON = CoreAbandon, RETOUCHEDPIECETYPOLOGY = RetouchedPieceTypology) |> 
-  dplyr::select(ID, CLASS, COREPREPPROD, PIECECOMPLETENESS, CORTEX, CORTEXLOCATION, PLATFORMTYPE, PLATFORMCORTEX,
-                SCARCOUNT, THICKNESS, MAXWIDTH, LENGTH, COREPLATFORM, MAINFACECORTEX, MAINFACESCARCOUNT, COREABANDON, RETOUCHEDPIECETYPOLOGY)
-
-gravettian_tech <- gravettian_tech |> 
-  mutate(CLASS = case_when(
-    CLASS == "Flake" | CLASS == "ElongBlank" ~ "Blank",
-    CLASS == "FlakeFrag" | CLASS == "ElongBlankFrag" ~ "BlankFrag",
-    TRUE ~ CLASS)) |> 
-  dplyr::mutate(RETOUCHEDPIECETYPOLOGY = case_when( # Solving typing issue
-    RETOUCHEDPIECETYPOLOGY == "Carenated endscrapper" ~ "Carenated endscraper",
-    RETOUCHEDPIECETYPOLOGY == "Endscrapper" ~ "Endscraper",
-    RETOUCHEDPIECETYPOLOGY == "Endscrapper-burin" ~ "Burin",
-    TRUE ~ RETOUCHEDPIECETYPOLOGY))
-
-terrace_tech <- bind_rows(proto_tech_WIP, gravettian_tech) # Creating single DS with Proto and Gravettian
-
-terrace_RM_WIP <- terrace_RM |> 
-  mutate(RMTYPE = case_when(
-    RMTYPE == "TYPE 2" | RMTYPE == "Type 2" ~ "T2",
-    RMTYPE == "Chalcedony" ~ "T1", # Altering first group names to final group names. Subtypes are maintained as before.
-    RMTYPE == "TYPE 15" ~ "T3",
-    RMTYPE == "TYPE 7" ~ "T4",
-    RMTYPE == "TYPE 12" ~ "T5",
-    RMTYPE == "TYPE 11" ~ "T6",
-    RMTYPE == "TYPE 13" ~ "T7",
-    RMTYPE == "TYPE 11F" ~ "T8",
-    RMTYPE == "TYPE 13B" ~ "T9",
-    RMTYPE == "Oolitic" ~ "T10",
-    RMTYPE == "TYPE GB" ~ "T11",
-    .default = RMTYPE)) |> 
-  select(AREA, ID, RMTYPE, SUBTYPE, WEIGHT, CORTEXTHICKNESS, CORTEXAPPEARANCE) |> 
-  distinct(ID, .keep_all = TRUE)
-
-context <- context |>
-  dplyr::rename("UNIT" = "Unit") |> # Renaming first column from Unit to UNIT to use cols_to_concat
-  unite(col='ID', cols_to_concat_terrace, sep="-", remove=FALSE) |> # Unite UNIT with ID using cols_to_concat
-  select(ID, Level, Spit, Code) |> # Selecting important variables: ID refers to artifact ID; Level refers to archaeologycal layer; Spit refers to artificial levels within an archaeological layer; Code refers to type of artifact (e.g., LITHIC or BONE)
-  distinct(ID, .keep_all = TRUE)
-
-xyz <- xyz |>
-  unite(col='ID', cols_to_concat_terrace, sep="-", remove=FALSE) |> # Unite UNIT with ID using cols_to_concat
-  filter(Suffix == 0) |> # To avoid several entries related to several points of the same artefact
-  select(ID, X, Y, Z) |> # Selecting important variables
-  distinct(ID, .keep_all = TRUE)
-
-field_data <- full_join(xyz, context, by = "ID") # Join field tables
-
-terrace_tech_WIP <- left_join(terrace_tech, field_data, by = "ID") # Join field and RM type tables
-terrace_dataset <- full_join(terrace_tech_WIP, terrace_RM_WIP, by = "ID") # Base 12690
-terrace_dataset <- terrace_dataset |>
-  filter(!Level %in% c("3", "4", "4C", "4D")) |>  # Dropping NAs on the technological class drops dataset to 1651
-  drop_na(RMTYPE) |>  # Dropping NAs on the RM database drops dataset to 3635
-  drop_na(CLASS) # Dropping NAs on the technological class drops dataset to 1647
-  
-# Mutate level 5 to add phases: top of 5 (4E/5) and bottom of 5 (5), following Belmiro et al. (2020).
-phase_dataset <- terrace_dataset |> 
-  mutate(Level = case_when(
-    Level == 5 & Z > 24.1 ~ "4E/5",
-    Level == 5 & Z < 24.1 ~ "5",
-    Level == "7C" | Level == 8 ~ "7", # Collapsing samples from Level 7C and Level 8 into 7 to homogenise dataset
-    TRUE ~ Level)) |> # Adding technocomplex name based on the levels
-  mutate(Technocomplex = case_when(
-    Level == "4E" | Level == "4E/5" | Level == 5 ~ "Proto-Solutrean",
-    Level == 6 | Level == 7 ~ "Gravettian")) |> 
-  mutate(RETOUCHEDPIECETYPOLOGY = case_when(
-    RETOUCHEDPIECETYPOLOGY == "Splintered piece with notch" | RETOUCHEDPIECETYPOLOGY == "Splintered piece with lateral retouch" | RETOUCHEDPIECETYPOLOGY == "Splintered piece fragment" ~ "Splintered piece",
-    RETOUCHEDPIECETYPOLOGY == "Retouched blade" | RETOUCHEDPIECETYPOLOGY == "Retouched bladelet" | RETOUCHEDPIECETYPOLOGY == "Retouched flake" | RETOUCHEDPIECETYPOLOGY == "Retouched burin spall" ~ "Retouched blank",
-    RETOUCHEDPIECETYPOLOGY == "Retouched bladelet frag" | RETOUCHEDPIECETYPOLOGY == "Retouched flake frag" | RETOUCHEDPIECETYPOLOGY == "Retouched flake siret fragment"  ~ "Retouched blank fragment",
-    RETOUCHEDPIECETYPOLOGY == "Multiple burin" | RETOUCHEDPIECETYPOLOGY == "Burin splintered piece" | RETOUCHEDPIECETYPOLOGY == "Burin on truncation" | RETOUCHEDPIECETYPOLOGY == "Retouched burin" ~ "Burin",
-    RETOUCHEDPIECETYPOLOGY == "Dentilhado" ~ "Denticulate",
-    RETOUCHEDPIECETYPOLOGY == "Right truncation on retouched piece" ~ "Truncation",
-    RETOUCHEDPIECETYPOLOGY == "Backed bladelet" | RETOUCHEDPIECETYPOLOGY == "Backed flake" | RETOUCHEDPIECETYPOLOGY == "Double backed bladelet" | RETOUCHEDPIECETYPOLOGY == "Backed bladelet parcial" ~ "Backed tool",
-    RETOUCHEDPIECETYPOLOGY == "Carenated endscraper" ~ "Endscraper",
-    TRUE ~ RETOUCHEDPIECETYPOLOGY))
-
-```
-
-```{r}
-#| label: shelter-solutrean-setup
-
-# Setting up the Shelter dataset
-cols_to_concat_shelter <- c("YEAR", "ID") # Concatenate YEAR and ID variables in one single variable (e.g. 05-500)
-
-solutrean_WIP <- solutrean_JC |> 
-  filter(Layer %in% c("A", "B", "C")) |> # Filtering Solutrean layers
-  filter(`Raw material` %in% c("Chert", "Chalcedony")) |>  # Filtering raw materials
-  filter(!Screen %in% c("Crivo", "crivo")) |>  # Filtering out all bucket lithics since they were not included in the RM analysis
-  mutate_at("Date", str_replace, "20", "") |> # Removing initial part of the year to match IDs
-  dplyr::rename("YEAR" = "Date") |> 
-  tidyr::unite(col='ID', all_of(cols_to_concat_shelter), sep="-", remove=FALSE) # Concatenate YEAR and ID variables in one single variable (e.g. 05-500)
-
-# Dataset filtering for chert/chalcedony and levels (A-C), 3229 + 61 solutrean points, n=2390
-solutrean_original_chert <- solutrean_JC |> 
-  filter(Layer %in% c("A", "B", "C")) |> # Filtering Solutrean layers
-  filter(`Raw material` %in% c("Chert", "Chalcedony")) |> 
-  filter(Class != "Chip")
-
-# In Cascalheira 2010 Retouched piece was not a category but a variable. To match the other DBs, this category was added
-solutrean_WIP <- solutrean_WIP |> 
-  mutate(Class = case_when( # This alteration is being done on the original class column
-    Retouched == "Yes" ~ "RetouchedPiece", # Whenever retouch is present, class is now Retouched piece
-    TRUE ~ Class)) |> 
-  mutate(CLASS = case_when( # Creating a column for clustered classes, to match the other DBs
-    Class == "Blade" | Class == "Bladelet" ~ "ElongBlank", # Cluster blades with bladelets. The distinction can come later through a mutate and the measurements
-    Class == "Core front" | Class == "Core tablet" | Class == "Core trimming elem." | Class == "Crested piece" ~ "CorePrepProd", # Cluster all preparation products
-    Class == "Fragment" ~ "Shatter",
-    Class == "Flake distal frag." | Class == "Flake mesial frag." | Class == "Flake prox. frag." ~ "FlakeFrag", # Cluster flake frags into a single category
-    Class == "Blade distal frag." | Class == "Blade mesial frag." | Class == "Blade prox. frag." 
-    | Class == "Bladelet distal frag." | Class == "Bladelet mesial frag." | Class == "Bladelet prox. frag." ~ "ElongBlankFrag", # Cluster elong frags into a single category
-    TRUE ~ Class)) |> 
-  mutate(COREPREPPROD = case_when( # Creating a column for the types of core preparation and maintenance products (COREPREPPROD)
-    Class == "Core front" ~ "Core front",
-    Class == "Core tablet" ~ "Core tablet",
-    Class == "Core trimming elem." ~ "Core trim",
-    Class == "Crested piece" ~ "Crested piece")) |> 
-  mutate(PIECECOMPLETENESS = case_when( # Creating a column for the portions present in flake or elongblank fragments to match other DBs
-    Class == "Flake distal frag." | Class == "Blade distal frag." | Class == "Bladelet distal frag." ~ "Distal",
-    Class == "Flake mesial frag." | Class == "Blade mesial frag." | Class == "Bladelet mesial frag." ~ "Mesial",
-    Class == "Flake prox. frag." | Class == "Blade prox. frag." | Class == "Bladelet prox. frag." ~ "Proximal")) |> 
-  rename(PLATFORMTYPE = Platform_type) |> # Renaming column
-  mutate(PLATFORMTYPE = case_when( # Renaming variables to match correspondent variables in the other DBs
-    PLATFORMTYPE == "Multifacetted" ~ "Faceted",
-    PLATFORMTYPE == "Unfacetted" ~ "Plain",
-    TRUE ~ PLATFORMTYPE)) |>
-  mutate(Type = case_when( # Translating retouched types from Zilhão 1997 to simplified typologies
-    Type == "92b" ~ "Retouched piece fragment",
-    Type == "92a" ~ "Retouched blank",
-    Type == "76" ~ "Splintered piece",
-    Type == "75" ~ "Denticulate",
-    Type == "74" ~ "Notch",
-    Type == "66" ~ "Retouched blade",
-    Type == "61" ~ "Truncation",
-    Type == "28" ~ "Burin",
-    Type == "7" | Type == "5b" | Type == "4"  ~ "Endscrapper",
-    TRUE ~ Type)) |>
-  rename(LEVEL = Layer, UNIT = Unit, CORTEX = Percent_of_cortex, CORTEXLOCATION = Loc_of_cortex, THICKNESS = Thickness,
-         MAXWIDTH = Width, LENGTH = Length, COREPLATFORM = Core_platfform, SCARCOUNT = N_of_Scars, COREABANDON = Core_abandon,
-         RETOUCHEDPIECETYPOLOGY = Type)  # Renaming column
-  
-solutrean_tech <- solutrean_WIP |>
-  dplyr::select(ID, CLASS, LEVEL, UNIT, COREPREPPROD, PIECECOMPLETENESS, CORTEX, CORTEXLOCATION, PLATFORMTYPE,
-                SCARCOUNT, THICKNESS, MAXWIDTH, LENGTH, COREPLATFORM, COREABANDON, RETOUCHEDPIECETYPOLOGY)
-
-solutrean_points <- solutrean_points |> 
-  mutate_at("YEAR", str_replace, "20", "") |> # Removing initial part of the year to match IDs
-  tidyr::unite(col='ID', all_of(cols_to_concat_shelter), sep="-", remove=TRUE)
-  
-solutrean_tech <- bind_rows(solutrean_tech, solutrean_points) # Uniting technology dataset with points (2167 to 2228)
-
-solutrean_tech <- solutrean_tech |> # Originally 2228
-  distinct(ID, .keep_all = TRUE) # Keeping individual IDs to avoid buckets (down to 1993)
-
-shelter_RM_WIP <- shelter_RM |>
-  mutate_at("ID", str_replace, "VB", "") |> # Remove "VB" from ID
-  mutate(RMTYPE = case_when(
-    RMTYPE == "Type 2" | RMTYPE == "TYPE 2" ~ "T2",
-    RMTYPE == "Chalcedony" ~ "T1", # Altering first group names to final group names. Subtypes are maintained as before.
-    RMTYPE == "TYPE 15" ~ "T3",
-    RMTYPE == "TYPE 7" ~ "T4",
-    RMTYPE == "TYPE 12" ~ "T5",
-    RMTYPE == "TYPE 11" ~ "T6",
-    RMTYPE == "TYPE 13" ~ "T7",
-    RMTYPE == "TYPE 11F" ~ "T8",
-    RMTYPE == "TYPE 13B" ~ "T9",
-    RMTYPE == "Oolitic" ~ "T10",
-    RMTYPE == "TYPE GB" ~ "T11",
-    RMTYPE == "ND_A" ~ "INDET",
-    .default = RMTYPE)) |>
-  select(AREA, ID, RMTYPE, SUBTYPE, WEIGHT, CORTEXTHICKNESS, CORTEXAPPEARANCE) |>  # Select variables
-  distinct(ID, .keep_all = TRUE) # Keeping individual IDs to avoid buckets
-
-solutrean_dataset <- full_join(solutrean_tech, shelter_RM_WIP, by = "ID") # The complete dataset has 2818 (44 points) entries
-solutrean_dataset <- solutrean_dataset |>
-  drop_na(RMTYPE) |>   # Dropping NAs on the RM database drops dataset to 1514
-  drop_na(CLASS) |>  # Dropping NAs on the technological class drops dataset to 914
-  dplyr::mutate(RETOUCHEDPIECETYPOLOGY = case_when(
-    RETOUCHEDPIECETYPOLOGY == "Bifacial fragment" ~ "Bifacial blank",
-    RETOUCHEDPIECETYPOLOGY == "Shouldered point fragment" ~ "Shouldered point",
-    TRUE ~ RETOUCHEDPIECETYPOLOGY))
-  
-```
-
-```{r}
-#| label: general-graphs
-
-barplot_gravettian <- phase_dataset |> 
-    dplyr::mutate(RMTYPE = case_when(
-    RMTYPE == "T1" | RMTYPE == "T2" | RMTYPE == "T3" | RMTYPE == "T4" | RMTYPE == "T5" ~ "Local",
-    TRUE ~ RMTYPE)) |> 
-  dplyr::mutate(CLASS = case_when(
-    CLASS == "BlankFrag" ~ "Blank",
-    CLASS == "BurinSpall" ~ "Burin spall",
-    CLASS == "CoreFrag" ~ "Core",
-    CLASS == "CorePreparProd" ~ "Core prep product",
-    CLASS == "RetouchedPiece" | CLASS == "RetouchedPieceFrag" ~ "Retouched",
-    TRUE ~ CLASS)) |> 
-  filter(Level %in% c(6, 7)) |>
-  filter(RMTYPE != "INDET") |> 
-  mutate(RMTYPE = factor(RMTYPE, levels = c("Local", "T6","T7", 
-                                        "T8", "T9", "T10", "TL"))) |>
-  dplyr::group_by(RMTYPE, CLASS) |> 
-  dplyr::summarise(n = n()) |> 
-  mutate(percent = n/sum(n)) |>
-  ggplot(aes(x = RMTYPE, y = percent, fill = CLASS)) +
-  geom_bar(stat = "identity", width = 0.5) +
-  geom_text(aes(label=ifelse(n > 7, n, "")), position = position_stack(vjust = .5), size = 3, color = "white") +
-  scale_y_continuous(labels = scales::percent_format()) +
-  theme_minimal() +
-  theme(axis.title.x=element_blank()) +
-  labs(y = " ") +
-  scale_fill_manual(name = "Class", values = c("#D49B54", "#8B6969", "#CDAF95", "#2B4F60",
-                              "tomato4", "#798777"))
-
-barplot_proto <- phase_dataset |> 
-    dplyr::mutate(RMTYPE = case_when(
-    RMTYPE == "T1" | RMTYPE == "T2" | RMTYPE == "T3" | RMTYPE == "T4" | RMTYPE == "T5" ~ "Local",
-    TRUE ~ RMTYPE)) |> 
-  dplyr::mutate(CLASS = case_when(
-    CLASS == "BlankFrag" ~ "Blank",
-    CLASS == "BurinSpall" ~ "Burin spall",
-    CLASS == "CoreFrag" ~ "Core",
-    CLASS == "CorePreparProd" ~ "Core prep product",
-    CLASS == "RetouchedPiece" | CLASS == "RetouchedPieceFrag" ~ "Retouched",
-    TRUE ~ CLASS)) |> 
-  filter(Level %in% c("4E", "4E/5")) |>
-  filter(RMTYPE != "INDET") |> 
-  filter(CLASS != "Chip") |> 
-  mutate(RMTYPE = factor(RMTYPE, levels = c("Local", "T6","T7", 
-                                        "T8", "T9", "T10", "TL"))) |>
-  dplyr::group_by(RMTYPE, CLASS) |> 
-  dplyr::summarise(n = n()) |> 
-  mutate(percent = n/sum(n)) |>
-  ggplot(aes(x = RMTYPE, y = percent, fill = CLASS)) +
-  geom_bar(stat = "identity", width = 0.5) +
-  geom_text(aes(label=ifelse(n > 7, n, "")), position = position_stack(vjust = .5), size = 3, color = "white") +
-  scale_y_continuous(labels = scales::percent_format()) +
-  labs(y = " ") +
-  theme_minimal() +
-  theme(axis.title.x=element_blank()) +
-  scale_fill_manual(values = c("#D49B54", "#8B6969", "#CDAF95", "#2B4F60",
-                              "tomato4", "#798777"))
-
-barplot_solutrean <- solutrean_dataset |> 
-   dplyr::mutate(RMTYPE = case_when(
-    RMTYPE == "T1" | RMTYPE == "T2" | RMTYPE == "T3" | RMTYPE == "T4" | RMTYPE == "T5" ~ "Local",
-    TRUE ~ RMTYPE)) |> 
-  dplyr::mutate(CLASS = case_when(
-    CLASS == "ElongBlank" | CLASS == "Flake" ~ "Blank",
-    CLASS == "ElongBlankFrag" | CLASS == "FlakeFrag" ~ "Blank",
-    CLASS == "Thinning flake" ~ "Blank",
-    CLASS == "CorePrepProd" ~ "Core prep product",
-    CLASS == "RetouchedPiece" | CLASS == "Retouched piece" | CLASS == "Retouched piece fragment" ~ "Retouched",
-    CLASS == "Core fragment" ~ "Core",
-    TRUE ~ CLASS)) |> 
-  filter(RMTYPE != "INDET") |> 
-  mutate(RMTYPE = factor(RMTYPE, levels = c("Local", "T6","T7", 
-                                        "T8", "T9", "T10","T11", "TL"))) |>
-  dplyr::group_by(RMTYPE, CLASS) |> 
-  dplyr::summarise(n = n()) |> 
-  mutate(percent = n/sum(n)) |>
-  ggplot(aes(x = RMTYPE, y = percent, fill = CLASS)) +
-  geom_bar(stat = "identity", width = 0.5) +
-  geom_text(aes(label=ifelse(n > 7, n, "")), position = position_stack(vjust = .5), size = 3, color = "white") +
-  scale_y_continuous(labels = scales::percent_format()) +
-  labs(y = " ") +
-  theme_minimal() +
-  theme(axis.title.x=element_blank()) +
-  scale_fill_manual(values = c("#D49B54", "#8B6969", "#CDAF95", "#2B4F60",
-                              "tomato4", "#798777"))
-
-```
-
-```{r}
-#| label: stats-setup
-
-# Scatterplots for width and length and Boxplots for weight by assemblage
-
-# Solutrean statistics
-# DS preparation
-solutrean_stats <- solutrean_dataset |> 
-  filter(RMTYPE != "INDET") |>
-   mutate(CLASS = case_when(
-    CLASS == "ElongBlank" | CLASS == "Flake" ~ "Blank",
-    CLASS == "FlakeFrag" | CLASS == "ElongBlankFrag" ~ "BlankFrag",
-    TRUE ~ CLASS)) |> 
-  dplyr::mutate(RMTYPE = case_when(
-    RMTYPE == "T1" | RMTYPE == "T2" | RMTYPE == "T3" | RMTYPE == "T4" | RMTYPE == "T5" ~ "Local",
-    TRUE ~ RMTYPE))
-
-# Scatterplot for width and length
-solutrean_scatter <- solutrean_stats |>
-  filter(CLASS %in% c("Blank", "Core")) |>
-  filter(MAXWIDTH !="0" & LENGTH != "0") |>
-  mutate(RMTYPE = factor(RMTYPE, levels = c("Local", "T6","T7", 
-                                        "T8", "T9", "T10", "T11", "TL"))) |>
-  mutate(CLASS = factor(CLASS, levels = c("Blank", "Core"))) |>
-  ggplot(aes(x = LENGTH, y = MAXWIDTH, fill = RMTYPE)) +
-  geom_point(alpha = 0.9, size = 3, shape = 21, colour = "black") +
-  facet_wrap(~CLASS) +
-  labs(x="Length (mm)", y="Max. Width (mm)") +
-  scale_fill_manual(name = "Chert type", values = c("#D49B54", "#8B6969", "#CDAF95", "#2B4F60",
-                              "tomato4", "#BDC7C9", "#798777"))
-
-# Boxplot for individual measurements
-# Weight
-solutrean_stats_weight <- solutrean_stats |>
-  filter(CLASS %in% c("Blank", "Core")) |> 
-  filter(WEIGHT !="0") |>
-  mutate(RMTYPE = factor(RMTYPE, levels = c("Local", "T6","T7", 
-                                        "T8", "T9", "T10", "T11", "TL"))) |>
-  mutate(CLASS = factor(CLASS, levels = c("Blank", "Core"))) |>
-  ggplot(aes(RMTYPE, WEIGHT, fill = RMTYPE)) +
-  geom_boxplot(aes(fill=factor(RMTYPE)), outlier.shape=21) +
-  facet_wrap(~CLASS, scales = "free_y") +
-  stat_summary(fun=mean, geom="point", shape=23) +
-  labs(y="Weight (gr)") +
-  #coord_cartesian(ylim =  c(0, 50)) +
-  scale_fill_manual(values = c("#D49B54", "#8B6969", "#CDAF95", "#2B4F60",
-                              "tomato4", "#BDC7C9", "#798777")) +
-  theme(axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(), axis.title.x = element_blank())
-
-# Proto-Solutrean statistics
-# DS prep
-proto_stats <- phase_dataset |> 
-  filter(Level %in% c("4E", "4E/5")) |> 
-  filter(!RMTYPE == "INDET") |>
-  dplyr::mutate(RMTYPE = case_when(
-    RMTYPE == "T1" | RMTYPE == "T2" | RMTYPE == "T3" | RMTYPE == "T4" | RMTYPE == "T5" ~ "Local",
-    TRUE ~ RMTYPE))
-
-# Scatterplots for width and length
-proto_scatter <- proto_stats |>
-  filter(CLASS %in% c("Blank", "Core")) |>
-  filter(MAXWIDTH !="0" & LENGTH != "0") |>
-   mutate(RMTYPE = factor(RMTYPE, levels = c("Local", "T6","T7", 
-                                        "T8", "T9", "T10", "TL"))) |>
-  mutate(CLASS = factor(CLASS, levels = c("Blank", "Core"))) |>
-  ggplot(aes(x = LENGTH, y = MAXWIDTH, fill = RMTYPE)) +
-  geom_point(alpha = 0.9, size = 3, shape = 21, colour = "black") +
-  facet_wrap(~CLASS) +
-  labs(x="Length (mm)", y="Max. Width (mm)") +
-  scale_fill_manual(name = "Chert type", values = c("#D49B54", "#8B6969", "#CDAF95", "#2B4F60",
-                              "tomato4", "#BDD2B6", "#798777", "#BDC7C9"))
-
-# Boxplots weight
-proto_stats_weight <- proto_stats |>
-  filter(CLASS %in% c("Blank", "Core")) |> 
-  filter(WEIGHT !="0") |>
-  mutate(RMTYPE = factor(RMTYPE, levels = c("Local", "T6", "T7", "T8", "T9", "T10", "TL"))) |>
-  mutate(CLASS = factor(CLASS, levels = c("Blank", "Core"))) |>
-  ggplot(aes(RMTYPE, WEIGHT, fill = RMTYPE)) +
-  geom_boxplot(aes(fill=factor(RMTYPE)), outlier.shape=21) +
-  facet_wrap(~CLASS, scales = "free_y") +
-  stat_summary(fun.y=mean, geom="point", shape=23) +
-  labs(y="Weight (gr)") +
-  #coord_cartesian(ylim =  c(0, 50)) +
-  scale_fill_manual(values = c("#D49B54", "#8B6969", "#CDAF95", "#2B4F60",
-                              "tomato4", "#BDD2B6", "#798777", "#BDC7C9")) +
-  theme(axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(), axis.title.x = element_blank())
-
-
-# Gravettian statistics
-# DS prep
-gravettian_stats <- phase_dataset |>
-  filter(Level %in% c(6, 7)) |>
-  filter(RMTYPE != "INDET") |>
-  dplyr::mutate(RMTYPE = case_when(
-    RMTYPE == "T1" | RMTYPE == "T2" | RMTYPE == "T3" | RMTYPE == "T4" | RMTYPE == "T5" ~ "Local",
-    TRUE ~ RMTYPE))
-
-# Scatterplots for width and length
-gravettian_scatter <- gravettian_stats |>
-  filter(CLASS %in% c("Blank", "Core")) |>
-  filter(MAXWIDTH !="0" & LENGTH != "0") |>
-   mutate(RMTYPE = factor(RMTYPE, levels = c("Local", "T6","T7", 
-                                        "T8", "T9", "T10", "TL"))) |>
-  mutate(CLASS = factor(CLASS, levels = c("Blank", "Core"))) |>
-  ggplot(aes(x = LENGTH, y = MAXWIDTH, fill = RMTYPE)) +
-  geom_point(alpha = 0.9, size = 3, shape = 21, colour = "black") +
-  facet_wrap(~CLASS) +
-  labs(x="Length (mm)", y="Max. Width (mm)") +
-  scale_fill_manual(name = "Chert type", values = c("#D49B54", "#8B6969", "#CDAF95", "#2B4F60",
-                              "#8B7D6B", "#BDD2B6", "#798777", "#BDC7C9"))
-
-# Boxplots
-# Weight
-gravettian_stats_weight <- gravettian_stats |>
-  filter(CLASS %in% c("Blank", "Core")) |> 
-  filter(WEIGHT !="0") |>
-  filter(!(RMTYPE == "Local" & WEIGHT > 40)) |> # Removed a single outlier at 60 weight while ensuring that the data remains consistent. Only mean changed significantly and was normalised
-  mutate(RMTYPE = factor(RMTYPE, levels = c("Local", "T6", "T7", "T8", "T9", "T10", "TL"))) |>
-  mutate(CLASS = factor(CLASS, levels = c("Blank", "Core"))) |>
-  ggplot(aes(RMTYPE, WEIGHT, fill = RMTYPE)) +
-  geom_boxplot(aes(fill=factor(RMTYPE)), outlier.shape=21) +
-  facet_wrap(~CLASS, scales = "free_y") +
-  stat_summary(fun.y=mean, geom="point", shape=23) +
-  labs(y="Weight (gr)") +
-  #coord_cartesian(ylim =  c(0, 60)) +
-  scale_fill_manual(values = c("#D49B54", "#8B6969", "#CDAF95", "#2B4F60",
-                              "#8B7D6B", "#BDD2B6", "#798777", "#BDC7C9")) +
-  theme(axis.text.x=element_blank(),
-        axis.ticks.x=element_blank(), axis.title.x = element_blank())
-
-```
-
-```{r}
-#| label: ratiobc
-
-# DS preparation and tool-to-debitage ratio tables
-## For Gravettian
-gravettian_ratiobc <- phase_dataset |> 
-  filter(Level %in% c(6, 7)) |> 
-  filter(RMTYPE != "INDET") |> 
-  mutate(CLASS = case_when(
-    CLASS == "BlankFrag" & PIECECOMPLETENESS == "Proximal" ~ "Blank", # To add proximal fragments to ratio
-    TRUE ~ CLASS)) |> 
-  filter(CLASS %in% c("Blank", "Core")) |> 
-  count(RMTYPE, CLASS, sort = TRUE) |> 
-  group_by(RMTYPE, CLASS) |>
-  summarise(n=sum(n)) |> 
-  spread(CLASS, n, fill=0) |> 
-  mutate(sum = rowSums(across(where(is.numeric)))) |> 
-  filter(!sum <= 5) |> 
-  mutate("Blank/Core" = Blank / Core)
-
-# For Proto-Solutrean
-proto_ratiobc <- phase_dataset |> 
-  filter(Level %in% c("4E", "4E/5")) |> 
-  filter(RMTYPE != "INDET") |> 
-  mutate(CLASS = case_when(
-    CLASS == "BlankFrag" & PIECECOMPLETENESS == "Proximal" ~ "Blank", # To add proximal fragments to ratio
-    TRUE ~ CLASS)) |> 
-  filter(CLASS %in% c("Blank", "Core")) |> 
-  count(RMTYPE, CLASS, sort = TRUE) |> 
-  group_by(RMTYPE, CLASS) |>
-  summarise(n=sum(n)) |> 
-  spread(CLASS, n, fill=0) |> 
-  mutate(sum = rowSums(across(where(is.numeric)))) |> 
-  filter(!sum <= 5) |>
-  mutate("Blank/Core" = Blank / Core)
-
-# For Solutrean
-solutrean_ratiobc <- solutrean_dataset |> 
-  mutate(CLASS = case_when(
-    CLASS == "Flake" | CLASS == "ElongBlank" | CLASS == "Thinning flake" ~ "Blank",
-    CLASS == "FlakeFrag" | CLASS == "ElongBlankFrag" ~ "BlankFrag",
-    TRUE ~ CLASS)) |> 
-  mutate(CLASS = case_when(
-    CLASS == "BlankFrag" & PIECECOMPLETENESS == "Proximal" ~ "Blank", # To add proximal fragments to ratio
-    TRUE ~ CLASS)) |> 
-  filter(RMTYPE != "INDET") |> 
-  filter(CLASS %in% c("Blank", "Core")) |> 
-  count(RMTYPE, CLASS, sort = TRUE) |> 
-  group_by(RMTYPE, CLASS) |>
-  summarise(n=sum(n)) |> 
-  spread(CLASS, n, fill=0) |> 
-  mutate(sum = rowSums(across(where(is.numeric)))) |> 
-  filter(!sum <= 5) |> 
-  mutate("Blank/Core" = Blank / Core)
-
-# Cleaning up to create a single table for scatterplot
-gravettian_ratiobc_b <-gravettian_ratiobc |>
-  filter(`Blank/Core` != "Inf") |> 
-  dplyr::mutate("Assemblage" = "Gravettian") |> 
-  select(Assemblage, RMTYPE, `Blank/Core`)
-proto_ratiobc_b <- proto_ratiobc |> 
-  filter(`Blank/Core` != "Inf") |> 
-  dplyr::mutate("Assemblage" = "Proto-Solutrean") |> 
-  select(Assemblage, RMTYPE, `Blank/Core`)
-solutrean_ratiobc_b <- solutrean_ratiobc |> 
-  filter(`Blank/Core` != "Inf") |> 
-  dplyr::mutate("Assemblage" = "Solutrean") |> 
-  select(Assemblage, RMTYPE, `Blank/Core`)
-ratio_blankcore <- bind_rows(gravettian_ratiobc_b, proto_ratiobc_b,solutrean_ratiobc_b)
-
-# Scatterplot with local vs non-local RM Types
-bc_ratio <- ratio_blankcore |>
-  dplyr::mutate(Source = case_when(
-    RMTYPE == "T1" | RMTYPE == "T2" | RMTYPE == "T3" | RMTYPE == "T4" | RMTYPE == "T5" ~ "Local",
-    TRUE ~ RMTYPE)) |>
-  mutate(Source = factor(Source, levels = c("Local", "T6","T7", 
-                                        "T8", "T9", "T10", "T11", "TL"))) |>
-  ggplot(aes(x=Assemblage, y=`Blank/Core`, fill = Source)) +
-  geom_point(size=3, shape = 21, colour = "black") +
-  coord_cartesian(clip = "off") +
-  theme(legend.position = "none", axis.title.x = element_blank()) +
-  scale_fill_manual(values = c("#D49B54", "#8B6969", "#CDAF95", "#2B4F60",
-                              "#BDD2B6"))
-
-```
-
-```{r}
-#| label: ratiotd
-
-# DS preparation and tool-to-debitage ratio tables
-## For Gravettian
-gravettian_ratiotd <- phase_dataset |> 
-  filter(Level %in% c(6, 7)) |> 
-  filter(RMTYPE != "INDET") |> 
-  mutate(CLASS = case_when(
-    CLASS == "BlankFrag" & PIECECOMPLETENESS == "Proximal" ~ "Blank", # To add proximal fragments to ratio
-    CLASS == "RetouchedPieceFrag" & PIECECOMPLETENESS == "Proximal" ~ "RetouchedPiece",
-    TRUE ~ CLASS)) |> 
-  filter(CLASS %in% c("Blank", "RetouchedPiece")) |> 
-  count(RMTYPE, CLASS, sort = TRUE) |> 
-  group_by(RMTYPE, CLASS) |>
-  summarise(n=sum(n)) |> 
-  spread(CLASS, n, fill=0) |> 
-  mutate(sum = rowSums(across(where(is.numeric)))) |> 
-  filter(!sum <= 5) |> 
-  mutate("Tool/Blank" = RetouchedPiece / Blank)
-
-## For Proto-Solutrean
-proto_ratiotd <- phase_dataset |> 
-  filter(Level %in% c("4E", "4E/5")) |> 
-  filter(RMTYPE != "INDET") |> 
-  mutate(CLASS = case_when(
-    CLASS == "BlankFrag" & PIECECOMPLETENESS == "Proximal" ~ "Blank", # To add proximal fragments to ratio
-    CLASS == "RetouchedPieceFrag" & PIECECOMPLETENESS == "Proximal" ~ "RetouchedPiece",
-    TRUE ~ CLASS)) |> 
-  filter(CLASS %in% c("Blank", "RetouchedPiece")) |> 
-  count(RMTYPE, CLASS, sort = TRUE) |> 
-  group_by(RMTYPE, CLASS) |>
-  summarise(n=sum(n)) |> 
-  spread(CLASS, n, fill=0) |> 
-  mutate(sum = rowSums(across(where(is.numeric)))) |> 
-  filter(!sum <= 5) |> 
-  mutate("Tool/Blank" = RetouchedPiece / Blank)
-
-## For Solutrean
-solutrean_ratiotd <- solutrean_dataset |> 
-  filter(RMTYPE != "INDET") |> 
-  mutate(CLASS = case_when(
-    CLASS == "Flake" | CLASS == "ElongBlank" | CLASS == "Thinning flake" ~ "Blank",
-    CLASS == "FlakeFrag" | CLASS == "ElongBlankFrag" ~ "BlankFrag",
-    CLASS == "Retouched piece" ~ "RetouchedPiece",
-    CLASS == "Retouched piece fragment" ~ "RetouchedPieceFrag",
-    TRUE ~ CLASS)) |> 
-  mutate(CLASS = case_when(
-    CLASS == "BlankFrag" & PIECECOMPLETENESS == "Proximal" ~ "Blank", # To add proximal fragments to ratio
-    CLASS == "RetouchedPieceFrag" & PIECECOMPLETENESS == "Proximal" ~ "RetouchedPiece",
-    TRUE ~ CLASS)) |> 
-  filter(CLASS %in% c("Blank", "RetouchedPiece")) |> 
-  count(RMTYPE, CLASS, sort = TRUE) |> 
-  group_by(RMTYPE, CLASS) |>
-  summarise(n=sum(n)) |> 
-  spread(CLASS, n, fill=0) |> 
-  mutate(sum = rowSums(across(where(is.numeric)))) |> 
-  filter(!sum <= 5) |> 
-  mutate("Tool/Blank" = RetouchedPiece / Blank)
-
-# Creating a single table with all ratios by assemblage for the scatterplot
-gravettian_ratiotd_b <-gravettian_ratiotd |> 
-  dplyr::mutate("Assemblage" = "Gravettian") |> 
-  select(Assemblage, RMTYPE, `Tool/Blank`)
-proto_ratiotd_b <- proto_ratiotd |> 
-  dplyr::mutate("Assemblage" = "Proto-Solutrean") |> 
-  select(Assemblage, RMTYPE, `Tool/Blank`)
-solutrean_ratiotd_b <- solutrean_ratiotd |> 
-  dplyr::mutate("Assemblage" = "Solutrean") |> 
-  select(Assemblage, RMTYPE, `Tool/Blank`)
-ratio_tooldebitage <- bind_rows(gravettian_ratiotd_b, proto_ratiotd_b,solutrean_ratiotd_b)
-
-# Scatterplot with local vs non-local RM Types
-td_ratio <- ratio_tooldebitage |>
-  dplyr::mutate(Source = case_when(
-    RMTYPE == "T1" | RMTYPE == "T2" | RMTYPE == "T3" | RMTYPE == "T4" | RMTYPE == "T5" ~ "Local",
-    TRUE ~ RMTYPE)) |>
-  mutate(Source = factor(Source, levels = c("Local", "T6","T7", 
-                                        "T8", "T9", "T10", "T11", "TL"))) |>
-  ggplot(aes(x=Assemblage, y=`Tool/Blank`, fill = Source)) +
-  geom_point(size=3, shape = 21, colour = "black") +
-  theme(legend.position = "bottom", axis.title.x = element_blank()) +
-  scale_fill_manual(name = "Chert type", values = c("#D49B54", "#8B6969", "#CDAF95", "#2B4F60",
-                              "#BDD2B6", "#BDC7C9", "#798777"))
-
-```
-
-Results are structured according to the predefined analytical parameters, comparing local and non-local cherts ([@fig-cherts]) across different assemblages. A comprehensive description of each assemblage and detailed tables for all analyses are provided in Online Resource 1.
+Results are structured according to the predefined analytical parameters, comparing local and non-local cherts (@fig-cherts) across different assemblages. A comprehensive description of each assemblage and detailed tables for all analyses are provided in Online Resource 1.
 
 Blanks and blank fragments represent the most abundant lithic class in all assemblages, accounting for over 40% of artifacts across all chert types ([@fig-general-graphs]). As expected, cores are present in lower frequencies (\~3-8%) but are more numerous in local cherts than in non-local types and absent from the TL group. In the Proto-Solutrean assemblage, non-local chert cores are rare, with only T7-9 yielding a small number (n=4 complete cores, n=2 core fragments). Albeit in very small numbers in all assemblages (n\<10), core preparation and maintenance products are also present in local and non-local cherts, especially in the non-local types which show the larger sample number such as T6-7. The presence of knapping by-products such as shatter is also seen in both local and non-local cherts in the Gravettian (@fig-general-graphs a) and Proto-Solutrean (@fig-general-graphs b) assemblages. Retouched tools are present in all chert types across all assemblages. In general, local cherts exhibit lower retouch frequencies than non-local cherts, though the total number of retouched tools varies significantly between assemblages.
 
 ```{r}
 #| label: fig-general-graphs
 #| fig-cap: "Class by chert type in the Gravettian (a), Proto-Solutrean (b) and Solutrean (c) assemblages. Labels within the plots correspond to the number of artefacts within each class. Only labels of n>7 are shown"
-#| fig-width: 5
-#| fig-asp: 1.3
-#| fig-align: center
 
-ggpubr::ggarrange(barplot_gravettian, barplot_proto, barplot_solutrean, labels = c("a", "b", "c"), nrow = 3, common.legend = TRUE, legend = "bottom")
+
+knitr::include_graphics(here::here("data/05-stone-to-tool/general_graphs.png"))
 
 ```
 
-The Gravettian assemblage exhibits the highest proportion of retouched tools (\~21%; [@fig-general-graphs] a), compared to \<10% in other assemblages. Tool diversity is greater among non-local cherts, which contain a high frequency of generalized tools (e.g., notches, retouched pieces) alongside hunting implements such as backed bladelets. The abundance of burins and burin spalls suggests they may have functioned as cores, indicating a technological strategy rather than solely a focus on retouch (Online Resource 1 Tables s1 and s3). In comparison to the Gravettian, other assemblages show smaller numbers of retouched tools. While in the Proto-Solutrean (Online Resource 1 Table s5) no significant difference was identified between local and non-local retouched tools, in the Solutrean assemblage (Online Resource 1 Table s7) both tool diversity and tool specialization are higher in local cherts.
+The Gravettian assemblage exhibits the highest proportion of retouched tools (\~21%; [@fig-general-graphs] a), compared to \<10% in other assemblages. Tool diversity is greater among non-local cherts, which contain a high frequency of generalized tools (e.g., notches, retouched pieces) alongside hunting implements such as backed bladelets. The abundance of burins and burin spalls suggests they may have functioned as cores, indicating a technological strategy rather than solely a focus on retouch (Online Resource 1 Tables s1 and s3). In comparison to the Gravettian, other assemblages show smaller numbers of retouched tools. While in the Proto-Solutrean (Online Resource 1 Table s5) no significant difference was identified between local and non-local retouched tools, in the Solutrean assemblage (Online Resource 1 Table s7) both tool diversity and tool specialisation are higher in local cherts.
 
 Retouched tools were further explored through the tools-to-debitage ratio (@fig-ratios a, Online Resource 1 Table s8). In general, the results show that non-local chert types have higher tool-to-debitage ratios than local types, albeit with differences between assemblages. The Gravettian assemblage shows the highest tool-to-debitage ratios compared to the remaining assemblages; non-local cherts show ratios above 0.9, while local cherts show values below 0.5. In the Proto-Solutrean non-local cherts show ratios between 0.3 to 0.5, while local cherts show ratios below 0.3. This pattern is less clear in the Solutrean assemblage since the ratios are the lowest of all assemblages. Non-local cherts show ratios above 0.1 (with exception of T8) while local cherts show ratios below 0.1 (with exception of T1; Online Resource1 Table s8 c).
 
 ```{r}
 #| label: fig-ratios
 #| fig-cap: "Plotted ratios of blanks-to-core (a) and tool-to-debitage (b) by assemblage (Gravettian, Proto-Solutrean and Solutrean) and by chert type. All local cherts were grouped in a single category Local, while non-local cherts maintained their individual types"
-#| fig-width: 5
-#| fig-asp: 1.2
-#| fig-align: center
 
-# Extract legend from plot B using ggpubr function since plot B has more categories than plot A
-legend_b <- as_ggplot(get_legend(td_ratio))  # Convert legend to a ggpubr-compatible plot
-td_ratio <- td_ratio + theme(legend.position = "none")
-ggpubr::ggarrange(td_ratio, bc_ratio, legend_b, labels = c("a", "b", ""), ncol = 1, heights = c(3, 3, 1))
+knitr::include_graphics(here::here("data/05-stone-to-tool/ratios.png"))
 
 ```
 
@@ -863,33 +240,24 @@ The scatterplots and boxplots show different patterns in the several analysed cl
 ```{r}
 #| label: fig-gravettian-plots
 #| fig-cap: "Gravettian assemblage blank and core measurements and weight descriptive statistics in local and non-local chert types. a) Scatterplots of width and length. b) Boxplots of weight; diamond symbol represents mean values within each group"
-#| fig-width: 6
-#| fig-asp: 1
-#| fig-align: center
 
-ggpubr::ggarrange(gravettian_scatter, gravettian_stats_weight, labels = c("a", "b"), nrow = 2, common.legend = TRUE, legend = "bottom")
+knitr::include_graphics(here::here("data/05-stone-to-tool/gravettian_plots.png"))
 
 ```
 
 ```{r}
 #| label: fig-proto-plots
 #| fig-cap: "Proto-Solutrean assemblage blank and core measurements and weight descriptive statistics in local and non-local chert types. a) Scatterplots of width and length. b) Boxplots of weight; diamond symbol represents mean values within each group"
-#| fig-width: 6
-#| fig-asp: 1
-#| fig-align: center
 
-ggpubr::ggarrange(proto_scatter, proto_stats_weight, labels = c("a", "b"), nrow = 2, common.legend = TRUE, legend = "bottom")
+knitr::include_graphics(here::here("data/05-stone-to-tool/proto_plots.png"))
 
 ```
 
 ```{r}
 #| label: fig-solutrean-plots
 #| fig-cap: "Solutrean assemblage blank and core measurements and weight descriptive statistics in local and non-local chert types. a) Scatterplots of width and length. b) Boxplots of weight; diamond symbol represents mean values within each group"
-#| fig-width: 6
-#| fig-asp: 1
-#| fig-align: center
 
-ggpubr::ggarrange(solutrean_scatter, solutrean_stats_weight, labels = c("a", "b"), nrow = 2, common.legend = TRUE, legend = "bottom")
+knitr::include_graphics(here::here("data/05-stone-to-tool/solutrean_plots.png"))
 
 ```
 
@@ -907,7 +275,7 @@ Finally, the Solutrean shows no relevant differences in the frequencies of retou
 #| label: tbl-results-sum
 #| tbl-cap: "Summarised results for analysis parameters between grouped chert types (local and non-local) by assemblage. Core sizes (P6) for the local Proto-Solutrean cherts are presented in mean values instead." 
 
-p_results <- readr::read_csv(here::here('data/raw_data_from-stone-to-tool/results_sum.csv'))
+p_results <- readr::read_csv(here::here('data/05-stone-to-tool/results_sum.csv'))
 
 knitr::kable(p_results)
 
@@ -915,49 +283,49 @@ knitr::kable(p_results)
 
 ## Discussion
 
-Our findings confirm initial expectations regarding mobility patterns, raw material use, and technological strategies in southwestern Iberia during the UP. While core reduction differences between local and non-local cherts were anticipated ([@tbl-expectations] a-b), these differences were largely shaped by transportation strategies used to bring non-local cherts to Vale Boi. As such, the occurrence of non-local chert cores at Vale Boi depended on whether these materials arrived as finished tools or blanks—likely reflecting an individual provisioning strategy [@kuhn2004]—or as trimmed cores and larger stone volumes, aligning with site provisioning models [@kelly1988; @roth1998; @clark1987; @kuhn2004].
+Our findings confirm initial expectations regarding mobility patterns, raw material use, and technological strategies in southwestern Iberia during the UP. While core reduction differences between local and non-local cherts were anticipated ([@tbl-expectations] a-b), these differences were largely shaped by transportation strategies used to bring non-local cherts to Vale Boi. As such, the occurrence of non-local chert cores at Vale Boi depended on whether these materials arrived as finished tools or blanks—likely reflecting an individual provisioning strategy [@kuhnUpperPaleolithicRaw2004]—or as trimmed cores and larger stone volumes, aligning with site provisioning models [@kellyThreeSidesBiface1988; @rothProductionTransportBlanks1998; @clarkPoliticsPrismaticBlades1987; @kuhnUpperPaleolithicRaw2004].
 
 Non-local chert cores appear in all studied assemblages, though in limited numbers (e.g., in the Proto-Solutrean). While chips—often proxies for on-site knapping—were not analysed, the presence of knapping by-products, such as shatter (except in the Solutrean assemblage; see Section Datasets and analysis), and core preparation and maintenance products in non-local cherts suggests active core reduction and on-site knapping.
 
-Our results indicate that most non-local cherts were introduced to Vale Boi as cores or nodules, subsequently knapped on-site. However, an exception is seen in TL cherts (TL2-6, TL9-10, TL14; Online Resource 1 Table S2), which lack associated cores and knapping debris. This absence suggests that TL cherts were introduced to the site primarily as finished tools or blanks, aligning with long-distance individual provisioning models [@kuhn2004].
+Our results indicate that most non-local cherts were introduced to Vale Boi as cores or nodules, subsequently knapped on-site. However, an exception is seen in TL cherts (TL2-6, TL9-10, TL14; Online Resource 1 Table S2), which lack associated cores and knapping debris. This absence suggests that TL cherts were introduced to the site primarily as finished tools or blanks, aligning with long-distance individual provisioning models [@kuhnUpperPaleolithicRaw2004].
 
 The presence of cores and evidence of on-site knapping enabled a comprehensive comparison of knapping strategies—specifically, the degree of preparation and maintenance through maintenance products—as well as knapping intensity between local and non-local cherts.
 
 Our analysis identified core preparation and maintenance products in the studied assemblages, suggesting a possible effort to preserve raw material volumes. However, these products were found in low percentages across all assemblages and chert types (\<4% and n\<7). This indicates that, at Vale Boi, core preparation and maintenance products may not serve as reliable proxies for distinguishing between chert types. Instead, their presence may be more closely linked to specific knapping strategies and objectives, such as prioritizing the production of blades and bladelets.
 
-Core and blank size comparisons provide further insights. Non-local cherts underwent more intensive reduction than local cherts, as indicated by their higher blank-to-core ratios and the significantly smaller size and weight of non-local chert blanks. These results align with previous studies, which propose that the intensive reduction of cores—manifested in smaller core sizes, smaller debitage products, and a higher amount of debitage per core—may be linked to lower mobility. In this context, lower mobility results in decreased access to non-local raw materials, which are therefore more intensively reduced and eventually replaced by local raw materials [@kuhn2004; @roth1998; @grove2023; @surovell2009]. However, our results show that these differences are not limited to long-term occupations and low mobility. High blank-to-core ratios and smaller blank sizes in non-local cherts are also observed in the Gravettian occupation, previously interpreted as a short-term occupation with frequent moves [@cascalheira2017; @belmiro2025]. Due to this, we may interpret that non-local raw materials were generally more intensively reduced than local cherts throughout all the UP, independent of the duration of the occupation.
+Core and blank size comparisons provide further insights. Non-local cherts underwent more intensive reduction than local cherts, as indicated by their higher blank-to-core ratios and the significantly smaller size and weight of non-local chert blanks. These results align with previous studies, which propose that the intensive reduction of cores—manifested in smaller core sizes, smaller debitage products, and a higher amount of debitage per core—may be linked to lower mobility. In this context, lower mobility results in decreased access to non-local raw materials, which are therefore more intensively reduced and eventually replaced by local raw materials [@kuhnUpperPaleolithicRaw2004; @rothProductionTransportBlanks1998; @groveMovingFarMoving2023a; @surovellBehavioralEcologyLithic2009]. However, our results show that these differences are not limited to long-term occupations and low mobility. High blank-to-core ratios and smaller blank sizes in non-local cherts are also observed in the Gravettian occupation, previously interpreted as a short-term occupation with frequent moves [@cascalheira_2017; @belmiroChertProcurementPatterns2025]. Due to this, we may interpret that non-local raw materials were generally more intensively reduced than local cherts throughout all the UP, independent of the duration of the occupation.
 
-In contrast to blanks, cores exhibited small, though statistically non-significant, differences in size and weight between local and non-local cherts. These results may be explained by a combination of factors, including the availability of local lithic resources, transport, and knapping strategies focused on the intensive reduction and maintenance of non-local raw materials. Belmiro et al. [-@belmiro2023] highlight that chert nodules in the Algarve region vary between \~5-10 cm, with a maximum diameter of 20 cm. Although abundant and easily accessible in exposed cliffs, local chert nodules are generally small and prone to fracturing when extracted and normally occur fractured in secondary deposits associated to primary outcrops. As a result, the small size of local chert cores may not necessarily indicate intensive reduction but could instead reflect the initial size of available raw material volumes.
+In contrast to blanks, cores exhibited small, though statistically non-significant, differences in size and weight between local and non-local cherts. These results may be explained by a combination of factors, including the availability of local lithic resources, transport, and knapping strategies focused on the intensive reduction and maintenance of non-local raw materials. Belmiro et al. [-@belmiroCreatingFramesReference2023] highlight that chert nodules in the Algarve region vary between \~5-10 cm, with a maximum diameter of 20 cm. Although abundant and easily accessible in exposed cliffs, local chert nodules are generally small and prone to fracturing when extracted and normally occur fractured in secondary deposits associated to primary outcrops. As a result, the small size of local chert cores may not necessarily indicate intensive reduction but could instead reflect the initial size of available raw material volumes.
 
 In comparison, cherts from central Portugal—the probable source of T6 cherts from Vale Boi—can be found in larger volumes (\>20 cm), although smaller nodules are also present. These findings suggest that the small size of non-local chert artifacts was not necessarily constrained by raw material availability but was likely an intentional choice. This could reflect preferences for transportable nodules, strategic reduction to maximize resource utility, or a combination of both. This is further supported by the higher blank-to-core ratio observed in non-local raw materials, particularly T6. It may also explain the more frequent occurrence of heavier and larger outliers in local chert cores, compared to the relatively rare occurrence of larger outliers in non-local types (T6-7).
 
-The intensity of reduction and maintenance discussed thus far can also be inferred from the frequency and diversity of retouched tools. In fact, retouched tools are often key elements used in the literature to distinguish between differential use of local and non-local raw materials [@andrefsky1994; @bamforth1986; @kelly1988; @kuhn2004; @perlès1992]. Our results align with expected outcomes, as non-local cherts exhibit higher frequencies of retouched tools and higher tool-to-blank ratios across all assemblages. This supports the idea that non-local raw materials were actively procured, and that greater effort was invested in tool production [@andrefsky1994; @perlès1992; @kelly1988] and the maintenance of existing artifacts through retouch [@kuhn2004].
+The intensity of reduction and maintenance discussed thus far can also be inferred from the frequency and diversity of retouched tools. In fact, retouched tools are often key elements used in the literature to distinguish between differential use of local and non-local raw materials [@andrefskyRawMaterialAvailabilityOrganization1994; @bamforthTechnologicalEfficiencyTool1986; @kellyThreeSidesBiface1988; @kuhnUpperPaleolithicRaw2004; @perlesSearchLithicStrategies1992]. Our results align with expected outcomes, as non-local cherts exhibit higher frequencies of retouched tools and higher tool-to-blank ratios across all assemblages. This supports the idea that non-local raw materials were actively procured, and that greater effort was invested in tool production [@andrefskyRawMaterialAvailabilityOrganization1994; @perlesSearchLithicStrategies1992; @kellyThreeSidesBiface1988] and the maintenance of existing artifacts through retouch [@kuhnUpperPaleolithicRaw2004].
 
-While the high intensity of retouch in non-local cherts aligns with expectations ([@tbl-expectations] 1c and 2c), their unexpectedly high tool diversity contradicts common mobility models which expect mobility to be linked with limited tool variability and an increase of easily reconfigurable tools [@odell1981; @shott1986; @siegel1984]. Non-local cherts at Vale Boi contain a diverse set of tool types, although less specialized tools, such as retouched blanks, remain predominant in non-local cherts across all assemblages. This suggests that these materials were not only transported as unspecialised tools but as volumes that supported on-site tool production and diversification.
+While the high intensity of retouch in non-local cherts aligns with expectations ([@tbl-expectations] 1c and 2c), their unexpectedly high tool diversity contradicts common mobility models which expect mobility to be linked with limited tool variability and an increase of easily reconfigurable tools [@odellMorphologicalExpressFunction1981; @shottTechnologicalOrganizationSettlement1986; @siegelFunctionalVariabilityAssemblage1984]. Non-local cherts at Vale Boi contain a diverse set of tool types, although less specialized tools, such as retouched blanks, remain predominant in non-local cherts across all assemblages. This suggests that these materials were not only transported as unspecialised tools but as volumes that supported on-site tool production and diversification.
 
 While the patterns identified so far have established a clear distinction in the use and maintenance of local and non-local resources, it is also important to discuss the possible reasons for the varying abundance and technological patterns of non-local raw materials throughout the UP at Vale Boi, as well as the factors behind the differences observed across the different technocomplexes.
 
-Previous studies emphasize raw material abundance and quality as key factors driving the procurement and use of non-local lithic resources over local ones, shaping their proportions, use, and maintenance. In this context, the scarcity or low quality of local resources would drive the procurement of non-local materials and require more effort in preparing transportable cores and producing tools [@andrefsky1994; @perlès1992; @kelly1988]. However, quality may become a less significant factor when non-local raw materials are easily accessible [@akerman2002; @torrence1986; @brown1999; @oestmo2017]. Even in the presence of high-quality local materials, effort was still invested in transporting non-local resources [@roth1998].
+Previous studies emphasize raw material abundance and quality as key factors driving the procurement and use of non-local lithic resources over local ones, shaping their proportions, use, and maintenance. In this context, the scarcity or low quality of local resources would drive the procurement of non-local materials and require more effort in preparing transportable cores and producing tools [@andrefskyRawMaterialAvailabilityOrganization1994; @perlesSearchLithicStrategies1992; @kellyThreeSidesBiface1988]. However, quality may become a less significant factor when non-local raw materials are easily accessible [@akermanWeaponsWunanProduction2002; @torrenceProductionExchangeStone1986; @brown_raw_1999; @oestmoFormalModelingApproach2017]. Even in the presence of high-quality local materials, effort was still invested in transporting non-local resources [@rothProductionTransportBlanks1998].
 
-Regarding Vale Boi, quality does not appear to be a defining factor in raw material choice, as typologies typically associated with high-quality lithic resources are also present in other materials. For example, Solutrean bifacial tools and points were produced using Lower Jurassic and Triassic local chert, which may be considered lower quality than Rio Maior Cretaceous chert (central Portugal) due to its coarser texture and less homogeneous composition. This suggests that the choice of raw material was not solely dependent on quality, especially when techniques such as heat treatment—the process of heating lithic raw material to improve knapping quality [@schmidt2016]—have been identified during the Solutrean in European UP contexts [@bachellerie2022; @bordes1969; @inizan1976; @tiffagom1998].
+Regarding Vale Boi, quality does not appear to be a defining factor in raw material choice, as typologies typically associated with high-quality lithic resources are also present in other materials. For example, Solutrean bifacial tools and points were produced using Lower Jurassic and Triassic local chert, which may be considered lower quality than Rio Maior Cretaceous chert (central Portugal) due to its coarser texture and less homogeneous composition. This suggests that the choice of raw material was not solely dependent on quality, especially when techniques such as heat treatment—the process of heating lithic raw material to improve knapping quality [@schmidtInvestmentTimeNeeded2016]—have been identified during the Solutrean in European UP contexts [@bachellerieRecognizingHeatTreated2022; @bordesTraitementThermiqueSilex1969; @inizanAvantagesDunTraitement1976; @tiffagomEvidenceThermalTreatment1998].
 
-Similarly, Vale Comprido points, the index fossil of the Proto-Solutrean, were primarily made from other lithic resources (e.g., dolerite), with only two identified points made of chalcedony and chert [@belmiro2021]. This further supports the idea that raw material choice was not strictly based on quality, as these points were made from a variety of materials, including those less commonly associated with formal tools at the site.
+Similarly, Vale Comprido points, the index fossil of the Proto-Solutrean, were primarily made from other lithic resources (e.g., dolerite), with only two identified points made of chalcedony and chert [@belmiro_gravettian-solutrean_2021]. This further supports the idea that raw material choice was not strictly based on quality, as these points were made from a variety of materials, including those less commonly associated with formal tools at the site.
 
 In this case, the impact of raw material quality seems to be more related to the differences between lithological groups, which have varying textures and breakage patterns (e.g., between greywacke and chert), rather than within micro-cryptocrystalline or fibrous quartz resources like chert.
 
-Finally, a visual inspection of a cache found in the Shelter area attributed to the Gravettian revealed a high frequency of backed bladelets made from both local and non-local cherts [@bicho2016]. This observation further emphasizes the use of diverse chert types, regardless of their quality.
+Finally, a visual inspection of a cache found in the Shelter area attributed to the Gravettian revealed a high frequency of backed bladelets made from both local and non-local cherts [@bichoEarlyGravettianPoint2016]. This observation further emphasizes the use of diverse chert types, regardless of their quality.
 
 Thus, non-local cherts were likely not procured solely for their quality or due to local resource limitations. Instead, their presence reflects mobility strategies, territorial exploitation, and social networks that facilitated the circulation of long-distance raw materials within southwestern Iberian hunter-gatherer groups. These non-local materials were used and maintained differently, possibly due to their initial size or the need for conservation, given their more restricted or higher-cost acquisition compared to local cherts.
 
-These mobility strategies, territorial exploitation, and social networks also help explain the distinct patterns of non-local raw material use observed between the Gravettian and other assemblages. A key distinction is the elevated proportion of non-local cherts in the Gravettian assemblage at Vale Boi, comprising approximately 50% of the total chert assemblage [@belmiro2025]. When combined with technological data, this also reveals significant differences in the frequency of retouched non-local chert tools and the tool-to-blank ratio (\~30% and \~1, respectively), compared to other technocomplexes (\~15-19% and 0.1-0.5).
+These mobility strategies, territorial exploitation, and social networks also help explain the distinct patterns of non-local raw material use observed between the Gravettian and other assemblages. A key distinction is the elevated proportion of non-local cherts in the Gravettian assemblage at Vale Boi, comprising approximately 50% of the total chert assemblage [@belmiroChertProcurementPatterns2025]. When combined with technological data, this also reveals significant differences in the frequency of retouched non-local chert tools and the tool-to-blank ratio (\~30% and \~1, respectively), compared to other technocomplexes (\~15-19% and 0.1-0.5).
 
-Several studies have shown that short-term occupations often rely heavily on non-local toolkits and raw materials [@torrence1983; @surovell2009] and are characterized by higher reduction intensity and increased tool-to-debitage ratios [@grove2023]. These differences support the interpretation of the Gravettian at Vale Boi as a set of short-term occupations [@belmiro2025].
+Several studies have shown that short-term occupations often rely heavily on non-local toolkits and raw materials [@torrenceTimeBudgetingHuntergatherer1983; @surovellBehavioralEcologyLithic2009] and are characterized by higher reduction intensity and increased tool-to-debitage ratios [@groveMovingFarMoving2023a]. These differences support the interpretation of the Gravettian at Vale Boi as a set of short-term occupations [@belmiroChertProcurementPatterns2025].
 
-This allows us to further expand our knowledge about chert provisioning during the UP at Vale Boi and suggest an overall interpretation for how groups were using and managing their lithic resources through time. In southwesternmost Iberia, the first identified UP occupations are from the Gravettian. At Vale Boi, these occupations appear to correspond to short-term settlements with frequent mobility, where non-local raw materials were transported as cores or nodules and knapped on-site. Alternatively, non-local raw materials were brought in as blanks, which were consistently retouched, although individual toolkits made from limited non-local raw materials—primarily blanks or tools—were also present. Raw material volumes were intensively exploited at the site, yielding both specialised and non-specialised tools. Local raw materials were also used to produce high frequencies of retouched tools, though this was done less intensively. Given the technological differences between the Gravettian Vicentine facies and other regions such as central Portugal and southern Spain [@marreiros2015], we suggest that the approximately 250 km distance between Vale Boi and identified non-local sources reflects raw material exchanges between groups at the edges of their territories, rather than an indication of exploited territory.
+This allows us to further expand our knowledge about chert provisioning during the UP at Vale Boi and suggest an overall interpretation for how groups were using and managing their lithic resources through time. In southwesternmost Iberia, the first identified UP occupations are from the Gravettian. At Vale Boi, these occupations appear to correspond to short-term settlements with frequent mobility, where non-local raw materials were transported as cores or nodules and knapped on-site. Alternatively, non-local raw materials were brought in as blanks, which were consistently retouched, although individual toolkits made from limited non-local raw materials—primarily blanks or tools—were also present. Raw material volumes were intensively exploited at the site, yielding both specialised and non-specialised tools. Local raw materials were also used to produce high frequencies of retouched tools, though this was done less intensively. Given the technological differences between the Gravettian Vicentine facies and other regions such as central Portugal and southern Spain [@marreirosLithicTechnologyGravettian2015], we suggest that the approximately 250 km distance between Vale Boi and identified non-local sources reflects raw material exchanges between groups at the edges of their territories, rather than an indication of exploited territory.
 
 These exchanges and patterns of mobility persisted throughout the UP, though with changes in the mobility and settlement patterns at Vale Boi. Over time, Vale Boi was occupied as a long-term residential site. At the beginning and during the LGM, Proto-Solutrean and later Solutrean groups, while still having access to non-local raw materials, moved less frequently, which limited the influx of these materials.
 
-These changes in mobility frequency may be related to the increasingly harsher climatic conditions, which impacted all of Europe, while allowing regions such as southern Iberia to maintain temperate conditions where flora and faunal resources may have remained much the same [@gómez2007; @gonzález-sampériz2010; @hewitt2000; @jennings2011]. The climatic stability of this ecological niche may have provided the necessary conditions for longer-term occupations of Vale Boi [@cascalheira2017], while still maintaining social interactions and contacts with other groups from Iberia seen both through technological patterns [@belmiro2021; @cascalheira2013c; @cascalheira2017] and the presence of non-local raw materials [@belmiro2025].
+These changes in mobility frequency may be related to the increasingly harsher climatic conditions, which impacted all of Europe, while allowing regions such as southern Iberia to maintain temperate conditions where flora and faunal resources may have remained much the same [@gomezRefugiaRefugiaPatterns2007; @gonzalez-samperiz_steppes_2010-1; @hewitt_genetic_2000; @jennings_southern_2011]. The climatic stability of this ecological niche may have provided the necessary conditions for longer-term occupations of Vale Boi [@cascalheira_2017], while still maintaining social interactions and contacts with other groups from Iberia seen both through technological patterns [@belmiro_gravettian-solutrean_2021; @cascalheiraINFLUENCIAMEDITERRANICANAS; @cascalheira_2017] and the presence of non-local raw materials [@belmiroChertProcurementPatterns2025].
 
 These non-local raw materials were still intensively exploited and maintained at the site, although hunter-gatherer groups increasingly relied on local raw materials. This shift was likely due to the proximity of local sources, which facilitated more frequent use and discard, or even due to the introduction of new lithic treatment techniques.
 
@@ -975,6 +343,6 @@ These findings provide new insights into hunter-gatherer mobility, social networ
 
 Future work should explore whether Vale Boi’s non-local cherts were obtained through direct procurement, down-the-line exchange, or social trade networks. Additionally, applying use-wear analysis to retouched tools could help clarify whether non-local chert tools had specialised functions, further informing our understanding of raw material management and mobility strategies.
 
-## Supplementary Information {.unnumbered}
+## Acknowledgments {.unnumbered}
 
-**Online Resource 1:** Supplementary results and tables, supporting information for the results presented in the main paper. Includes detailed assemblage technological descriptions by chert type, tool-to-debitage and blank-to-core ratios tables, descriptive statistics tables for measurements (mean and standard deviation) and results of the Mann-Whitney U statistical analysis.
+We would like to thank the Fundacão para a Ciência e Tecnologia for the funding essential for our research, and ICArEHB for funding and providing access to the archaeological materials.

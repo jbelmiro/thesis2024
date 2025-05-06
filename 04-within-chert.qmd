@@ -4,6 +4,7 @@ execute:
   warning: false
   message: false
   comment: "#>"
+  fig-dpi: 600
 ---
 
 ```{r}
@@ -16,7 +17,11 @@ library(knitr)
 
 ```
 
+\newpage
+
 # Within chert: a multi-technique mineral and geochemical approach to the study of chert of southwestern Iberia {#sec-chapter4}
+
+*In preparation for publishing*
 
 ## Abstract {.unnumbered}
 
@@ -83,7 +88,7 @@ Other geological samples included in the study were the central Portugal (Rio Ma
 
 The archaeological samples used for the study are from the archaeological site of Vale Boi, mainly the Terrace and Shelter areas. The samples were chosen based on the groups identified in our previous works [@belmiroChertProcurementPatterns2025], with T1-5 corresponding to the archaeological chert types corresponding to local types, T6 possibly originating from central Portugal Cretaceous formation, T7 and T9 with sources possibly from southern Portugal Betic systems and T8 and T10-11 without a current identified source.
 
-For further reproducibility and replicability, and working towards the goal of open science [@Marwick2017], all analyses were performed through R Studio. The R code used for the analysis, datasets, and visual representations presented in this paper are available through our online repository (https://doi.org/10.17605/OSF.IO/DBFT2). We utilised the rrtools package by Marwick et al. [-@marwickPackagingDataAnalytical2018] to create a research compendium and produce a reproducible journal article. The repository includes the complete set of raw data used in the analysis, along with a custom R project [@wickhamPackagesOrganizeTest2015] that contains the necessary code to generate all tables and figures. To facilitate broad reuse, the code is provided under the MIT license, the data under CC‐0, and the figures under CC‐BY.
+For further reproducibility and replicability, and working towards the goal of open science [@marwickComputationalReproducibilityArchaeological2017], all analyses were performed through R Studio. The R code used for the analysis, datasets, and visual representations presented in this paper are available through our online repository (https://doi.org/10.17605/OSF.IO/DBFT2). We utilised the rrtools package by Marwick et al. [-@marwickPackagingDataAnalytical2018] to create a research compendium and produce a reproducible journal article. The repository includes the complete set of raw data used in the analysis, along with a custom R project [@wickhamPackagesOrganizeTest2015] that contains the necessary code to generate all tables and figures. To facilitate broad reuse, the code is provided under the MIT license, the data under CC‐0, and the figures under CC‐BY.
 
 ### X-Ray Diffraction (XRD)
 
@@ -363,6 +368,6 @@ Finally, this work has contributed to the development of a robust regional litho
 
 Future research should expand the geological reference collections beyond the Algarve and incorporate higher-resolution geochemical analyses to further refine raw material sourcing. In doing so, it will be possible to deepen our understanding of human behavioural adaptations and regional interaction networks during the Upper Palaeolithic.
 
-## Acknowledgements
+## Acknowledgements {.unnumbered}
 
 I would like to thank Dr. José Mirão for the training in the XRD and SEM-EDS methods and aid in the interpretation of the results, and the HERCULES laboratory, for facilitating the equipment necessary—the analyses were developed at the HERCULES Laboratory of the University of Évora, funded by FCT through the projects UIDB/04449/2020 and UIDP/04449/2020. Still from the Hércules team, I thank the technician Sandra Velez for the training, help and bright mood during the preparation of SEM-EDS samples. Similarly, I thank Dr. Javier Sanchéz-Martinéz for the help in obtaining chips for analysis through meticulous knapping whenever necessary. The preparation of bulk samples for XRD would also not have been possible without the help of the CIMA laboratory and their equipment. Finally, I would like to thank ICArEHB for providing the necessary equipment, contacts and researchers that allowed me to complete this study and explore the different techniques employed here. In particular, I would like to thank Dr. Hussein Kanbar for the support during the analysis and key insights for interpretation and visual presentation of geochemical data; and technician Pedro Coxito and Dr. Vera Aldeias for the continuous support and advice.

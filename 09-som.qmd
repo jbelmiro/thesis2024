@@ -6,7 +6,7 @@ execute:
   comment: "#>"
 ---
 
-# Repositories and Supplementary online materials
+# Repositories and Supplementary online materials {#sec-chapter9}
 
 All chapters (excluding Introduction and Discussion) have associated online repositories. The materials that would be presented in the dissertation's Appendix section can instead be freely accessed and downloaded through the repositories.
 

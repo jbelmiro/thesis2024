@@ -7,19 +7,19 @@ book:
   date: "12/25/2024"
   chapters:
     - index.qmd
-    - 00-abstract.qmd
     - 01-intro.qmd
     - 02-creating-frames.qmd
     - 03-within-and-beyond.qmd
     - 04-within-chert.qmd
     - 05-stone-to-tool.qmd
     - 06-discussion.qmd
-    - 07-conclusion
+    - 07-conclusion.qmd
     - 08-references.qmd
   appendices:
     - 09-som.qmd
 
 bibliography: references.bib
+csl: "data/templates/journal-of-archaeological-science.csl"
 
 format:
   html:
@@ -32,6 +32,9 @@ format:
     indent: true
     papersize: a4
     linestretch: 2
-  docx: default
+  docx:
+    reference-doc: "data/templates/template.docx"
+    toc: false
+
 
 editor: visual

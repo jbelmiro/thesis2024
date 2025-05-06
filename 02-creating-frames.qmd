@@ -4,7 +4,6 @@ execute:
   warning: false
   message: false
   comment: "#>"
-  fig-path: "../figures/creating-frames/"
   fig-dpi: 600
 ---
 
@@ -17,6 +16,8 @@ library(kableExtra)
 library(knitr)
 
 ```
+
+\newpage
 
 # Creating frames of reference for chert exploitation during the Late Pleistocene in Southwesternmost Iberia {#sec-chapter2}
 
