@@ -1,9 +1,61 @@
-# Acknowledgments {.unnumbered}
+*Às mulheres da minha vida-a minha avó e a minha mãe-que sofreram e sacrificaram tudo o que podiam para me darem uma hipótese de um futuro mais feliz. Dei eu agora tudo o que tinha para vos deixar orgulhosas da criança que criaram.*
 
-This is a Quarto book.
+*There's a cycle here, a rhythm. Don't we need to know in advance if the next Season is going to be longer or worse somehow? How can we prepare for the future if we won't acknowledge the past?*
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+\- The stone sky, N. K. Jemisin
 
-```{r}
-1 + 1
-```
+\newpage
+
+# A small thank-you note {.unnumbered}
+
+Foremost, a warning—I know, dramatic. Please don’t expect a scientific undertone in this page, but do forgive me if I slip; I have spent the last years writing—and learning to write—in the language of science, and those close to me know my waves flow long lengths and through odd currents. Just look at the this last sentence.
+
+Alright, now to the actual point; you already know what it is—after all, this is one of the first pages of a Doctoral dissertation, and it does say so in the title. But while the goal of this page—here we go, that science leaking from within my fingernails. Again, you have to forgive me... this is harder, much more complex than it seems (at least for me); after all, how do you fit within a few a pages nearly half a decade of appreciation for countless of people that made the colossal task of writing a doctoral dissertation—and all that goes between the lines—a pleasant, possible, plausible undertaking?
+
+Let’s keep it simple then—thank you. All of you who shared my highs and my lows; who kept me afloat; who offered me advice, who gave me opportunities, who made me smile—all three families who helped me grow branches and sprout leaves, aiming towards the sky. And please forgive me if I chose to not name names. Hopefully I have done a proper job of thanking everyone who took part in this journey throughout the years.
+
+Thank you—from the bottom of my heart, *thank you*.
+
+\newpage
+
+# Abstract {.unnumbered}
+
+The Late Pleistocene was characterised by cyclical, abrupt climatic events that had significant regional environmental impacts. These environmental shifts are often associated with processes of cultural and demographic reorganisation across time and space. This project aims to investigate the economic and social adaptations of human groups during the Upper Palaeolithic (UP) in southwestern Iberia and their relationship to millennial-scale climatic events.
+
+To this end, we analysed chert raw materials from the UP archaeological sequence at Vale Boi (Portugal). Vale Boi presents ideal conditions for a comprehensive study of raw material procurement, use, and management: it has been extensively excavated over nearly two decades using state-of-the-art methods, yet only preliminary studies of its raw materials exist. Lithic raw material exploitation, processing, and use are essential to understanding such adaptations, as raw materials are central to the technological and cultural organisation of hunter-gatherers. For this analysis, we employed a multi-method approach that combined macroscopic, petrographic, geochemical and technological analyses.
+
+Our results indicate the consistent use of both local and non-local chert resources throughout the UP sequence. Some non-local cherts were sourced from as far as central Portugal and southern Spain, over 250 km from the site. The proportion of non-local materials was highest during the Gravettian period and decreased in subsequent occupations, which relied more heavily on local resources. We interpret this shift as reflecting changes in mobility and settlement patterns—from short-term to longer-term occupations—likely in response to the harsh climatic conditions of Heinrich Event 2 and the Last Glacial Maximum. Despite these changes, the continued presence of non-local materials suggests that long-distance social networks were maintained throughout the UP sequence at Vale Boi, revealing resilient social connections among Iberian hunter-gatherers over more than 10,000 years.
+
+**Keywords**: Upper Palaeolithic; Raw Material studies; Petrography; Geochemistry
+
+\newpage
+
+# Resumo {.unnumbered}
+
+O Pleistocénico Superior foi caracterizado pela ocorrência cíclica de eventos climáticos abruptos, que tiveram impactos ambientais significativos a nível regional. Estas alterações ambientais estão frequentemente associadas a processos de reorganização cultural e demográfica ao longo do tempo e do espaço. Este projeto tem como objetivo investigar as adaptações económicas e sociais dos grupos humanos durante o Paleolítico Superior no sudoeste da Península Ibérica e a sua relação com eventos climáticos de escala milenar. Ao analisar padrões de resiliência e inovação na aquisição e utilização de matérias-primas, em paralelo com a mobilidade dos caçadores-recolectores, este estudo investiga de que forma estes comportamentos se correlacionam com as alterações ambientais e com a evolução das dinâmicas dos territórios sociais.
+
+A obtenção, uso e manutenção de matérias-primas líticas são aspetos fundamentais para compreender adaptações humanas, dado que constituem elementos centrais da organização tecnológica e cultural dos caçadores-recolectores. As diferenças nas proporções de matérias-primas aliadas a padrões tecnológicos permitem-nos também entender diferenças na manutenção de matérias-primas específicas e diferentes tipos de ocupação dos sítios arqueológicos. Além disso, a identificação de matérias-primas exóticas permite entender padrões de mobilidade de longa-distância e a possível participação em grupos sociais alargados.
+
+Como tal, analisámos as matérias-primas siliciosas (sílex e calcedónia) da sequência arqueológica do Paleolítico Superior do sítio de Vale Boi (Portugal). Vale Boi apresenta condições únicas e ideais para um estudo aprofundado sobre a aquisição, utilização e manutenção de matérias-primas ao longo do Paleolítico Superior. Considerado um nicho cultural e ecológico, Vale Boi apresenta uma das sequências arqueológicas do Paleolítico Superior mais completas da Península Ibéria, e é um sítio de referência para o sudoeste ibérico onde sítios desta cronologia são escassos e se encontram mal preservados ou destruídos. O sítio conta com escavações sistemáticas há quase duas décadas com recurso a metodologias de ponta e vários estudos das coleções líticas que permitiram caracterizar a organização tecnológica, padrões de ocupação e contacto com outras regiões dos caçadores-recolectores da região. No entanto, estudos sobre as matérias-primas ainda se encontram numa fase preliminar.
+
+De forma a alcançar os objetivos descrito acima, este estudo aborda questões relacionadas com a proveniência das matérias-primas siliciosas, padrões de mobilidade e organização tecnológica. Em particular, procuramos compreender que tipos de sílex foram explorados, como estes materiais chegaram ao sítio, e de que forma a sua gestão esteve relacionada com estratégias de mobilidade e com mudanças tecnológicas e sociais influenciadas por variações climáticas.
+
+Para tal, foram estudados todos os artefactos com coordenadas individuais das áreas do Terraço e Abrigo de Vale Boi da sequência do Paleolítico Superior. Esta inclui as ocupações Gravetenses (c. 32-27.000 cal BP), Proto-Solutrenses (c. 26-24.000 cal BP) e Solutrenses (c. 24-20.000 cal BP) do Terraço, e a ocupação Solutrense (c. 24-22.000 cal BP) do Abrigo.
+
+ Seguindo outros exemplos para o estudo de matérias-primas, em específico e sílex, aplicámos uma abordagem multidisciplinar. Assim, a metodologia aplicada neste estudo integra prospeções geológicas com análises macroscópicas, petrográficas, mineralógicas e geoquímicas. Desta forma, foi possível comparar o sílex geológico local e regional com o sílex arqueológico. Amostras geológicas de outras regiões foram também utilizadas de forma a entender a proveniência de sílex exótico presente no sítio. Finalmente, estudos tecnológicos dos artefactos líticos foram também integrados com os resultados da análise de matérias-primas, de forma a entender padrões de manutenção ao longo da sequência arqueológica.
+
+Os resultados mostram o uso combinado e contínuo de recursos locais e não locais ao longo de toda a sequência do Paleolítico. Uma parte significativa do sílex utilizado em Vale Boi é de origem local, proveniente de formações de calcedónia e sílex situadas no interior, num raio de aproximadamente 10 km do sítio, ou de zonas costeiras num raio de cerca de 20 km. Estes materiais terão sido transportados para o sítio sob a forma de nódulos, provavelmente recolhidos em depósitos primários ou sub-primários.
+
+Uma parte do sílex utilizado em Vale Boi é de origem não local. A maioria deste sílex não local parece ter sido transportada para o sítio sob a forma de nódulos, núcleos parcialmente descorticados ou volumes líticos de maior dimensão, tendo sido posteriormente talhados no local. Algumas das matérias-primas não locais foram identificadas como provenientes do centro de Portugal e do sul de Espanha, a mais de 250 km a Norte e a Este (respetivamente) do sítio. A presença de matérias-primas provenientes de longa distância em Vale Boi é interpretada como evidência de interação social entre grupos de caçadores-recolectores distintos na Península Ibérica.
+
+ Apesar dos mesmos tipos de sílex se encontrarem presentes em toda a sequência arqueológica, a proporção de sílex local e não local demonstra variações, assim como a proporção de utensílios retocados. A proporção de matérias-primas não locais e utensílios retocados é mais elevada durante as ocupações Gravetenses, diminuindo nas ocupações Proto-Solutrenses e Solutrenses, que revelam uma maior dependência de recursos locais. Esta mudança é interpretada como reflexo de alterações nos padrões de mobilidade e ocupação. Assim, a ocupação Gravetense é interpretada como uma ocupação de curta duração, possivelmente relacionada com as condições climáticas mais amenas do Evento Heinrich 3 e consequente melhoria climática. Em contraste, as ocupações subsequentes são interpretadas como ocupações de longa duração com redução da frequência da mobilidade, possivelmente em resposta às condições climáticas adversas associadas ao Evento Heinrich 2 e ao Último Máximo Glacial e às condições climáticas mais estáveis do sudoeste de Portugal.
+
+Apesar destas mudanças, outros padrões mantêm-se constantes ao longo da sequência arqueológica. Por exemplo, em todas as ocupações, a utilização e manutenção de sílex não local é mais intensiva, com maior redução dos núcleos e produção de utensílios retocados. Além disso, a presença contínua de matérias-primas não locais sugere a manutenção de redes sociais de longa distância ao longo de toda a sequência do Paleolítico Superior em Vale Boi, revelando uma persistência de conexões sociais entre caçadores-recolectores na Península Ibérica durante mais de 10.000 anos.
+
+Este estudo apresenta a primeira análise abrangente das matérias-primas siliciosas associadas à tecnologia das ocupações do Paleolítico Superior no sudoeste da Península Ibérica, contribuindo para o debate contínuo sobre as adaptações humanas no passado. A investigação confirma interpretações e sugestões propostas por estudos anteriores, ao mesmo tempo que introduz resultados inovadores. Este contributo é de particular importância para o estudo do Paleolítico Superior no sudoeste ibérico, uma região pouco representada no registo arqueológico.
+
+A criação de uma base de dados online, de acesso livre à comunidade científica, representa a primeira coleção de referência digital para o sílex da região. Esta ferramenta é fundamental para o desenvolvimento de uma produção científica acessível e transparente, oferecendo um ponto de referência valioso para estudos futuros sobre sílex em diferentes períodos pré-históricos, tanto a nível regional como em toda a Península Ibérica.
+
+**Palavras-chave**: Paleolítico Superior; Estudos de matérias-primas; Petrografia; Geoquímica
+
+\newpage
