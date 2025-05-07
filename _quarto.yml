@@ -2,9 +2,9 @@ project:
   type: book
 
 book:
-  title: "thesis2024"
+  title: "The exploitation of siliceous raw materials during the Upper Paleolithic in the southwest of the Iberian Peninsula"
   author: "Joana Belmiro"
-  date: "12/25/2024"
+  date: "2025"
   chapters:
     - index.qmd
     - 01-intro.qmd
