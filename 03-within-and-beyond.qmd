@@ -26,7 +26,7 @@ library(gtsummary)
 
 ^1^ Interdisciplinary Center for Archaeology and the Evolution of Human Behaviour (ICArEHB), University of Algarve; ^2^ Spanish National Research Council - Institute Milá y Fontanals of research on Humanities, Barcelona, Spain; ^3^ UGEA-PHAM, Departamento de Ciencias de la Tierra, Facultad de Ciencias, Universidad de Cádiz. Puerto Real, Cádiz, Spain
 
-**Reference**: Belmiro, Joana, Xavier Terradas, Salvador Dominguez-Bella, and João Cascalheira. 2025. "Within and Beyond: Chert Procurement Patterns During The Upper Palaeolithic in Southwesternmost Iberia". Journal of Paleolithic Archaeology 8 (1): 8. https://doi.org/10.1007/s41982-025-00209-2.
+**Publication reference**: Belmiro, Joana, Xavier Terradas, Salvador Dominguez-Bella, and João Cascalheira. 2025. "Within and Beyond: Chert Procurement Patterns During The Upper Palaeolithic in Southwesternmost Iberia". Journal of Paleolithic Archaeology 8 (1): 8. https://doi.org/10.1007/s41982-025-00209-2.
 
 \newpage
 
