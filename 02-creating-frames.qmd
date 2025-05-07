@@ -17,8 +17,6 @@ library(knitr)
 
 ```
 
-\newpage
-
 # Creating frames of reference for chert exploitation during the Late Pleistocene in Southwesternmost Iberia {#sec-chapter2}
 
 Joana Belmiro^1^, Xavier Terradas^2^, João Cascalheira^1^
@@ -112,8 +110,8 @@ The second phase of the study focused on the petrographic analysis of the geolog
 #| tbl-cap: "List of geological samples chosen for the petrographical study. UB – Servei de Làmina Prima, University of Barcelona (Barcelona, Spain); TSL - Thin Section Lab (Toul, France)."
 
 petrolist <- read_csv(here::here("data/02-creating-frames/petro_sample.csv"))
-knitr::kable(petrolist) |> 
-  kable_styling(latex_options = c("striped", "scale_down", "repeat_header"))
+knitr::kable(petrolist)
+  #kable_styling(latex_options = c("striped", "scale_down", "repeat_header"))
 
 
 ```
@@ -233,3 +231,5 @@ In this study we identified several sources of chert nodules in southern Portuga
 ## Acknowledgments {.unnumbered}
 
 We would like the thank the entities that funded the current research: Fundação para a Ciência e a Technologia (FCT) and ICArEHB (Interdisciplinary Center for Archaeology and the Evolution of Human Behavior). Furthermore, we want to thank Dr. Telmo Pereira and Dr. Carlos Ribeiro for allowing us to consult their previous research and for their support. We’d like to thank Jack Acres for the IT support essential for the creation of the online LusoLit database. Finally, we thank Dr. Célia Gonçalves for helping with the creation of the maps.
+
+\newpage

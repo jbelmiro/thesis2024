@@ -20,8 +20,6 @@ library(gtsummary)
 
 ```
 
-\newpage
-
 # Within and beyond: chert procurement patterns during the Upper Palaeolithic in Southwesternmost Iberia {#sec-chapter3}
 
 **Authors**: Joana Belmiro^1^, Xavier Terradas^2^, Salvador Dominguez-Bella^3^, João Cascalheira^1^
@@ -371,3 +369,5 @@ Additionally, experimental replication and the creation of a reference collectio
 ## Acknowledgments {.unnumbered}
 
 We would like to thank the Fundacão para a Ciência e Tecnologia for the funding essential for our research, and ICArEHB for funding and providing access to the archaeological materials. We would also like to thank Dr. David Ortega for the provided insight and expertise that greatly assisted the research and Dr. Célia Gonçalves for the invaluable assistance with the maps and imagery created for this paper. Finally, we would like to thank the reviewers who provided key insights, constructive criticism and attention to detail, which greatly aided in improving our initial submission.
+
+\newpage

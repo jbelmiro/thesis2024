@@ -17,8 +17,6 @@ library(knitr)
 
 ```
 
-\newpage
-
 # Within chert: a multi-technique mineral and geochemical approach to the study of chert of southwestern Iberia {#sec-chapter4}
 
 *In preparation for publishing*
@@ -371,3 +369,5 @@ Future research should expand the geological reference collections beyond the Al
 ## Acknowledgements {.unnumbered}
 
 I would like to thank Dr. José Mirão for the training in the XRD and SEM-EDS methods and aid in the interpretation of the results, and the HERCULES laboratory, for facilitating the equipment necessary—the analyses were developed at the HERCULES Laboratory of the University of Évora, funded by FCT through the projects UIDB/04449/2020 and UIDP/04449/2020. Still from the Hércules team, I thank the technician Sandra Velez for the training, help and bright mood during the preparation of SEM-EDS samples. Similarly, I thank Dr. Javier Sanchéz-Martinéz for the help in obtaining chips for analysis through meticulous knapping whenever necessary. The preparation of bulk samples for XRD would also not have been possible without the help of the CIMA laboratory and their equipment. Finally, I would like to thank ICArEHB for providing the necessary equipment, contacts and researchers that allowed me to complete this study and explore the different techniques employed here. In particular, I would like to thank Dr. Hussein Kanbar for the support during the analysis and key insights for interpretation and visual presentation of geochemical data; and technician Pedro Coxito and Dr. Vera Aldeias for the continuous support and advice.
+
+\newpage
